@@ -1,0 +1,534 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_enderase_members_tree" model="ir.ui.view">
+        <field name="name">enderase.members.tree</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <tree decoration-muted="enderase_record_status == 'archived'" decoration-danger="enderase_record_status == 'rejected'">
+                <field name="enderase_registry_id"/>
+                <field name="name"/>
+                <field name="fayda_national_id"/>
+                <field name="gender"/>
+                <field name="birthdate"/>
+                <field name="phone"/>
+                <field name="email"/>
+                <field name="enderase_admin_region_id"/>
+                <field name="enderase_membership_status"/>
+                <field name="enderase_record_status"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_enderase_groups_tree" model="ir.ui.view">
+        <field name="name">enderase.groups.tree</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <tree decoration-muted="enderase_record_status == 'archived'" decoration-danger="enderase_record_status == 'rejected'">
+                <field name="enderase_registry_id"/>
+                <field name="name"/>
+                <field name="startup_name"/>
+                <field name="group_type"/>
+                <field name="organization_type"/>
+                <field name="representative_role"/>
+                <field name="selected_for_showcase"/>
+                <field name="interested_in_collaboration"/>
+                <field name="hiring_or_recruiting"/>
+                <field name="enderase_record_status"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_enderase_registry_search" model="ir.ui.view">
+        <field name="name">enderase.registry.search</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="enderase_registry_id"/>
+                <field name="fayda_national_id"/>
+                <field name="phone"/>
+                <field name="email"/>
+                <field name="startup_name"/>
+                <filter name="members" string="Members" domain="[('is_enderase_member', '=', True), ('is_group', '=', False)]"/>
+                <filter name="startups" string="Startups" domain="[('is_enderase_startup', '=', True), ('is_group', '=', True)]"/>
+                <filter name="groups" string="Groups" domain="['&amp;', ('is_group', '=', True), '|', ('is_enderase_group', '=', True), ('is_enderase_startup', '=', True)]"/>
+                <filter name="active_records" string="Active" domain="[('enderase_record_status', '=', 'active')]"/>
+                <filter name="needs_follow_up" string="Needs Follow-up" domain="[('needs_follow_up', '=', True)]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_status" string="Status" context="{'group_by': 'enderase_record_status'}"/>
+                    <filter name="group_region" string="Region" context="{'group_by': 'enderase_admin_region_id'}"/>
+                    <filter name="group_category" string="Category" context="{'group_by': 'enderase_beneficiary_category'}"/>
+                    <filter name="group_type" string="Group Type" context="{'group_by': 'group_type'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_enderase_individual_form_inherit" model="ir.ui.view">
+        <field name="name">enderase.individual.form.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="g2p_registry_individual.view_individuals_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/sheet" position="before">
+                <header invisible="not is_enderase_member and not is_enderase_beneficiary">
+                    <field name="enderase_record_status" widget="statusbar" statusbar_visible="draft,submitted,verified,active"/>
+                    <button name="action_enderase_submit" type="object" string="Submit" class="btn-primary" invisible="enderase_record_status != 'draft'"/>
+                    <button name="action_enderase_verify" type="object" string="Verify" class="btn-secondary" invisible="enderase_record_status != 'submitted'"/>
+                    <button name="action_enderase_activate" type="object" string="Activate" class="btn-success" invisible="enderase_record_status not in ('submitted', 'verified')"/>
+                    <button name="action_enderase_reject" type="object" string="Reject" class="btn-danger" invisible="enderase_record_status in ('rejected', 'archived')"/>
+                    <button name="action_enderase_archive_registry" type="object" string="Archive Registry" invisible="enderase_record_status == 'archived'"/>
+                </header>
+            </xpath>
+            <xpath expr="//notebook[@name='individual_detail']" position="inside">
+                <page string="Enderase Profile" name="enderase_profile" invisible="not is_enderase_member and not is_enderase_beneficiary">
+                    <group>
+                        <group string="Registry">
+                            <field name="is_enderase_member"/>
+                            <field name="is_enderase_beneficiary"/>
+                            <field name="enderase_registry_id" readonly="1"/>
+                            <field name="enderase_membership_status"/>
+                            <field name="enderase_beneficiary_type"/>
+                            <field name="source_reference"/>
+                            <field name="odk_instance_id"/>
+                        </group>
+                        <group string="Identity">
+                            <field name="enderase_full_name"/>
+                            <field name="fayda_national_id"/>
+                            <field name="date_of_birth"/>
+                            <field name="gender"/>
+                            <field name="enderase_nationality"/>
+                        </group>
+                    </group>
+                    <group string="Administrative Area">
+                        <field name="address"/>
+                        <field name="enderase_admin_region_id"/>
+                        <field name="enderase_admin_zone_id"/>
+                        <field name="enderase_admin_woreda_id"/>
+                        <field name="enderase_kebele_name"/>
+                        <field name="enderase_subcity_id"/>
+                    </group>
+                </page>
+                <page string="Education &amp; Skills" name="enderase_skills" invisible="not is_enderase_member and not is_enderase_beneficiary">
+                    <group>
+                        <group string="Education and Work">
+                            <field name="occupation_profession_id"/>
+                            <field name="profession_other" invisible="occupation_profession_id == False"/>
+                            <field name="educational_level_id"/>
+                            <field name="employment_status_id"/>
+                        </group>
+                        <group string="Training">
+                            <field name="desired_training_area_ids" widget="many2many_tags"/>
+                            <field name="training_area_other"/>
+                            <field name="preferred_training_schedule_ids" widget="many2many_tags"/>
+                            <field name="required_support_ids" widget="many2many_tags"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="current_skills"/>
+                        <field name="previous_training_received"/>
+                        <field name="certifications_held"/>
+                    </group>
+                </page>
+                <page string="Membership" name="enderase_membership" invisible="not is_enderase_member and not is_enderase_beneficiary">
+                    <group>
+                        <group>
+                            <field name="previous_membership"/>
+                            <field name="experience_skill_area"/>
+                            <field name="reason_for_joining"/>
+                            <field name="interest_area_ids" widget="many2many_tags"/>
+                            <field name="interest_area_other"/>
+                            <field name="membership_type_id"/>
+                            <field name="declaration"/>
+                        </group>
+                        <group>
+                            <field name="interested_starting_business"/>
+                            <field name="business_area_interest" invisible="interested_starting_business != 'yes'"/>
+                            <field name="hear_about_id"/>
+                            <field name="hear_about_other" invisible="hear_about_id == False"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="why_join"/>
+                        <field name="career_path"/>
+                        <field name="skills_to_develop"/>
+                        <field name="challenges_faced"/>
+                        <field name="support_ambitions"/>
+                        <field name="leadership_growth"/>
+                        <field name="view_of_enderase"/>
+                        <field name="value_to_members_community"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_enderase_member_form_primary" model="ir.ui.view">
+        <field name="name">enderase.member.form.primary</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" eval="False"/>
+        <field name="arch" type="xml">
+            <form string="Enderase Member">
+                <header>
+                    <field name="enderase_record_status" widget="statusbar" statusbar_visible="draft,submitted,verified,active"/>
+                    <button name="action_enderase_submit" type="object" string="Submit" class="btn-primary" invisible="enderase_record_status != 'draft'"/>
+                    <button name="action_enderase_verify" type="object" string="Verify" class="btn-secondary" invisible="enderase_record_status != 'submitted'"/>
+                    <button name="action_enderase_activate" type="object" string="Activate" class="btn-success" invisible="enderase_record_status not in ('submitted', 'verified')"/>
+                    <button name="action_enderase_reject" type="object" string="Reject" class="btn-danger" invisible="enderase_record_status in ('rejected', 'archived')"/>
+                    <button name="action_enderase_archive_registry" type="object" string="Archive Registry" invisible="enderase_record_status == 'archived'"/>
+                </header>
+                <sheet>
+                    <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'avatar_128'}"/>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Full name"/>
+                        </h1>
+                    </div>
+                    <notebook>
+                        <page string="Enderase Profile" name="enderase_profile">
+                            <group>
+                                <group string="Registry">
+                                    <field name="is_registrant" invisible="1"/>
+                                    <field name="is_group" invisible="1"/>
+                                    <field name="is_enderase_member"/>
+                                    <field name="is_enderase_beneficiary"/>
+                                    <field name="enderase_registry_id" readonly="1"/>
+                                    <field name="enderase_membership_status"/>
+                                    <field name="enderase_beneficiary_type"/>
+                                    <field name="source_reference"/>
+                                    <field name="odk_instance_id"/>
+                                </group>
+                                <group string="Identity">
+                                    <field name="enderase_full_name"/>
+                                    <field name="fayda_national_id"/>
+                                    <field name="date_of_birth"/>
+                                    <field name="gender"/>
+                                    <field name="enderase_nationality"/>
+                                </group>
+                            </group>
+                            <group>
+                                <group string="Contact">
+                                    <field name="phone"/>
+                                    <field name="mobile"/>
+                                    <field name="email" widget="email"/>
+                                </group>
+                                <group string="Administrative Area">
+                                    <field name="address"/>
+                                    <field name="enderase_admin_region_id"/>
+                                    <field name="enderase_admin_zone_id"/>
+                                    <field name="enderase_admin_woreda_id"/>
+                                    <field name="enderase_kebele_name"/>
+                                    <field name="enderase_subcity_id"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Education &amp; Skills" name="enderase_skills">
+                            <group>
+                                <group string="Education and Work">
+                                    <field name="occupation_profession_id"/>
+                                    <field name="profession_other" invisible="occupation_profession_id == False"/>
+                                    <field name="educational_level_id"/>
+                                    <field name="employment_status_id"/>
+                                    <field name="interested_starting_business"/>
+                                    <field name="business_area_interest" invisible="interested_starting_business != 'yes'"/>
+                                </group>
+                                <group string="Training">
+                                    <field name="desired_training_area_ids" widget="many2many_tags"/>
+                                    <field name="training_area_other"/>
+                                    <field name="preferred_training_schedule_ids" widget="many2many_tags"/>
+                                    <field name="required_support_ids" widget="many2many_tags"/>
+                                </group>
+                            </group>
+                            <group>
+                                <field name="current_skills"/>
+                                <field name="previous_training_received"/>
+                                <field name="certifications_held"/>
+                            </group>
+                        </page>
+                        <page string="Membership" name="enderase_membership">
+                            <group>
+                                <group>
+                                    <field name="previous_membership"/>
+                                    <field name="experience_skill_area"/>
+                                    <field name="reason_for_joining"/>
+                                    <field name="interest_area_ids" widget="many2many_tags"/>
+                                    <field name="interest_area_other"/>
+                                    <field name="membership_type_id"/>
+                                    <field name="declaration"/>
+                                </group>
+                                <group>
+                                    <field name="hear_about_id"/>
+                                    <field name="hear_about_other" invisible="hear_about_id == False"/>
+                                </group>
+                            </group>
+                            <group>
+                                <field name="why_join"/>
+                                <field name="career_path"/>
+                                <field name="skills_to_develop"/>
+                                <field name="challenges_faced"/>
+                                <field name="support_ambitions"/>
+                                <field name="leadership_growth"/>
+                                <field name="view_of_enderase"/>
+                                <field name="value_to_members_community"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_enderase_group_form_inherit" model="ir.ui.view">
+        <field name="name">enderase.group.form.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="g2p_registry_group.view_groups_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/sheet" position="before">
+                <header invisible="not is_enderase_group and not is_enderase_startup and not is_enderase_beneficiary">
+                    <field name="enderase_record_status" widget="statusbar" statusbar_visible="draft,submitted,verified,active"/>
+                    <button name="action_enderase_submit" type="object" string="Submit" class="btn-primary" invisible="enderase_record_status != 'draft'"/>
+                    <button name="action_enderase_verify" type="object" string="Verify" class="btn-secondary" invisible="enderase_record_status != 'submitted'"/>
+                    <button name="action_enderase_activate" type="object" string="Activate" class="btn-success" invisible="enderase_record_status not in ('submitted', 'verified')"/>
+                    <button name="action_enderase_reject" type="object" string="Reject" class="btn-danger" invisible="enderase_record_status in ('rejected', 'archived')"/>
+                    <button name="action_enderase_archive_registry" type="object" string="Archive Registry" invisible="enderase_record_status == 'archived'"/>
+                </header>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Enderase Group" name="enderase_group" invisible="not is_enderase_group and not is_enderase_startup and not is_enderase_beneficiary">
+                    <group>
+                        <group string="Registry">
+                            <field name="is_enderase_group"/>
+                            <field name="is_enderase_startup"/>
+                            <field name="is_enderase_beneficiary"/>
+                            <field name="enderase_registry_id" readonly="1"/>
+                            <field name="enderase_beneficiary_type"/>
+                            <field name="source_reference"/>
+                        </group>
+                        <group string="Group">
+                            <field name="startup_name"/>
+                            <field name="group_type"/>
+                            <field name="organization_name"/>
+                            <field name="organization_type"/>
+                            <field name="primary_sector"/>
+                            <field name="support_category"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="profile_description"/>
+                        <field name="support_needed"/>
+                        <field name="participation_expectation"/>
+                        <field name="business_registration_status"/>
+                    </group>
+                </page>
+                <page string="Enderase Engagement" name="enderase_engagement" invisible="not is_enderase_group and not is_enderase_startup and not is_enderase_beneficiary">
+                    <group>
+                        <group>
+                            <field name="representative_role"/>
+                            <field name="selected_for_showcase"/>
+                            <field name="interested_in_collaboration"/>
+                            <field name="hiring_or_recruiting"/>
+                            <field name="needs_follow_up"/>
+                        </group>
+                        <group>
+                            <field name="collaboration_interest"/>
+                            <field name="hiring_notes"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_enderase_group_form_primary" model="ir.ui.view">
+        <field name="name">enderase.group.form.primary</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" eval="False"/>
+        <field name="arch" type="xml">
+            <form string="Enderase Group">
+                <header>
+                    <field name="enderase_record_status" widget="statusbar" statusbar_visible="draft,submitted,verified,active"/>
+                    <button name="action_enderase_submit" type="object" string="Submit" class="btn-primary" invisible="enderase_record_status != 'draft'"/>
+                    <button name="action_enderase_verify" type="object" string="Verify" class="btn-secondary" invisible="enderase_record_status != 'submitted'"/>
+                    <button name="action_enderase_activate" type="object" string="Activate" class="btn-success" invisible="enderase_record_status not in ('submitted', 'verified')"/>
+                    <button name="action_enderase_reject" type="object" string="Reject" class="btn-danger" invisible="enderase_record_status in ('rejected', 'archived')"/>
+                    <button name="action_enderase_archive_registry" type="object" string="Archive Registry" invisible="enderase_record_status == 'archived'"/>
+                </header>
+                <sheet>
+                    <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'avatar_128'}"/>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Group name"/>
+                        </h1>
+                    </div>
+                    <notebook>
+                        <page string="Enderase Group" name="enderase_group">
+                            <group>
+                                <group string="Registry">
+                                    <field name="is_registrant" invisible="1"/>
+                                    <field name="is_group" invisible="1"/>
+                                    <field name="is_enderase_group"/>
+                                    <field name="is_enderase_startup"/>
+                                    <field name="is_enderase_beneficiary"/>
+                                    <field name="enderase_registry_id" readonly="1"/>
+                                    <field name="enderase_beneficiary_type"/>
+                                    <field name="source_reference"/>
+                                </group>
+                                <group string="Group">
+                                    <field name="startup_name"/>
+                                    <field name="group_type"/>
+                                    <field name="kind"/>
+                                    <field name="organization_name"/>
+                                    <field name="organization_type"/>
+                                    <field name="primary_sector"/>
+                                    <field name="support_category"/>
+                                </group>
+                            </group>
+                            <group>
+                                <field name="profile_description"/>
+                                <field name="support_needed"/>
+                                <field name="participation_expectation"/>
+                                <field name="business_registration_status"/>
+                            </group>
+                        </page>
+                        <page string="Enderase Engagement" name="enderase_engagement">
+                            <group>
+                                <group>
+                                    <field name="representative_role"/>
+                                    <field name="selected_for_showcase"/>
+                                    <field name="interested_in_collaboration"/>
+                                    <field name="hiring_or_recruiting"/>
+                                    <field name="needs_follow_up"/>
+                                </group>
+                                <group>
+                                    <field name="collaboration_interest"/>
+                                    <field name="hiring_notes"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_enderase_registry_form_primary" model="ir.ui.view">
+        <field name="name">enderase.registry.form.primary</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" eval="False"/>
+        <field name="arch" type="xml">
+            <form string="Enderase Registry Record">
+                <header>
+                    <field name="enderase_record_status" widget="statusbar" statusbar_visible="draft,submitted,verified,active"/>
+                    <button name="action_enderase_submit" type="object" string="Submit" class="btn-primary" invisible="enderase_record_status != 'draft'"/>
+                    <button name="action_enderase_verify" type="object" string="Verify" class="btn-secondary" invisible="enderase_record_status != 'submitted'"/>
+                    <button name="action_enderase_activate" type="object" string="Activate" class="btn-success" invisible="enderase_record_status not in ('submitted', 'verified')"/>
+                    <button name="action_enderase_reject" type="object" string="Reject" class="btn-danger" invisible="enderase_record_status in ('rejected', 'archived')"/>
+                    <button name="action_enderase_archive_registry" type="object" string="Archive Registry" invisible="enderase_record_status == 'archived'"/>
+                </header>
+                <sheet>
+                    <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'avatar_128'}"/>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Registry">
+                            <field name="is_registrant" invisible="1"/>
+                            <field name="is_group"/>
+                            <field name="is_enderase_member"/>
+                            <field name="is_enderase_group"/>
+                            <field name="is_enderase_startup"/>
+                            <field name="is_enderase_beneficiary"/>
+                            <field name="enderase_registry_id" readonly="1"/>
+                            <field name="enderase_beneficiary_type"/>
+                            <field name="source_reference"/>
+                            <field name="odk_instance_id"/>
+                        </group>
+                        <group string="Contact">
+                            <field name="phone"/>
+                            <field name="mobile"/>
+                            <field name="email" widget="email"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Individual Profile" name="enderase_individual_profile" invisible="is_group">
+                            <group>
+                                <group string="Identity">
+                                    <field name="enderase_full_name"/>
+                                    <field name="fayda_national_id"/>
+                                    <field name="date_of_birth"/>
+                                    <field name="gender"/>
+                                    <field name="enderase_nationality"/>
+                                </group>
+                                <group string="Education and Work">
+                                    <field name="occupation_profession_id"/>
+                                    <field name="educational_level_id"/>
+                                    <field name="employment_status_id"/>
+                                    <field name="membership_type_id"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Group Profile" name="enderase_group_profile" invisible="not is_group">
+                            <group>
+                                <group string="Group">
+                                    <field name="startup_name"/>
+                                    <field name="group_type"/>
+                                    <field name="kind"/>
+                                    <field name="organization_name"/>
+                                    <field name="organization_type"/>
+                                    <field name="primary_sector"/>
+                                </group>
+                                <group string="Engagement">
+                                    <field name="representative_role"/>
+                                    <field name="selected_for_showcase"/>
+                                    <field name="interested_in_collaboration"/>
+                                    <field name="hiring_or_recruiting"/>
+                                    <field name="needs_follow_up"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Administrative Area" name="enderase_admin_area">
+                            <group>
+                                <field name="address"/>
+                                <field name="enderase_admin_region_id"/>
+                                <field name="enderase_admin_zone_id"/>
+                                <field name="enderase_admin_woreda_id"/>
+                                <field name="enderase_kebele_name"/>
+                                <field name="enderase_subcity_id"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_enderase_members" model="ir.actions.act_window">
+        <field name="name">Enderase Members</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('is_enderase_member', '=', True), ('is_group', '=', False)]</field>
+        <field name="context">{'default_is_registrant': True, 'default_is_group': False, 'default_is_enderase_member': True, 'default_enderase_membership_status': 'applied', 'default_enderase_beneficiary_type': 'member'}</field>
+        <field name="search_view_id" ref="view_enderase_registry_search"/>
+        <field name="view_ids" eval="[(5, 0, 0), (0, 0, {'view_mode': 'tree', 'view_id': ref('view_enderase_members_tree')}), (0, 0, {'view_mode': 'form', 'view_id': ref('view_enderase_member_form_primary')})]"/>
+    </record>
+
+    <record id="action_enderase_groups" model="ir.actions.act_window">
+        <field name="name">Enderase Groups</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">['&amp;', ('is_group', '=', True), '|', ('is_enderase_group', '=', True), ('is_enderase_startup', '=', True)]</field>
+        <field name="context">{'default_is_registrant': True, 'default_is_group': True, 'default_is_enderase_group': True, 'default_is_enderase_beneficiary': True, 'default_enderase_beneficiary_type': 'group'}</field>
+        <field name="search_view_id" ref="view_enderase_registry_search"/>
+        <field name="view_ids" eval="[(5, 0, 0), (0, 0, {'view_mode': 'tree', 'view_id': ref('view_enderase_groups_tree')}), (0, 0, {'view_mode': 'form', 'view_id': ref('view_enderase_group_form_primary')})]"/>
+    </record>
+
+    <record id="action_enderase_registry" model="ir.actions.act_window">
+        <field name="name">Enderase Registry</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">['|', '|', '|', ('is_enderase_member', '=', True), ('is_enderase_group', '=', True), ('is_enderase_startup', '=', True), ('is_enderase_beneficiary', '=', True)]</field>
+        <field name="search_view_id" ref="view_enderase_registry_search"/>
+        <field name="view_ids" eval="[(5, 0, 0), (0, 0, {'view_mode': 'tree', 'view_id': ref('view_enderase_members_tree')}), (0, 0, {'view_mode': 'form', 'view_id': ref('view_enderase_registry_form_primary')})]"/>
+    </record>
+</odoo>

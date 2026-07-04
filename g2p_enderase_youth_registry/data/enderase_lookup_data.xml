@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- Selection values such as declaration and yes/no are stored directly on fields. -->
+</odoo>

@@ -1,0 +1,438 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_enderase_lookup_tree" model="ir.ui.view">
+        <field name="name">enderase.lookup.tree</field>
+        <field name="model">g2p.enderase.profession</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_enderase_lookup_form" model="ir.ui.view">
+        <field name="name">enderase.lookup.form</field>
+        <field name="model">g2p.enderase.profession</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="code"/>
+                        <field name="name"/>
+                        <field name="active"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_enderase_admin_region_tree" model="ir.ui.view">
+        <field name="name">enderase.admin.region.tree</field>
+        <field name="model">g2p.enderase.admin.region</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_enderase_admin_region_form" model="ir.ui.view">
+        <field name="name">enderase.admin.region.form</field>
+        <field name="model">g2p.enderase.admin.region</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="code"/>
+                        <field name="name"/>
+                        <field name="active"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_enderase_admin_zone_tree" model="ir.ui.view">
+        <field name="name">enderase.admin.zone.tree</field>
+        <field name="model">g2p.enderase.admin.zone</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="region_id"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_enderase_admin_woreda_tree" model="ir.ui.view">
+        <field name="name">enderase.admin.woreda.tree</field>
+        <field name="model">g2p.enderase.admin.woreda</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="region_id"/>
+                <field name="zone_id"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_enderase_admin_zone_form" model="ir.ui.view">
+        <field name="name">enderase.admin.zone.form</field>
+        <field name="model">g2p.enderase.admin.zone</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="code"/>
+                        <field name="name"/>
+                        <field name="region_id"/>
+                        <field name="active"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_enderase_admin_woreda_form" model="ir.ui.view">
+        <field name="name">enderase.admin.woreda.form</field>
+        <field name="model">g2p.enderase.admin.woreda</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="code"/>
+                        <field name="name"/>
+                        <field name="region_id"/>
+                        <field name="zone_id"/>
+                        <field name="active"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_enderase_subcity_tree" model="ir.ui.view">
+        <field name="name">enderase.subcity.tree</field>
+        <field name="model">g2p.enderase.subcity</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_enderase_subcity_form" model="ir.ui.view">
+        <field name="name">enderase.subcity.form</field>
+        <field name="model">g2p.enderase.subcity</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="code"/>
+                        <field name="name"/>
+                        <field name="active"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_enderase_education_level_tree" model="ir.ui.view">
+        <field name="name">enderase.education.level.tree</field>
+        <field name="model">g2p.enderase.education.level</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_enderase_education_level_form" model="ir.ui.view">
+        <field name="name">enderase.education.level.form</field>
+        <field name="model">g2p.enderase.education.level</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="code"/>
+                        <field name="name"/>
+                        <field name="active"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_enderase_employment_status_tree" model="ir.ui.view">
+        <field name="name">enderase.employment.status.tree</field>
+        <field name="model">g2p.enderase.employment.status</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_enderase_employment_status_form" model="ir.ui.view">
+        <field name="name">enderase.employment.status.form</field>
+        <field name="model">g2p.enderase.employment.status</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="code"/>
+                        <field name="name"/>
+                        <field name="active"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_enderase_training_area_tree" model="ir.ui.view">
+        <field name="name">enderase.training.area.tree</field>
+        <field name="model">g2p.enderase.training.area</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_enderase_training_area_form" model="ir.ui.view">
+        <field name="name">enderase.training.area.form</field>
+        <field name="model">g2p.enderase.training.area</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="code"/>
+                        <field name="name"/>
+                        <field name="active"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_enderase_training_schedule_tree" model="ir.ui.view">
+        <field name="name">enderase.training.schedule.tree</field>
+        <field name="model">g2p.enderase.training.schedule</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_enderase_training_schedule_form" model="ir.ui.view">
+        <field name="name">enderase.training.schedule.form</field>
+        <field name="model">g2p.enderase.training.schedule</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="code"/>
+                        <field name="name"/>
+                        <field name="active"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_enderase_support_service_tree" model="ir.ui.view">
+        <field name="name">enderase.support.service.tree</field>
+        <field name="model">g2p.enderase.support.service</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_enderase_support_service_form" model="ir.ui.view">
+        <field name="name">enderase.support.service.form</field>
+        <field name="model">g2p.enderase.support.service</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="code"/>
+                        <field name="name"/>
+                        <field name="active"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_enderase_interest_area_tree" model="ir.ui.view">
+        <field name="name">enderase.interest.area.tree</field>
+        <field name="model">g2p.enderase.interest.area</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_enderase_interest_area_form" model="ir.ui.view">
+        <field name="name">enderase.interest.area.form</field>
+        <field name="model">g2p.enderase.interest.area</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="code"/>
+                        <field name="name"/>
+                        <field name="active"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_enderase_hear_about_tree" model="ir.ui.view">
+        <field name="name">enderase.hear.about.tree</field>
+        <field name="model">g2p.enderase.hear.about</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_enderase_hear_about_form" model="ir.ui.view">
+        <field name="name">enderase.hear.about.form</field>
+        <field name="model">g2p.enderase.hear.about</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="code"/>
+                        <field name="name"/>
+                        <field name="active"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_enderase_membership_type_tree" model="ir.ui.view">
+        <field name="name">enderase.membership.type.tree</field>
+        <field name="model">g2p.enderase.membership.type</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_enderase_membership_type_form" model="ir.ui.view">
+        <field name="name">enderase.membership.type.form</field>
+        <field name="model">g2p.enderase.membership.type</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="code"/>
+                        <field name="name"/>
+                        <field name="active"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_enderase_admin_regions" model="ir.actions.act_window">
+        <field name="name">Regions</field>
+        <field name="res_model">g2p.enderase.admin.region</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <record id="action_enderase_admin_zones" model="ir.actions.act_window">
+        <field name="name">Zones</field>
+        <field name="res_model">g2p.enderase.admin.zone</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <record id="action_enderase_admin_woredas" model="ir.actions.act_window">
+        <field name="name">Woredas</field>
+        <field name="res_model">g2p.enderase.admin.woreda</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <record id="action_enderase_subcities" model="ir.actions.act_window">
+        <field name="name">Subcities</field>
+        <field name="res_model">g2p.enderase.subcity</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <record id="action_enderase_professions" model="ir.actions.act_window">
+        <field name="name">Professions</field>
+        <field name="res_model">g2p.enderase.profession</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <record id="action_enderase_education_levels" model="ir.actions.act_window">
+        <field name="name">Education Levels</field>
+        <field name="res_model">g2p.enderase.education.level</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <record id="action_enderase_employment_statuses" model="ir.actions.act_window">
+        <field name="name">Employment Statuses</field>
+        <field name="res_model">g2p.enderase.employment.status</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <record id="action_enderase_training_areas" model="ir.actions.act_window">
+        <field name="name">Training Areas</field>
+        <field name="res_model">g2p.enderase.training.area</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <record id="action_enderase_training_schedules" model="ir.actions.act_window">
+        <field name="name">Training Schedules</field>
+        <field name="res_model">g2p.enderase.training.schedule</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <record id="action_enderase_support_services" model="ir.actions.act_window">
+        <field name="name">Support Services</field>
+        <field name="res_model">g2p.enderase.support.service</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <record id="action_enderase_interest_areas" model="ir.actions.act_window">
+        <field name="name">Interest Areas</field>
+        <field name="res_model">g2p.enderase.interest.area</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <record id="action_enderase_hear_about" model="ir.actions.act_window">
+        <field name="name">Hear About Sources</field>
+        <field name="res_model">g2p.enderase.hear.about</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <record id="action_enderase_membership_types" model="ir.actions.act_window">
+        <field name="name">Membership Types</field>
+        <field name="res_model">g2p.enderase.membership.type</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

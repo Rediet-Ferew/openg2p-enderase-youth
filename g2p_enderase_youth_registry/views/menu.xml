@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem
+        id="menu_enderase_registry_root"
+        name="Enderase Registry"
+        sequence="3"
+        groups="base.group_user"
+    />
+    <menuitem id="menu_enderase_members" name="Members" parent="menu_enderase_registry_root" action="action_enderase_members" sequence="10"/>
+    <menuitem id="menu_enderase_groups" name="Groups" parent="menu_enderase_registry_root" action="action_enderase_groups" sequence="20"/>
+    <menuitem id="menu_enderase_all_registry" name="All Registry Records" parent="menu_enderase_registry_root" action="action_enderase_registry" sequence="30"/>
+    <menuitem id="menu_enderase_configuration" name="Configuration" parent="menu_enderase_registry_root" sequence="90" groups="g2p_registry_base.group_g2p_admin"/>
+    <menuitem id="menu_enderase_admin_regions" name="Regions" parent="menu_enderase_configuration" action="action_enderase_admin_regions" sequence="10"/>
+    <menuitem id="menu_enderase_admin_zones" name="Zones" parent="menu_enderase_configuration" action="action_enderase_admin_zones" sequence="20"/>
+    <menuitem id="menu_enderase_admin_woredas" name="Woredas" parent="menu_enderase_configuration" action="action_enderase_admin_woredas" sequence="30"/>
+    <menuitem id="menu_enderase_subcities" name="Subcities" parent="menu_enderase_configuration" action="action_enderase_subcities" sequence="40"/>
+    <menuitem id="menu_enderase_professions" name="Professions" parent="menu_enderase_configuration" action="action_enderase_professions" sequence="50"/>
+    <menuitem id="menu_enderase_education_levels" name="Education Levels" parent="menu_enderase_configuration" action="action_enderase_education_levels" sequence="60"/>
+    <menuitem id="menu_enderase_employment_statuses" name="Employment Statuses" parent="menu_enderase_configuration" action="action_enderase_employment_statuses" sequence="70"/>
+    <menuitem id="menu_enderase_training_areas" name="Training Areas" parent="menu_enderase_configuration" action="action_enderase_training_areas" sequence="80"/>
+    <menuitem id="menu_enderase_training_schedules" name="Training Schedules" parent="menu_enderase_configuration" action="action_enderase_training_schedules" sequence="90"/>
+    <menuitem id="menu_enderase_support_services" name="Support Services" parent="menu_enderase_configuration" action="action_enderase_support_services" sequence="100"/>
+    <menuitem id="menu_enderase_interest_areas" name="Interest Areas" parent="menu_enderase_configuration" action="action_enderase_interest_areas" sequence="110"/>
+    <menuitem id="menu_enderase_hear_about" name="Hear About Sources" parent="menu_enderase_configuration" action="action_enderase_hear_about" sequence="120"/>
+    <menuitem id="menu_enderase_membership_types" name="Membership Types" parent="menu_enderase_configuration" action="action_enderase_membership_types" sequence="130"/>
+</odoo>

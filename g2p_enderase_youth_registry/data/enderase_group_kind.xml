@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="enderase_group_kind_startup" model="g2p.group.kind">
+        <field name="name">Enderase Startup</field>
+    </record>
+    <record id="enderase_group_kind_collective" model="g2p.group.kind">
+        <field name="name">Enderase Collective</field>
+    </record>
+    <record id="enderase_group_kind_community" model="g2p.group.kind">
+        <field name="name">Enderase Community</field>
+    </record>
+    <record id="enderase_group_kind_association" model="g2p.group.kind">
+        <field name="name">Enderase Association</field>
+    </record>
+    <record id="enderase_group_kind_organization" model="g2p.group.kind">
+        <field name="name">Enderase Organization</field>
+    </record>
+
+    <record id="enderase_membership_kind_founder" model="g2p.group.membership.kind">
+        <field name="name">Enderase Founder</field>
+    </record>
+    <record id="enderase_membership_kind_cofounder" model="g2p.group.membership.kind">
+        <field name="name">Enderase Co-founder</field>
+    </record>
+    <record id="enderase_membership_kind_ceo" model="g2p.group.membership.kind">
+        <field name="name">Enderase CEO</field>
+    </record>
+    <record id="enderase_membership_kind_owner" model="g2p.group.membership.kind">
+        <field name="name">Enderase Owner</field>
+    </record>
+    <record id="enderase_membership_kind_representative" model="g2p.group.membership.kind">
+        <field name="name">Enderase Representative</field>
+    </record>
+    <record id="enderase_membership_kind_member" model="g2p.group.membership.kind">
+        <field name="name">Enderase Member</field>
+    </record>
+</odoo>

@@ -1,0 +1,4 @@
+id,code,name
+enderase_training_schedule_weekdays,weekdays,Weekdays
+enderase_training_schedule_weekends,weekends,Weekends
+enderase_training_schedule_evening_classes,evening_classes,Evening Classes
