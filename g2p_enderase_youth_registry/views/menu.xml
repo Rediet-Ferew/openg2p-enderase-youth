@@ -8,7 +8,6 @@
     />
     <menuitem id="menu_enderase_members" name="Members" parent="menu_enderase_registry_root" action="action_enderase_members" sequence="10"/>
     <menuitem id="menu_enderase_groups" name="Groups" parent="menu_enderase_registry_root" action="action_enderase_groups" sequence="20"/>
-    <menuitem id="menu_enderase_all_registry" name="All Registry Records" parent="menu_enderase_registry_root" action="action_enderase_registry" sequence="30"/>
     <menuitem id="menu_enderase_configuration" name="Configuration" parent="menu_enderase_registry_root" sequence="90" groups="g2p_registry_base.group_g2p_admin"/>
     <menuitem id="menu_enderase_admin_regions" name="Regions" parent="menu_enderase_configuration" action="action_enderase_admin_regions" sequence="10"/>
     <menuitem id="menu_enderase_admin_zones" name="Zones" parent="menu_enderase_configuration" action="action_enderase_admin_zones" sequence="20"/>

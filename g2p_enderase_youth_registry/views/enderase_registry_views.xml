@@ -100,7 +100,6 @@
                         </group>
                     </group>
                     <group string="Administrative Area">
-                        <field name="address"/>
                         <field name="enderase_admin_region_id"/>
                         <field name="enderase_admin_zone_id"/>
                         <field name="enderase_admin_woreda_id"/>
@@ -108,25 +107,27 @@
                         <field name="enderase_subcity_id"/>
                     </group>
                 </page>
-                <page string="Education &amp; Skills" name="enderase_skills" invisible="not is_enderase_member and not is_enderase_beneficiary">
-                    <group>
-                        <group string="Education and Work">
+                <page string="Youth Skills Development" name="youth_skills_development" invisible="not is_enderase_member and not is_enderase_beneficiary">
+                    <group string="Youth Skills Development">
+                        <group>
                             <field name="occupation_profession_id"/>
                             <field name="profession_other" invisible="occupation_profession_id == False"/>
                             <field name="educational_level_id"/>
                             <field name="employment_status_id"/>
+                            <field name="interested_starting_business"/>
+                            <field name="business_area_interest" invisible="interested_starting_business != 'yes'"/>
                         </group>
-                        <group string="Training">
+                        <group>
                             <field name="desired_training_area_ids" widget="many2many_tags"/>
                             <field name="training_area_other"/>
                             <field name="preferred_training_schedule_ids" widget="many2many_tags"/>
                             <field name="required_support_ids" widget="many2many_tags"/>
                         </group>
-                    </group>
-                    <group>
-                        <field name="current_skills"/>
-                        <field name="previous_training_received"/>
-                        <field name="certifications_held"/>
+                        <group>
+                            <field name="current_skills"/>
+                            <field name="previous_training_received"/>
+                            <field name="certifications_held"/>
+                        </group>
                     </group>
                 </page>
                 <page string="Membership" name="enderase_membership" invisible="not is_enderase_member and not is_enderase_beneficiary">
@@ -207,12 +208,9 @@
                             </group>
                             <group>
                                 <group string="Contact">
-                                    <field name="phone"/>
-                                    <field name="mobile"/>
-                                    <field name="email" widget="email"/>
+                                    <field name="phone" string="Phone Number"/>
                                 </group>
                                 <group string="Administrative Area">
-                                    <field name="address"/>
                                     <field name="enderase_admin_region_id"/>
                                     <field name="enderase_admin_zone_id"/>
                                     <field name="enderase_admin_woreda_id"/>
@@ -221,9 +219,9 @@
                                 </group>
                             </group>
                         </page>
-                        <page string="Education &amp; Skills" name="enderase_skills">
-                            <group>
-                                <group string="Education and Work">
+                        <page string="Youth Skills Development" name="youth_skills_development">
+                            <group string="Youth Skills Development">
+                                <group>
                                     <field name="occupation_profession_id"/>
                                     <field name="profession_other" invisible="occupation_profession_id == False"/>
                                     <field name="educational_level_id"/>
@@ -231,17 +229,17 @@
                                     <field name="interested_starting_business"/>
                                     <field name="business_area_interest" invisible="interested_starting_business != 'yes'"/>
                                 </group>
-                                <group string="Training">
+                                <group>
                                     <field name="desired_training_area_ids" widget="many2many_tags"/>
                                     <field name="training_area_other"/>
                                     <field name="preferred_training_schedule_ids" widget="many2many_tags"/>
                                     <field name="required_support_ids" widget="many2many_tags"/>
                                 </group>
-                            </group>
-                            <group>
-                                <field name="current_skills"/>
-                                <field name="previous_training_received"/>
-                                <field name="certifications_held"/>
+                                <group>
+                                    <field name="current_skills"/>
+                                    <field name="previous_training_received"/>
+                                    <field name="certifications_held"/>
+                                </group>
                             </group>
                         </page>
                         <page string="Membership" name="enderase_membership">
@@ -445,9 +443,7 @@
                             <field name="odk_instance_id"/>
                         </group>
                         <group string="Contact">
-                            <field name="phone"/>
-                            <field name="mobile"/>
-                            <field name="email" widget="email"/>
+                            <field name="phone" string="Phone Number"/>
                         </group>
                     </group>
                     <notebook>
@@ -460,7 +456,7 @@
                                     <field name="gender"/>
                                     <field name="enderase_nationality"/>
                                 </group>
-                                <group string="Education and Work">
+                                <group string="Youth Skills Development">
                                     <field name="occupation_profession_id"/>
                                     <field name="educational_level_id"/>
                                     <field name="employment_status_id"/>
@@ -489,7 +485,6 @@
                         </page>
                         <page string="Administrative Area" name="enderase_admin_area">
                             <group>
-                                <field name="address"/>
                                 <field name="enderase_admin_region_id"/>
                                 <field name="enderase_admin_zone_id"/>
                                 <field name="enderase_admin_woreda_id"/>

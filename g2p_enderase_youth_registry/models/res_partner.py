@@ -103,7 +103,10 @@ class ResPartner(models.Model):
         "training_schedule_id",
         string="Preferred Training Schedule",
     )
-    interested_starting_business = fields.Selection([("yes", "Yes"), ("no", "No")])
+    interested_starting_business = fields.Selection(
+        [("yes", "Yes"), ("no", "No")],
+        string="Interested in starting a business?",
+    )
     business_area_interest = fields.Char(string="Business Area of Interest")
     required_support_ids = fields.Many2many(
         "g2p.enderase.support.service",
