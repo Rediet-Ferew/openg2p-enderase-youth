@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Form view for individual workflow stage editing -->
+    <record id="view_g2p_workflow_stage_form" model="ir.ui.view">
+        <field name="name">g2p.workflow.stage.definition.form</field>
+        <field name="model">g2p.workflow.stage.definition</field>
+        <field name="arch" type="xml">
+            <form string="Workflow Stage">
+                <sheet>
+                    <group>
+                        <field name="stage_number"/>
+                        <field name="stage_name"/>
+                        <field name="group_id" domain="[('category_id', '=', %(g2p_pbms.g2p_pbms)d)]"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tree view for workflow stages (used inline in program config form) -->
+    <record id="view_g2p_workflow_stage_tree" model="ir.ui.view">
+        <field name="name">g2p.workflow.stage.definition.tree</field>
+        <field name="model">g2p.workflow.stage.definition</field>
+        <field name="arch" type="xml">
+            <tree string="Workflow Stages" default_order="stage_number">
+                <field name="stage_number"/>
+                <field name="stage_name"/>
+                <field name="group_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Stage history tree (used inline on beneficiary list views) -->
+    <record id="view_g2p_workflow_stage_history_tree" model="ir.ui.view">
+        <field name="name">g2p.workflow.stage.history.tree</field>
+        <field name="model">g2p.workflow.stage.history</field>
+        <field name="arch" type="xml">
+            <tree string="Stage History" default_order="acted_at asc" create="0" delete="0">
+                <field name="stage_number" string="Stage #"/>
+                <field name="stage_name" string="Stage"/>
+                <field name="enqueued_at" string="Enqueued At"/>
+                <field name="status" string="Status" widget="badge"
+                       decoration-success="status == 'APPROVED'"
+                       decoration-danger="status == 'REJECTED'"
+                       decoration-warning="status == 'PENDING'"/>
+                <field name="reason" string="Reason"/>
+                <field name="acted_by" string="By"/>
+                <field name="acted_at" string="On"/>
+            </tree>
+        </field>
+    </record>
+</odoo>

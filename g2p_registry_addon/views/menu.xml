@@ -1,0 +1,14 @@
+<odoo>
+    <menuitem id="menu_g2p_household_registry"
+              name="Household Registry"
+              parent="g2p_pbms.menu_g2p_registry"
+              action="action_g2p_household_registry"
+              sequence="1"/>
+
+    <menuitem id="menu_g2p_individual_registry"
+              name="Individual Registry"
+              parent="g2p_pbms.menu_g2p_registry"
+              action="action_g2p_individual_registry"
+              sequence="2"/>
+</odoo>
+

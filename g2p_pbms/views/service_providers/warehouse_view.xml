@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Actions for Warehouse -->
+    <record id="action_g2p_warehouse" model="ir.actions.act_window">
+        <field name="name">Warehouse</field>
+        <field name="res_model">g2p.warehouse</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('is_sponsor_bank', '=', False)]</field>
+        <field name="context">{'default_is_sponsor_bank': False}</field>
+        <field name="views">[('view_g2p_warehouse_tree', 'tree'),('view_g2p_warehouse_form', 'form')]</field>
+    </record>
+
+    <!-- Views for G2P Warehouse -->
+    <record id="view_g2p_warehouse_form" model="ir.ui.view">
+        <field name="name">g2p.warehouse.form</field>
+        <field name="model">g2p.warehouse</field>
+        <field name="arch" type="xml">
+            <form string="G2P Warehouse">
+                <sheet>
+                    <group colspan="2">
+                        <group string="Warehouse Details">
+                            <field name="name" readonly="not context.get('warehouse_form_edit')"/>
+                            <field name="warehouse_mnemonic" readonly="not context.get('warehouse_form_edit')"/>
+                            <field name="is_sponsor_bank" invisible="1"/>
+                        </group>
+                        <group string="Administrator Details">
+                            <field name="admin_name" string="Admin Name" readonly="not context.get('warehouse_form_edit')"/>
+                            <field name="admin_email" string="Admin Email" readonly="not context.get('warehouse_form_edit')"/>
+                            <field name="admin_mobile" string="Admin Mobile" readonly="not context.get('warehouse_form_edit')"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Warehouse Program Benefit Code">
+                            <field name="warehouse_program_benefit_codes" nolabel="1" options="{'no_quick_create': True}"/>
+                        </page>
+                        <page string="Administrative Areas (Large)" invisible="is_sponsor_bank">
+                            <field name="administrative_area_large_ids" nolabel="1" options="{'no_quick_create': True}"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="view_g2p_warehouse_tree" model="ir.ui.view">
+        <field name="name">g2p.warehouse.tree</field>
+        <field name="model">g2p.warehouse</field>
+        <field name="arch" type="xml">
+            <tree string="G2P Warehouse" limit="10">
+                <control>
+                    <create string="Add Warehouse"/>
+                </control>
+                <field name="name" string="Warehouse Name"/>
+                <field name="warehouse_mnemonic" string="Warehouse Mnemonic"/>
+                <button name="action_open_edit" type="object" class="fa fa-pencil" title="Edit" groups="g2p_pbms.group_warehouse_editor"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_g2p_warehouse_view_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="view_g2p_warehouse_tree"/>
+        <field name="act_window_id" ref="action_g2p_warehouse"/>
+    </record>
+    <record id="action_g2p_warehouse_view_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_g2p_warehouse_form"/>
+        <field name="act_window_id" ref="action_g2p_warehouse"/>
+    </record>
+</odoo>

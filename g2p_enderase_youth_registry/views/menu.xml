@@ -1,14 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <menuitem
-        id="menu_enderase_registry_root"
-        name="Enderase Registry"
-        sequence="3"
-        groups="base.group_user"
-    />
-    <menuitem id="menu_enderase_members" name="Members" parent="menu_enderase_registry_root" action="action_enderase_members" sequence="10"/>
-    <menuitem id="menu_enderase_groups" name="Groups" parent="menu_enderase_registry_root" action="action_enderase_groups" sequence="20"/>
-    <menuitem id="menu_enderase_configuration" name="Configuration" parent="menu_enderase_registry_root" sequence="90" groups="g2p_registry_base.group_g2p_admin"/>
+    <record id="g2p_registry_base.g2p_main_menu_root" model="ir.ui.menu">
+        <field name="name">Enderase Registry</field>
+        <field name="sequence" eval="3"/>
+    </record>
+
+    <record id="g2p_registry_individual.menu_individuals_list" model="ir.ui.menu">
+        <field name="name">Individuals</field>
+        <field name="parent_id" ref="g2p_registry_base.g2p_main_menu_root"/>
+        <field name="action" eval="'ir.actions.act_window,%d' % ref('action_enderase_individuals')"/>
+        <field name="sequence" eval="10"/>
+        <field name="active" eval="False"/>
+    </record>
+
+    <record id="g2p_registry_group.menu_groups_list" model="ir.ui.menu">
+        <field name="name">Groups</field>
+        <field name="parent_id" ref="g2p_registry_base.g2p_main_menu_root"/>
+        <field name="action" eval="'ir.actions.act_window,%d' % ref('action_enderase_groups')"/>
+        <field name="sequence" eval="20"/>
+        <field name="active" eval="False"/>
+    </record>
+
+    <record id="menu_enderase_registry_root" model="ir.ui.menu">
+        <field name="name">Enderase Registry</field>
+        <field name="active" eval="False"/>
+    </record>
+    <record id="menu_enderase_members" model="ir.ui.menu">
+        <field name="name">Members</field>
+        <field name="parent_id" ref="g2p_registry_base.g2p_main_menu_root"/>
+        <field name="action" eval="'ir.actions.act_window,%d' % ref('action_enderase_members')"/>
+        <field name="active" eval="False"/>
+    </record>
+    <record id="menu_enderase_groups" model="ir.ui.menu">
+        <field name="name">Groups</field>
+        <field name="parent_id" ref="g2p_registry_base.g2p_main_menu_root"/>
+        <field name="action" eval="'ir.actions.act_window,%d' % ref('action_enderase_groups')"/>
+        <field name="active" eval="False"/>
+    </record>
+
+    <menuitem id="menu_enderase_individual_members" name="Members" parent="g2p_registry_base.g2p_main_menu_root" action="action_enderase_members" sequence="10"/>
+    <menuitem id="menu_enderase_individual_beneficiaries" name="Beneficiaries" parent="g2p_registry_base.g2p_main_menu_root" action="action_enderase_beneficiaries" sequence="20"/>
+
+    <menuitem id="menu_enderase_group_startups" name="Startups" parent="g2p_registry_base.g2p_main_menu_root" action="action_enderase_startups" sequence="30"/>
+    <menuitem id="menu_enderase_group_associations" name="Associations" parent="g2p_registry_base.g2p_main_menu_root" action="action_enderase_associations" sequence="40"/>
+    <menuitem id="menu_enderase_group_collectives" name="Collectives" parent="g2p_registry_base.g2p_main_menu_root" action="action_enderase_collectives" sequence="50"/>
+    <menuitem id="menu_enderase_group_communities" name="Communities" parent="g2p_registry_base.g2p_main_menu_root" action="action_enderase_communities" sequence="60"/>
+    <menuitem id="menu_enderase_group_organizations" name="Organizations" parent="g2p_registry_base.g2p_main_menu_root" action="action_enderase_organizations" sequence="70"/>
+
+    <menuitem id="menu_enderase_configuration" name="Enderase" parent="g2p_registry_base.g2p_configuration_menu_root" sequence="10" groups="g2p_registry_base.group_g2p_admin"/>
     <menuitem id="menu_enderase_admin_regions" name="Regions" parent="menu_enderase_configuration" action="action_enderase_admin_regions" sequence="10"/>
     <menuitem id="menu_enderase_admin_zones" name="Zones" parent="menu_enderase_configuration" action="action_enderase_admin_zones" sequence="20"/>
     <menuitem id="menu_enderase_admin_woredas" name="Woredas" parent="menu_enderase_configuration" action="action_enderase_admin_woredas" sequence="30"/>
@@ -22,4 +61,6 @@
     <menuitem id="menu_enderase_interest_areas" name="Interest Areas" parent="menu_enderase_configuration" action="action_enderase_interest_areas" sequence="110"/>
     <menuitem id="menu_enderase_hear_about" name="Hear About Sources" parent="menu_enderase_configuration" action="action_enderase_hear_about" sequence="120"/>
     <menuitem id="menu_enderase_membership_types" name="Membership Types" parent="menu_enderase_configuration" action="action_enderase_membership_types" sequence="130"/>
+    <menuitem id="menu_enderase_individual_types" name="Individual Types" parent="menu_enderase_configuration" action="action_enderase_individual_types" sequence="140"/>
+    <menuitem id="menu_enderase_group_types" name="Group Types" parent="menu_enderase_configuration" action="action_enderase_group_types" sequence="150"/>
 </odoo>

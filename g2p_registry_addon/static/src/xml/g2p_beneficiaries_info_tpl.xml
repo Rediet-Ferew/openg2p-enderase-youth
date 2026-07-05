@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="g2p_beneficiaries_info_tpl">
+        <div>
+            <DomainSelector
+                resModel="props.resModel"
+                domain="state.domain"
+                update.bind="onDomainChange"
+                readonly="false"
+                isDebugMode="!!env.debug"
+                className="'o_edit_mode'"
+            />
+        </div>
+        <div class="o_x2m_control_panel d-empty-none mb-4">
+            <button type="button" class="btn btn-secondary" t-on-click="searchRegistrants">
+                <i class="fa fa-search"/>
+            </button>
+        </div>
+        <div class="g2p-beneficiaries">
+            <t t-if="state.searched">
+                <h3><t t-esc="state.title"/></h3>
+            </t>
+            <table class="table table-bordered g2p-beneficiaries-table">
+                <thead>
+                    <tr>
+                        <th><t t-esc="('Link Registry ID')"/></th>
+                        <th><t t-esc="('Internal Record ID')"/></th>
+                        <t t-if="state.target_registry === 'household'">
+                            <th><t t-esc="('Head Name')"/></th>
+                            <th><t t-esc="('Headship')"/></th>
+                            <th><t t-esc="('Size')"/></th>
+                            <th><t t-esc="('Dwelling')"/></th>
+                            <th><t t-esc="('Small Area')"/></th>
+                            <th><t t-esc="('Large Area')"/></th>
+                        </t>
+                        <t t-if="state.target_registry === 'individual'">
+                            <th><t t-esc="('Full Name')"/></th>
+                            <th><t t-esc="('Gender')"/></th>
+                            <th><t t-esc="('Age')"/></th>
+                            <th><t t-esc="('Relationship')"/></th>
+                            <th><t t-esc="('Disability')"/></th>
+                            <th><t t-esc="('Small Area')"/></th>
+                        </t>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="state.records" t-as="record" t-key="record.id">
+                        <tr>
+                            <td><t t-esc="record.link_registry_id"/></td>
+                            <td><t t-esc="record.internal_record_id"/></td>
+                            <t t-if="state.target_registry === 'household'">
+                                <td><t t-esc="record.household_head_name || record.name"/></td>
+                                <td><t t-esc="record.headship_type"/></td>
+                                <td><t t-esc="record.size_total"/></td>
+                                <td><t t-esc="record.dwelling_type"/></td>
+                                <td><t t-esc="record.small_area_code"/></td>
+                                <td><t t-esc="record.large_area_code"/></td>
+                            </t>
+                            <t t-if="state.target_registry === 'individual'">
+                                <td><t t-esc="record.full_name || record.name"/></td>
+                                <td><t t-esc="record.gender"/></td>
+                                <td><t t-esc="record.estimated_age"/></td>
+                                <td><t t-esc="record.relationship_to_head"/></td>
+                                <td><t t-esc="record.disability_status"/></td>
+                                <td><t t-esc="record.small_area_code"/></td>
+                            </t>
+                        </tr>
+                    </t>
+                </tbody>
+            </table>
+            <t t-if="state.searched">
+                <div class="o_beneficiary_pager">
+                    <button type="button" class="btn btn-secondary" t-on-click="prevPage" t-att-disabled="state.page &lt;= 1">
+                        <i class="fa fa-chevron-left"/>
+                    </button>
+                    <span>
+                        <t t-esc="state.page"/> / <t t-esc="state.totalPages"/>
+                    </span>
+                    <button type="button" class="btn btn-secondary" t-on-click="nextPage" t-att-disabled="state.page &gt;= state.totalPages">
+                        <i class="fa fa-chevron-right"/>
+                    </button>
+                </div>
+            </t>
+        </div>
+    </t>
+</templates>
+

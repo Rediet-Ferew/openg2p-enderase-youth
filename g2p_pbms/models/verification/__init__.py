@@ -1,0 +1,1 @@
+from .beneficiary_list_verification import G2PBeneficiaryListVerification

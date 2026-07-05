@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="registry_database_enderase_youth" model="g2p.registry.database">
+        <field name="name">Enderase Youth Registry</field>
+        <field name="code">enderase_youth</field>
+        <field name="target_registry">youth</field>
+        <field name="model_id" ref="model_g2p_youth_registry"/>
+        <field name="identifier_field">internal_record_id</field>
+        <field name="base_domain">[]</field>
+    </record>
+</odoo>

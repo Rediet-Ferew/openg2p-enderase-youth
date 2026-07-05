@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="openg2p_inherit_res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">openg2p.res.config.settings.view.inherit.setup</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="999" />
+        <field name="inherit_id" ref="base.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app
+                    string="G2P PBMS Settings"
+                    name="g2p_config_settings"
+                    logo="/g2p_registry_base/static/description/icon.png">
+                    <block title="G2P PBMS Settings">
+                        <setting string="Staff Portal API URL" help="Staff Portal REST API URL Endpoint (e.g., https://localhost:8000 - no path allowed)">
+                            <field name="g2p_pbms_staff_portal_api_url" />
+                        </setting>
+                    </block>
+                    <block title="G2P Bridge Settings">
+                        <setting string="Bridge Partner API URL" help="Bridge Partner API URL Endpoint (e.g., https://localhost:8000 - no path allowed)">
+                            <field name="g2p_bridge_api_url" />
+                        </setting>
+                    </block>
+                    <block title="G2P Document Store Settings">
+                        <setting string="Default Document Store Config" help="Select the document store to be used for default document creation">
+                            <field name="g2p_document_store" />
+                        </setting>
+                    </block>
+                    <block title="Keymanager Configuration">
+                        <setting string="Keymanager Active?" help="Toggle Keymanager ON/OFF (Default OFF)">
+                            <field name="keymanager_toggle"/>
+                        </setting>
+                        <setting string="Keymanager API Base URL" help="Base URL for the Keymanager API (e.g., https://keymanager.example.com)">
+                            <field name="keymanager_api_base_url"/>
+                        </setting>
+                        <setting string="Keymanager API Timeout" help="Timeout in seconds for Keymanager API requests">
+                            <field name="keymanager_api_timeout"/>
+                        </setting>
+                        <setting string="Keymanager Sign Application ID" help="Application ID for Keymanager signing operations">
+                            <field name="keymanager_sign_application_id"/>
+                        </setting>
+                        <setting string="Keymanager Sign Reference ID" help="Reference ID for Keymanager signing operations">
+                            <field name="keymanager_sign_reference_id"/>
+                        </setting>
+                    </block>
+                    <block title="Keycloak Configuration (used for client authentication in Keymanager Communication)">
+                        <setting string="Keymanager Auth Active?" help="Toggle Keymanager Auth ON/OFF (Default OFF)">
+                            <field name="keycloak_toggle"/>
+                        </setting>
+                        <setting string="Keycloak Auth URL" help="URL for Keycloak authentication endpoint">
+                            <field name="keycloak_auth_url"/>
+                        </setting>
+                        <setting string="Keycloak Auth Client ID" help="Client ID for Keycloak authentication">
+                            <field name="keycloak_auth_client_id"/>
+                        </setting>
+                        <setting string="Keycloak Auth Client Secret" help="Client Secret for Keycloak authentication">
+                            <field name="keycloak_auth_client_secret"/>
+                        </setting>
+                        <setting string="Keycloak Auth Grant Type" help="Grant type for Keycloak authentication (e.g., client_credentials)">
+                            <field name="keycloak_auth_grant_type"/>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,32 @@
+{
+    "name": "Enderase PBMS Registry Addon",
+    "version": "3.0.0",
+    "summary": "Enderase registries for OpenG2P PBMS",
+    "description": "PBMS registry models, views, and background-task widgets for Enderase registry data.",
+    "category": "OpenG2P",
+    "license": "LGPL-3",
+    "depends": ["base_setup", "web", "g2p_pbms"],
+    "data": [
+        "security/ir.model.access.csv",
+        "data/ir_config_parameter.xml",
+        "data/registry_database_data.xml",
+        "views/program/program_view.xml",
+        "views/eligibility/eligibility_rule_view.xml",
+        "views/entitlement/entitlement_rule_view.xml",
+        "views/priority/priority_rule_view.xml",
+        "views/registry/household_registry_view.xml",
+        "views/registry/individual_registry_view.xml",
+        "views/bgtask/bgtask_view.xml",
+        "views/menu.xml",
+    ],
+    "assets": {
+        "web.assets_backend": [
+            "/g2p_registry_addon/static/src/css/registry_styles.scss",
+            "/g2p_registry_addon/static/src/js/beneficiaries_widget.js",
+            "/g2p_registry_addon/static/src/xml/g2p_beneficiaries_info_tpl.xml",
+        ],
+    },
+    "installable": True,
+    "application": True,
+    "auto_install": False,
+}

@@ -15,10 +15,52 @@ class ResPartner(models.Model):
         index=True,
         copy=False,
     )
-    is_enderase_member = fields.Boolean(string="Enderase Member", index=True)
-    is_enderase_beneficiary = fields.Boolean(string="Enderase Beneficiary", index=True)
-    is_enderase_group = fields.Boolean(string="Enderase Group", index=True)
-    is_enderase_startup = fields.Boolean(string="Enderase Startup", index=True)
+    enderase_individual_type_ids = fields.Many2many(
+        "g2p.enderase.individual.type",
+        "g2p_enderase_partner_individual_type_rel",
+        "partner_id",
+        "individual_type_id",
+        string="Individual Types",
+    )
+    enderase_group_type_ids = fields.Many2many(
+        "g2p.enderase.group.type",
+        "g2p_enderase_partner_group_type_rel",
+        "partner_id",
+        "group_type_id",
+        string="Group Types",
+    )
+    is_enderase_member = fields.Boolean(
+        string="Enderase Member",
+        compute="_compute_enderase_type_flags",
+        inverse="_inverse_enderase_type_flags",
+        store=True,
+        readonly=False,
+        index=True,
+    )
+    is_enderase_beneficiary = fields.Boolean(
+        string="Enderase Beneficiary",
+        compute="_compute_enderase_type_flags",
+        inverse="_inverse_enderase_type_flags",
+        store=True,
+        readonly=False,
+        index=True,
+    )
+    is_enderase_group = fields.Boolean(
+        string="Enderase Group",
+        compute="_compute_enderase_type_flags",
+        inverse="_inverse_enderase_type_flags",
+        store=True,
+        readonly=False,
+        index=True,
+    )
+    is_enderase_startup = fields.Boolean(
+        string="Enderase Startup",
+        compute="_compute_enderase_type_flags",
+        inverse="_inverse_enderase_type_flags",
+        store=True,
+        readonly=False,
+        index=True,
+    )
     enderase_record_status = fields.Selection(
         [
             ("draft", "Draft"),
@@ -195,6 +237,54 @@ class ResPartner(models.Model):
         )
 
     @api.depends(
+        "is_group",
+        "enderase_individual_type_ids.sets_member",
+        "enderase_individual_type_ids.sets_beneficiary",
+        "enderase_group_type_ids.sets_group",
+        "enderase_group_type_ids.sets_startup",
+        "enderase_group_type_ids.sets_beneficiary",
+    )
+    def _compute_enderase_type_flags(self):
+        IndividualType = self.env["g2p.enderase.individual.type"]
+        GroupType = self.env["g2p.enderase.group.type"]
+        for record in self:
+            individual_types = record.enderase_individual_type_ids if not record.is_group else IndividualType.browse()
+            group_types = record.enderase_group_type_ids if record.is_group else GroupType.browse()
+            record.is_enderase_member = bool(individual_types.filtered("sets_member"))
+            record.is_enderase_beneficiary = bool(
+                individual_types.filtered("sets_beneficiary") or group_types.filtered("sets_beneficiary")
+            )
+            record.is_enderase_group = bool(record.is_group and group_types.filtered("sets_group"))
+            record.is_enderase_startup = bool(record.is_group and group_types.filtered("sets_startup"))
+
+    def _inverse_enderase_type_flags(self):
+        member_type = self.env.ref("g2p_enderase_youth_registry.enderase_individual_type_member", False)
+        beneficiary_type = self.env.ref("g2p_enderase_youth_registry.enderase_individual_type_beneficiary", False)
+        group_type = self.env.ref("g2p_enderase_youth_registry.enderase_group_type_group", False)
+        startup_type = self.env.ref("g2p_enderase_youth_registry.enderase_group_type_startup", False)
+        for record in self:
+            if record.is_group:
+                group_types = record.enderase_group_type_ids
+                if record.is_enderase_startup and startup_type and not group_types.filtered("sets_startup"):
+                    group_types |= startup_type
+                if record.is_enderase_group and group_type and not group_types.filtered("sets_group"):
+                    group_types |= group_type
+                if record.is_enderase_beneficiary and group_type and not group_types.filtered("sets_beneficiary"):
+                    group_types |= group_type
+                record.enderase_group_type_ids = group_types
+            else:
+                individual_types = record.enderase_individual_type_ids
+                if record.is_enderase_member and member_type and not individual_types.filtered("sets_member"):
+                    individual_types |= member_type
+                if (
+                    record.is_enderase_beneficiary
+                    and beneficiary_type
+                    and not individual_types.filtered("sets_beneficiary")
+                ):
+                    individual_types |= beneficiary_type
+                record.enderase_individual_type_ids = individual_types
+
+    @api.depends(
         "unique_id",
         "is_group",
         "is_registrant",
@@ -231,18 +321,36 @@ class ResPartner(models.Model):
         if self.is_group and self.startup_name:
             self.name = self.startup_name
 
-    @api.onchange("group_type", "is_enderase_group", "is_enderase_startup")
+    @api.onchange("enderase_individual_type_ids")
+    def _onchange_enderase_individual_type_ids(self):
+        if self.is_group:
+            return
+        if self.enderase_individual_type_ids.filtered("sets_member"):
+            self.enderase_beneficiary_type = "member"
+        elif self.enderase_individual_type_ids.filtered("sets_beneficiary"):
+            self.enderase_beneficiary_type = "service_recipient"
+
+    @api.onchange("group_type")
     def _onchange_enderase_group_type(self):
-        if self.is_group and (self.is_enderase_group or self.is_enderase_startup or self.group_type):
-            self.is_enderase_group = True
-            self.is_enderase_beneficiary = True
-        if self.is_group and self.group_type == "startup":
-            self.is_enderase_startup = True
+        if not self.is_group or not self.group_type:
+            return
+        group_type = self.env["g2p.enderase.group.type"].search(
+            [("legacy_group_type", "=", self.group_type)],
+            limit=1,
+        )
+        if group_type and group_type not in self.enderase_group_type_ids:
+            self.enderase_group_type_ids |= group_type
+
+    @api.onchange("enderase_group_type_ids")
+    def _onchange_enderase_group_type_ids(self):
+        if not self.is_group:
+            return
+        startup_type = self.enderase_group_type_ids.filtered("sets_startup")[:1]
+        legacy_type = startup_type or self.enderase_group_type_ids.filtered("legacy_group_type")[:1]
+        self.group_type = legacy_type.legacy_group_type if legacy_type else False
+        if startup_type:
             self.enderase_beneficiary_type = "startup"
-        elif self.is_group and self.is_enderase_startup and not self.group_type:
-            self.group_type = "startup"
-            self.enderase_beneficiary_type = "startup"
-        elif self.is_group and self.is_enderase_group and not self.enderase_beneficiary_type:
+        elif self.enderase_group_type_ids.filtered("sets_group"):
             self.enderase_beneficiary_type = "group"
 
     @api.onchange("enderase_admin_region_id")

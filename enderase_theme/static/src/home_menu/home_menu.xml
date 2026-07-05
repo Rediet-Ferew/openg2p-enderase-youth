@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="enderase_theme.HomeMenu" owl="1">
+        <div
+            t-att-class="{
+                'o_enderase_home_menu': true,
+                'o_enderase_home_menu_leaving': state.isLeaving,
+            }"
+        >
+            <div class="o_enderase_home_menu_shell">
+                <header class="o_enderase_home_menu_header">
+                    <img
+                        class="o_enderase_home_menu_logo"
+                        t-att-src="brandIcon"
+                        alt="Enderase Youth Association"
+                    />
+                    <div class="o_enderase_home_menu_brand">
+                        <div class="o_enderase_home_menu_title">Enderase</div>
+                        <div class="o_enderase_home_menu_subtitle">Youth Association</div>
+                    </div>
+                </header>
+
+                <div class="o_enderase_home_menu_apps" role="menu">
+                    <a
+                        t-foreach="apps"
+                        t-as="app"
+                        t-key="app.id"
+                        t-att-class="{
+                            'o_enderase_home_menu_app': true,
+                            'o_enderase_home_menu_app_launching': state.launchingAppId === app.id,
+                        }"
+                        role="menuitem"
+                        t-att-href="getAppHref(app)"
+                        t-att-title="app.name"
+                        t-att-data-menu-xmlid="app.xmlid"
+                        t-att-data-section="app.id"
+                        t-on-click.prevent="() => this.openApp(app)"
+                    >
+                        <span class="o_enderase_home_menu_icon_frame">
+                            <img
+                                class="o_enderase_home_menu_icon"
+                                t-att-src="getAppIcon(app)"
+                                t-att-alt="app.name"
+                            />
+                        </span>
+                        <span class="o_enderase_home_menu_name">
+                            <t t-out="app.name"/>
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_g2p_entitlement_rule_definition_form_inherit_dr_registry" model="ir.ui.view">
+        <field name="name">g2p.entitlement.rule.definition.form.inherit.dr.registry</field>
+        <field name="model">g2p.entitlement.rule.definition</field>
+        <field name="inherit_id" ref="g2p_pbms.view_g2p_entitlement_rule_definition_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/sheet/group" position="inside">
+                <field name="registry_database_id" readonly="1"/>
+                <field name="registry_model_name" invisible="1"/>
+                <field name="pbms_domain" widget="domain"
+                       options="{'model': 'registry_model_name'}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

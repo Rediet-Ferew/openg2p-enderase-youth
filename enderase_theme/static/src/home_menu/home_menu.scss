@@ -1,0 +1,272 @@
+.o_enderase_home_menu {
+    display: flex;
+    justify-content: center;
+    box-sizing: border-box;
+    min-height: 100%;
+    height: 100%;
+    overflow-y: auto;
+    padding: 44px 24px 48px;
+    background: #fff;
+    color: var(--enderase-ink);
+    user-select: none;
+}
+
+body.o_enderase_home_menu_open {
+    .o_web_client {
+        grid-template-areas:
+            "banner"
+            "content"
+            "components" !important;
+        grid-template-rows: auto 1fr auto !important;
+        grid-template-columns: 1fr !important;
+    }
+
+    .o_web_client > .o_navbar {
+        position: fixed;
+        top: 0;
+        right: 0;
+        z-index: 1050;
+        grid-area: content !important;
+        width: 0;
+        height: 0;
+        min-height: 0;
+        overflow: visible;
+        border: 0 !important;
+        background: transparent !important;
+        pointer-events: none;
+    }
+
+    .o_main_navbar {
+        width: 0;
+        height: 0;
+        min-height: 0;
+        padding: 0;
+        overflow: visible;
+        border: 0 !important;
+        background: transparent !important;
+        pointer-events: none;
+    }
+
+    .o_action_manager {
+        grid-area: content !important;
+    }
+
+    .o_navbar_apps_menu,
+    .o_menu_brand,
+    .o_menu_sections {
+        display: none !important;
+    }
+
+    .o_menu_systray {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        z-index: 1051;
+        margin-right: 0 !important;
+        margin-left: 0 !important;
+        padding: 4px 6px;
+        border: 1px solid rgba(255, 248, 231, 0.18);
+        border-radius: 8px;
+        background: rgba(36, 20, 12, 0.78) !important;
+        box-shadow: 0 18px 38px -28px rgba(0, 0, 0, 0.62);
+        pointer-events: auto;
+    }
+
+    .o_user_menu {
+        display: block !important;
+
+        .oe_topbar_name {
+            display: none !important;
+        }
+    }
+}
+
+.o_enderase_home_menu_shell {
+    width: 100%;
+    max-width: 1060px;
+}
+
+.o_enderase_home_menu_header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-height: 64px;
+    margin-bottom: 44px;
+    color: var(--enderase-ink);
+}
+
+.o_enderase_home_menu_logo {
+    width: 54px;
+    height: 54px;
+    flex: 0 0 auto;
+    padding: 0;
+    border-radius: 999px;
+    background: transparent;
+    box-shadow: 0 18px 44px -24px rgba(217, 156, 32, 0.92);
+    object-fit: contain;
+}
+
+.o_enderase_home_menu_brand {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 0;
+}
+
+.o_enderase_home_menu_title {
+    font-size: 1.45rem;
+    font-weight: 850;
+    letter-spacing: 0;
+    line-height: 1.05;
+}
+
+.o_enderase_home_menu_subtitle {
+    margin-top: 3px;
+    color: var(--enderase-muted);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0;
+    text-transform: uppercase;
+}
+
+.o_enderase_home_menu_apps {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(112px, 1fr));
+    gap: 18px;
+    width: 100%;
+}
+
+.o_enderase_home_menu_app {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: flex-start;
+    min-height: 128px;
+    padding: 14px 10px 12px;
+    border-radius: 8px;
+    color: var(--enderase-ink);
+    text-align: center;
+    text-decoration: none;
+    transition:
+        border-color ease-out 0.16s,
+        box-shadow ease-out 0.16s,
+        opacity ease-out 0.16s,
+        transform ease-out 0.16s;
+
+    &:hover,
+    &:focus {
+        border-color: rgba(217, 156, 32, 0.72);
+        color: var(--enderase-ink);
+        text-decoration: none;
+        box-shadow: var(--enderase-shadow);
+        transform: translateY(-2px);
+    }
+
+    &:focus-visible {
+        outline: 3px solid rgba(217, 156, 32, 0.42);
+        outline-offset: 3px;
+    }
+}
+
+.o_enderase_home_menu_icon_frame {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 58px;
+    height: 58px;
+    flex: 0 0 auto;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+}
+
+.o_enderase_home_menu_icon {
+    width: 58px;
+    height: 58px;
+    background: transparent !important;
+    mix-blend-mode: multiply;
+    object-fit: contain;
+    transform-origin: center bottom;
+    transition: transform ease-in 0.1s;
+}
+
+.o_enderase_home_menu_name {
+    display: -webkit-box;
+    max-width: 100%;
+    min-height: 34px;
+    margin-top: 10px;
+    overflow: hidden;
+    color: var(--enderase-text);
+    font-size: 0.82rem;
+    font-weight: 720;
+    letter-spacing: 0;
+    line-height: 1.25;
+    overflow-wrap: anywhere;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+}
+
+.o_enderase_home_menu_leaving {
+    .o_enderase_home_menu_app {
+        opacity: 0.3;
+        pointer-events: none;
+        transform: scale(0.96);
+    }
+
+    .o_enderase_home_menu_app_launching {
+        opacity: 1;
+        transform: translateY(-7px) scale(1.04);
+    }
+
+    .o_enderase_home_menu_app_launching .o_enderase_home_menu_icon {
+        transform: scale(1.05);
+    }
+}
+
+@keyframes o-enderase-action-enter {
+    from {
+        opacity: 0;
+        transform: translateY(10px) scale(0.99);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+body:not(.o_enderase_home_menu_open) {
+    .o_action_manager > .o_action {
+        animation: o-enderase-action-enter 0.22s ease-out both;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .o_enderase_home_menu_app,
+    .o_enderase_home_menu_icon,
+    body:not(.o_enderase_home_menu_open) .o_action_manager > .o_action {
+        animation: none;
+        transition: none;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .o_enderase_home_menu {
+        padding: 28px 12px 32px;
+        background: #fff;
+    }
+
+    .o_enderase_home_menu_header {
+        margin-bottom: 30px;
+    }
+
+    .o_enderase_home_menu_apps {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+    }
+
+    .o_enderase_home_menu_app {
+        min-height: 120px;
+        padding-inline: 8px;
+    }
+}

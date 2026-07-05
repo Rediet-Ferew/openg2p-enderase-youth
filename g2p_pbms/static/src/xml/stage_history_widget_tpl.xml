@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="g2p_pbms.StageHistoryWidget">
+        <span
+            t-att-class="badgeClass"
+            t-on-mouseenter="onMouseEnter"
+            t-on-mouseleave="onMouseLeave"
+            style="cursor: default; user-select: none; white-space: nowrap;"
+        >
+            <t t-esc="label"/>
+        </span>
+    </t>
+
+    <t t-name="g2p_pbms.StageHistoryPopover">
+        <div
+            class="g2p-stage-history-pop p-2"
+            style="min-width: 380px;"
+            t-on-mouseenter="props.onPopoverMouseEnter"
+            t-on-mouseleave="props.onPopoverMouseLeave"
+        >
+            <table class="table table-sm table-bordered mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th style="width:36px">#</th>
+                        <th>Stage</th>
+                        <th style="width:95px">Status</th>
+                        <th>By</th>
+                        <th style="width:90px">On</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="props.stages" t-as="stage" t-key="stage_index">
+                        <tr>
+                            <td><t t-esc="stage.stage_number"/></td>
+                            <td><t t-esc="stage.stage_name"/></td>
+                            <td>
+                                <span t-attf-class="badge #{stage.status === 'APPROVED' ? 'text-bg-success' : stage.status === 'REJECTED' ? 'text-bg-danger' : 'text-bg-warning'}">
+                                    <t t-esc="stage.status"/>
+                                </span>
+                            </td>
+                            <td><t t-esc="stage.acted_by"/></td>
+                            <td class="text-nowrap"><t t-esc="stage.acted_at"/></td>
+                        </tr>
+                    </t>
+                </tbody>
+            </table>
+        </div>
+    </t>
+
+</templates>

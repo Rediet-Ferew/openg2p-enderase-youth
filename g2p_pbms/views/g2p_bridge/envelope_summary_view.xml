@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_envelope_creation_status_wizard_form" model="ir.ui.view">
+    <field name="name">g2p.disbursement.envelope.summary.wizard.form</field>
+    <field name="model">g2p.disbursement.envelope.summary.wizard</field>
+    <field name="arch" type="xml">
+      <form>
+        <header>
+          <button name="reload_wizard" type="object" string="Refresh" class="oe_highlight"/>
+        </header>
+        <sheet>
+         <div style="text-align: center; font-size: 20px; font-weight: bold; margin-bottom: 15px;">
+            Disbursement Envelope Summary
+          </div>
+          <group string="Program and Cycle Details">
+            <field name="program_mnemonic" readonly="1"/>
+            <field name="cycle_mnemonic" readonly="1"/>
+            <field name="beneficiary_list_id" readonly="1"/>
+          </group>
+          <group string="G2P Bridge Envelope">
+            <field name="disbursement_envelope_id" readonly="1"/>
+            <field name="number_of_disbursements_received" readonly="1"/>
+            <field name="total_disbursement_amount_received" readonly="1"/>
+          </group>
+          <group string="Funds Availability">
+            <field name="funds_available_with_bank" readonly="1"/>
+            <field name="funds_available_latest_timestamp" readonly="1"/>
+            <field name="funds_available_latest_error_code" readonly="1"/>
+            <field name="funds_available_attempts" readonly="1"/>
+          </group>
+          <group string="Funds Blocked">
+            <field name="funds_blocked_with_bank" readonly="1"/>
+            <field name="funds_blocked_latest_timestamp" readonly="1"/>
+            <field name="funds_blocked_latest_error_code" readonly="1"/>
+            <field name="funds_blocked_attempts" readonly="1"/>
+            <field name="funds_blocked_reference_number" readonly="1"/>
+          </group>
+          <group string="Funds Shipped and Reconciled">
+            <field name="number_of_disbursements_shipped" readonly="1"/>
+            <field name="number_of_disbursements_reconciled" readonly="1"/>
+            <field name="number_of_disbursements_reversed" readonly="1"/>
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+</odoo>

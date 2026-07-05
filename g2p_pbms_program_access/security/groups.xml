@@ -1,0 +1,9 @@
+<odoo noupdate="0">
+  <!-- Define Module Category -->
+  <record id="g2p_pbms_program_access" model="ir.module.category">
+    <field name="name">OpenG2P PBMS Program Access</field>
+    <field name="description">OpenG2P PBMS Program Access Groups</field>
+    <field name="sequence">4</field>
+  </record>
+
+</odoo>

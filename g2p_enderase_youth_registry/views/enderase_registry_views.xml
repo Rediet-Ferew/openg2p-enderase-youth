@@ -7,6 +7,7 @@
             <tree decoration-muted="enderase_record_status == 'archived'" decoration-danger="enderase_record_status == 'rejected'">
                 <field name="enderase_registry_id"/>
                 <field name="name"/>
+                <field name="enderase_individual_type_ids" widget="many2many_tags"/>
                 <field name="fayda_national_id"/>
                 <field name="gender"/>
                 <field name="birthdate"/>
@@ -27,7 +28,7 @@
                 <field name="enderase_registry_id"/>
                 <field name="name"/>
                 <field name="startup_name"/>
-                <field name="group_type"/>
+                <field name="enderase_group_type_ids" widget="many2many_tags"/>
                 <field name="organization_type"/>
                 <field name="representative_role"/>
                 <field name="selected_for_showcase"/>
@@ -49,7 +50,10 @@
                 <field name="phone"/>
                 <field name="email"/>
                 <field name="startup_name"/>
+                <field name="enderase_individual_type_ids"/>
+                <field name="enderase_group_type_ids"/>
                 <filter name="members" string="Members" domain="[('is_enderase_member', '=', True), ('is_group', '=', False)]"/>
+                <filter name="beneficiaries" string="Beneficiaries" domain="[('is_enderase_beneficiary', '=', True)]"/>
                 <filter name="startups" string="Startups" domain="[('is_enderase_startup', '=', True), ('is_group', '=', True)]"/>
                 <filter name="groups" string="Groups" domain="['&amp;', ('is_group', '=', True), '|', ('is_enderase_group', '=', True), ('is_enderase_startup', '=', True)]"/>
                 <filter name="active_records" string="Active" domain="[('enderase_record_status', '=', 'active')]"/>
@@ -83,8 +87,9 @@
                 <page string="Enderase Profile" name="enderase_profile" invisible="not is_enderase_member and not is_enderase_beneficiary">
                     <group>
                         <group string="Registry">
-                            <field name="is_enderase_member"/>
-                            <field name="is_enderase_beneficiary"/>
+                            <field name="enderase_individual_type_ids" widget="many2many_tags"/>
+                            <field name="is_enderase_member" readonly="1"/>
+                            <field name="is_enderase_beneficiary" readonly="1"/>
                             <field name="enderase_registry_id" readonly="1"/>
                             <field name="enderase_membership_status"/>
                             <field name="enderase_beneficiary_type"/>
@@ -190,8 +195,9 @@
                                 <group string="Registry">
                                     <field name="is_registrant" invisible="1"/>
                                     <field name="is_group" invisible="1"/>
-                                    <field name="is_enderase_member"/>
-                                    <field name="is_enderase_beneficiary"/>
+                                    <field name="enderase_individual_type_ids" widget="many2many_tags"/>
+                                    <field name="is_enderase_member" readonly="1"/>
+                                    <field name="is_enderase_beneficiary" readonly="1"/>
                                     <field name="enderase_registry_id" readonly="1"/>
                                     <field name="enderase_membership_status"/>
                                     <field name="enderase_beneficiary_type"/>
@@ -294,16 +300,17 @@
                 <page string="Enderase Group" name="enderase_group" invisible="not is_enderase_group and not is_enderase_startup and not is_enderase_beneficiary">
                     <group>
                         <group string="Registry">
-                            <field name="is_enderase_group"/>
-                            <field name="is_enderase_startup"/>
-                            <field name="is_enderase_beneficiary"/>
+                            <field name="enderase_group_type_ids" widget="many2many_tags"/>
+                            <field name="is_enderase_group" readonly="1"/>
+                            <field name="is_enderase_startup" readonly="1"/>
+                            <field name="is_enderase_beneficiary" readonly="1"/>
                             <field name="enderase_registry_id" readonly="1"/>
                             <field name="enderase_beneficiary_type"/>
                             <field name="source_reference"/>
                         </group>
                         <group string="Group">
                             <field name="startup_name"/>
-                            <field name="group_type"/>
+                            <field name="group_type" readonly="1"/>
                             <field name="organization_name"/>
                             <field name="organization_type"/>
                             <field name="primary_sector"/>
@@ -363,16 +370,17 @@
                                 <group string="Registry">
                                     <field name="is_registrant" invisible="1"/>
                                     <field name="is_group" invisible="1"/>
-                                    <field name="is_enderase_group"/>
-                                    <field name="is_enderase_startup"/>
-                                    <field name="is_enderase_beneficiary"/>
+                                    <field name="enderase_group_type_ids" widget="many2many_tags"/>
+                                    <field name="is_enderase_group" readonly="1"/>
+                                    <field name="is_enderase_startup" readonly="1"/>
+                                    <field name="is_enderase_beneficiary" readonly="1"/>
                                     <field name="enderase_registry_id" readonly="1"/>
                                     <field name="enderase_beneficiary_type"/>
                                     <field name="source_reference"/>
                                 </group>
                                 <group string="Group">
                                     <field name="startup_name"/>
-                                    <field name="group_type"/>
+                                    <field name="group_type" readonly="1"/>
                                     <field name="kind"/>
                                     <field name="organization_name"/>
                                     <field name="organization_type"/>
@@ -433,10 +441,12 @@
                         <group string="Registry">
                             <field name="is_registrant" invisible="1"/>
                             <field name="is_group"/>
-                            <field name="is_enderase_member"/>
-                            <field name="is_enderase_group"/>
-                            <field name="is_enderase_startup"/>
-                            <field name="is_enderase_beneficiary"/>
+                            <field name="enderase_individual_type_ids" widget="many2many_tags" invisible="is_group"/>
+                            <field name="enderase_group_type_ids" widget="many2many_tags" invisible="not is_group"/>
+                            <field name="is_enderase_member" readonly="1"/>
+                            <field name="is_enderase_group" readonly="1"/>
+                            <field name="is_enderase_startup" readonly="1"/>
+                            <field name="is_enderase_beneficiary" readonly="1"/>
                             <field name="enderase_registry_id" readonly="1"/>
                             <field name="enderase_beneficiary_type"/>
                             <field name="source_reference"/>
@@ -468,7 +478,7 @@
                             <group>
                                 <group string="Group">
                                     <field name="startup_name"/>
-                                    <field name="group_type"/>
+                                    <field name="group_type" readonly="1"/>
                                     <field name="kind"/>
                                     <field name="organization_name"/>
                                     <field name="organization_type"/>
@@ -498,12 +508,32 @@
         </field>
     </record>
 
+    <record id="action_enderase_individuals" model="ir.actions.act_window">
+        <field name="name">Enderase Individuals</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">['&amp;', ('is_group', '=', False), '|', ('is_enderase_member', '=', True), ('is_enderase_beneficiary', '=', True)]</field>
+        <field name="context" eval="{'default_is_registrant': True, 'default_is_group': False}"/>
+        <field name="search_view_id" ref="view_enderase_registry_search"/>
+        <field name="view_ids" eval="[(5, 0, 0), (0, 0, {'view_mode': 'tree', 'view_id': ref('view_enderase_members_tree')}), (0, 0, {'view_mode': 'form', 'view_id': ref('view_enderase_member_form_primary')})]"/>
+    </record>
+
     <record id="action_enderase_members" model="ir.actions.act_window">
         <field name="name">Enderase Members</field>
         <field name="res_model">res.partner</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">[('is_enderase_member', '=', True), ('is_group', '=', False)]</field>
-        <field name="context">{'default_is_registrant': True, 'default_is_group': False, 'default_is_enderase_member': True, 'default_enderase_membership_status': 'applied', 'default_enderase_beneficiary_type': 'member'}</field>
+        <field name="context" eval="{'default_is_registrant': True, 'default_is_group': False, 'default_enderase_individual_type_ids': [(6, 0, [ref('enderase_individual_type_member')])], 'default_enderase_membership_status': 'applied', 'default_enderase_beneficiary_type': 'member'}"/>
+        <field name="search_view_id" ref="view_enderase_registry_search"/>
+        <field name="view_ids" eval="[(5, 0, 0), (0, 0, {'view_mode': 'tree', 'view_id': ref('view_enderase_members_tree')}), (0, 0, {'view_mode': 'form', 'view_id': ref('view_enderase_member_form_primary')})]"/>
+    </record>
+
+    <record id="action_enderase_beneficiaries" model="ir.actions.act_window">
+        <field name="name">Enderase Beneficiaries</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('is_enderase_beneficiary', '=', True), ('is_group', '=', False)]</field>
+        <field name="context" eval="{'default_is_registrant': True, 'default_is_group': False, 'default_enderase_individual_type_ids': [(6, 0, [ref('enderase_individual_type_beneficiary')])], 'default_enderase_beneficiary_type': 'service_recipient'}"/>
         <field name="search_view_id" ref="view_enderase_registry_search"/>
         <field name="view_ids" eval="[(5, 0, 0), (0, 0, {'view_mode': 'tree', 'view_id': ref('view_enderase_members_tree')}), (0, 0, {'view_mode': 'form', 'view_id': ref('view_enderase_member_form_primary')})]"/>
     </record>
@@ -513,7 +543,57 @@
         <field name="res_model">res.partner</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">['&amp;', ('is_group', '=', True), '|', ('is_enderase_group', '=', True), ('is_enderase_startup', '=', True)]</field>
-        <field name="context">{'default_is_registrant': True, 'default_is_group': True, 'default_is_enderase_group': True, 'default_is_enderase_beneficiary': True, 'default_enderase_beneficiary_type': 'group'}</field>
+        <field name="context" eval="{'default_is_registrant': True, 'default_is_group': True, 'default_enderase_group_type_ids': [(6, 0, [ref('enderase_group_type_group')])], 'default_enderase_beneficiary_type': 'group'}"/>
+        <field name="search_view_id" ref="view_enderase_registry_search"/>
+        <field name="view_ids" eval="[(5, 0, 0), (0, 0, {'view_mode': 'tree', 'view_id': ref('view_enderase_groups_tree')}), (0, 0, {'view_mode': 'form', 'view_id': ref('view_enderase_group_form_primary')})]"/>
+    </record>
+
+    <record id="action_enderase_startups" model="ir.actions.act_window">
+        <field name="name">Enderase Startups</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('is_group', '=', True), ('is_enderase_startup', '=', True)]</field>
+        <field name="context" eval="{'default_is_registrant': True, 'default_is_group': True, 'default_enderase_group_type_ids': [(6, 0, [ref('enderase_group_type_startup')])], 'default_enderase_beneficiary_type': 'startup'}"/>
+        <field name="search_view_id" ref="view_enderase_registry_search"/>
+        <field name="view_ids" eval="[(5, 0, 0), (0, 0, {'view_mode': 'tree', 'view_id': ref('view_enderase_groups_tree')}), (0, 0, {'view_mode': 'form', 'view_id': ref('view_enderase_group_form_primary')})]"/>
+    </record>
+
+    <record id="action_enderase_associations" model="ir.actions.act_window">
+        <field name="name">Enderase Associations</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain" eval="[('is_group', '=', True), ('enderase_group_type_ids', 'in', [ref('enderase_group_type_association')])]"/>
+        <field name="context" eval="{'default_is_registrant': True, 'default_is_group': True, 'default_enderase_group_type_ids': [(6, 0, [ref('enderase_group_type_association')])], 'default_enderase_beneficiary_type': 'group'}"/>
+        <field name="search_view_id" ref="view_enderase_registry_search"/>
+        <field name="view_ids" eval="[(5, 0, 0), (0, 0, {'view_mode': 'tree', 'view_id': ref('view_enderase_groups_tree')}), (0, 0, {'view_mode': 'form', 'view_id': ref('view_enderase_group_form_primary')})]"/>
+    </record>
+
+    <record id="action_enderase_collectives" model="ir.actions.act_window">
+        <field name="name">Enderase Collectives</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain" eval="[('is_group', '=', True), ('enderase_group_type_ids', 'in', [ref('enderase_group_type_collective')])]"/>
+        <field name="context" eval="{'default_is_registrant': True, 'default_is_group': True, 'default_enderase_group_type_ids': [(6, 0, [ref('enderase_group_type_collective')])], 'default_enderase_beneficiary_type': 'group'}"/>
+        <field name="search_view_id" ref="view_enderase_registry_search"/>
+        <field name="view_ids" eval="[(5, 0, 0), (0, 0, {'view_mode': 'tree', 'view_id': ref('view_enderase_groups_tree')}), (0, 0, {'view_mode': 'form', 'view_id': ref('view_enderase_group_form_primary')})]"/>
+    </record>
+
+    <record id="action_enderase_communities" model="ir.actions.act_window">
+        <field name="name">Enderase Communities</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain" eval="[('is_group', '=', True), ('enderase_group_type_ids', 'in', [ref('enderase_group_type_community')])]"/>
+        <field name="context" eval="{'default_is_registrant': True, 'default_is_group': True, 'default_enderase_group_type_ids': [(6, 0, [ref('enderase_group_type_community')])], 'default_enderase_beneficiary_type': 'group'}"/>
+        <field name="search_view_id" ref="view_enderase_registry_search"/>
+        <field name="view_ids" eval="[(5, 0, 0), (0, 0, {'view_mode': 'tree', 'view_id': ref('view_enderase_groups_tree')}), (0, 0, {'view_mode': 'form', 'view_id': ref('view_enderase_group_form_primary')})]"/>
+    </record>
+
+    <record id="action_enderase_organizations" model="ir.actions.act_window">
+        <field name="name">Enderase Organizations</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain" eval="[('is_group', '=', True), ('enderase_group_type_ids', 'in', [ref('enderase_group_type_organization')])]"/>
+        <field name="context" eval="{'default_is_registrant': True, 'default_is_group': True, 'default_enderase_group_type_ids': [(6, 0, [ref('enderase_group_type_organization')])], 'default_enderase_beneficiary_type': 'group'}"/>
         <field name="search_view_id" ref="view_enderase_registry_search"/>
         <field name="view_ids" eval="[(5, 0, 0), (0, 0, {'view_mode': 'tree', 'view_id': ref('view_enderase_groups_tree')}), (0, 0, {'view_mode': 'form', 'view_id': ref('view_enderase_group_form_primary')})]"/>
     </record>

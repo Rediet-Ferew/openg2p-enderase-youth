@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_tree_warehouse_program_benefit_codes" model="ir.ui.view">
+        <field name="name">g2p.warehouse.program.benefit.codes.tree</field>
+        <field name="model">g2p.warehouse.program.benefit.codes</field>
+        <field name="arch" type="xml">
+            <tree string="Warehouse Program Benefit Codes">
+                <control>
+                    <create string="Add Program &amp; Benefit Code"/>
+                </control>
+                <field name="program_mnemonic"/>
+                <field name="benefit_mnemonic"/>
+                <field name="measurement_unit"/>
+                <field name="additional_info" string="Custom Data"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_form_warehouse_program_benefit_codes" model="ir.ui.view">
+        <field name="name">g2p.warehouse.program.benefit.codes.form</field>
+        <field name="model">g2p.warehouse.program.benefit.codes</field>
+        <field name="arch" type="xml">
+            <form string="Warehouse Program Benefit Codes">
+                <sheet>
+                    <group>
+                        <field name="warehouse_id" readonly="1"/>
+                        <field name="program_id" options="{'no_create': True, 'no_edit': True, 'no_quick_create': True}"/>
+                        <field name="benefit_codes" invisible="1"/>
+                        <field name="benefit_code_id" domain="[('id', 'in', benefit_codes)]" options="{'no_create': True, 'no_edit': True, 'no_quick_create': True}"/>
+                        <field name="benefit_type" readonly="1"/>
+                        <field name="additional_info" string="Custom Data"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_warehouse_program_benefit_codes" model="ir.actions.act_window">
+        <field name="name">Warehouse Program Benefit Codes</field>
+        <field name="res_model">g2p.warehouse.program.benefit.codes</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create warehouse program benefit codes here.
+            </p>
+        </field>
+    </record>
+</odoo>

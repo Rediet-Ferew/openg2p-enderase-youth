@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_g2p_eligibility_summary_wizard_form" model="ir.ui.view">
+    <field name="name">g2p.bgtask.summary.wizard.form</field>
+    <field name="model">g2p.bgtask.summary.wizard</field>
+    <field name="arch" type="xml">
+      <form string="Cycle Detail" create="0" delete="0">
+        <header>
+          <!-- Cycle pagination hidden fields -->
+          <field name="prev_enrollment_cycle_id" invisible="1"/>
+          <field name="next_enrollment_cycle_id" invisible="1"/>
+          <field name="is_viewing_current_enrollment_cycle" invisible="1"/>
+          <field name="prev_disbursement_cycle_id" invisible="1"/>
+          <field name="next_disbursement_cycle_id" invisible="1"/>
+          <field name="is_viewing_current_disbursement_cycle" invisible="1"/>
+          <!-- Action buttons -->
+          <button name="action_wizard_approve" type="object" string="Approve"
+                  class="btn-success" invisible="not show_approval_buttons"
+                  groups="g2p_pbms.group_enrolment_approver,g2p_pbms.group_disbursement_approver"/>
+          <button name="action_wizard_reject" type="object" string="Reject"
+                  class="btn-danger" invisible="not show_approval_buttons"
+                  groups="g2p_pbms.group_enrolment_approver,g2p_pbms.group_disbursement_approver"/>
+          <button name="action_create_new_version" type="object" string="Create New Enrolment List"
+                  class="btn-primary" icon="fa-plus" invisible="not can_create_list or list_stage != 'enrollment' or not is_viewing_current_enrollment_cycle"/>
+          <button name="action_create_new_version" type="object" string="Create New Disbursement List"
+                  class="btn-primary" icon="fa-plus" invisible="not can_create_list or list_stage != 'disbursement' or not is_viewing_current_disbursement_cycle"/>
+          <button name="action_current_cycle" type="object" string="Go to Current Cycle"
+                  class="btn-secondary"
+                  invisible="show_approval_buttons or list_stage != 'enrollment' or is_viewing_current_enrollment_cycle"/>
+          <button name="action_current_cycle" type="object" string="Go to Current Cycle"
+                  class="btn-secondary"
+                  invisible="show_approval_buttons or list_stage != 'disbursement' or is_viewing_current_disbursement_cycle"/>
+          <!-- Prev / Next — last in DOM, ms-auto pushes to far right -->
+          <button name="action_prev_cycle" type="object" string="&#8592; Prev Cycle"
+                  class="btn-secondary ms-auto"
+                  invisible="show_approval_buttons or list_stage != 'enrollment' or not prev_enrollment_cycle_id"/>
+          <button name="action_prev_cycle" type="object" string="&#8592; Prev Cycle"
+                  class="btn-secondary ms-auto"
+                  invisible="show_approval_buttons or list_stage != 'disbursement' or not prev_disbursement_cycle_id"/>
+          <button name="action_next_cycle" type="object" string="Next Cycle &#8594;"
+                  class="btn-secondary"
+                  invisible="show_approval_buttons or list_stage != 'enrollment' or not next_enrollment_cycle_id"/>
+          <button name="action_next_cycle" type="object" string="Next Cycle &#8594;"
+                  class="btn-secondary"
+                  invisible="show_approval_buttons or list_stage != 'disbursement' or not next_disbursement_cycle_id"/>
+        </header>
+        <sheet>
+          <!-- Hidden helper fields -->
+          <field name="beneficiary_list_id" invisible="1"/>
+          <widget name="web_ribbon" title="History" bg_color="bg-secondary"
+                  invisible="(list_stage == 'enrollment' and is_viewing_current_enrollment_cycle) or (list_stage == 'disbursement' and is_viewing_current_disbursement_cycle)"/>
+          <field name="list_stage" invisible="1"/>
+          <field name="list_workflow_status" invisible="1"/>
+          <field name="show_approve_enrolment_button" invisible="1"/>
+          <field name="show_approve_disbursement_button" invisible="1"/>
+          <field name="target_registry" invisible="1"/>
+          <field name="can_create_list" invisible="1"/>
+          <field name="has_previous_versions" invisible="1"/>
+          <field name="disbursement_cycle_m2o_id" invisible="1"/>
+          <field name="show_approval_buttons" invisible="1"/>
+          <field name="pending_stage_id" invisible="1"/>
+
+          <!-- Cycle + List context header -->
+          <div class="row" invisible="not cycle_name">
+            <div class="col-3">
+              <group string="Cycle">
+                <field name="cycle_name" string="Cycle #" readonly="1"/>
+                <field name="cycle_created_on" string="Created On" readonly="1"/>
+                <field name="cycle_created_by" string="Created By" readonly="1"/>
+              </group>
+            </div>
+            <div class="col-3">
+              <group string="Workflow">
+                <field name="current_version" string="List #" readonly="1" invisible="current_version == 0"/>
+                <field name="current_stage_display" string="Stage" readonly="1"/>
+                <field name="current_approval_status" string="Status" widget="badge" readonly="1"/>
+                <field name="current_enqueued_at" string="Queued On" readonly="1"/>
+              </group>
+            </div>
+            <div class="col-3">
+              <group string="Beneficiaries">
+                <field name="eligibility_process_status" string="Resolution Status" widget="badge" readonly="1" invisible="eligibility_process_status == 'not_applicable'"/>
+                <field name="current_beneficiary_count" string="# of Beneficiaries" readonly="1" invisible="current_beneficiary_count == 0"/>
+                <field name="computation_status" string="Computation Status" widget="badge" readonly="1" invisible="list_stage != 'disbursement' or computation_status == 'not_applicable'"/>
+                <field name="total_entitlements" string="Total Entitlements" readonly="1" invisible="list_stage != 'disbursement' or total_entitlements == 0"/>
+              </group>
+              <group string="Entitlements" invisible="not entitlement_summary_html">
+                <field name="entitlement_summary_html" nolabel="1" readonly="1"/>
+              </group>
+            </div>
+            <div class="col-3" invisible="list_stage != 'disbursement'">
+              <group string="Bridge Status">
+                <field name="envelope_status" string="Envelope Status" widget="badge" readonly="1" invisible="envelope_status == 'not_applicable'"/>
+                <field name="disbursement_batch_status" string="Batch Status" widget="badge" readonly="1" invisible="disbursement_batch_status == 'not_applicable'"/>
+                <field name="bridge_envelope_count" string="# of Envelopes" readonly="1" invisible="bridge_envelope_count == 0"/>
+                <field name="bridge_batch_count" string="# of Batches" readonly="1" invisible="bridge_batch_count == 0"/>
+              </group>
+            </div>
+          </div>
+
+          <!-- Beneficiary List Info (shown when opened standalone / without cycle context) -->
+          <group invisible="cycle_name">
+            <group string="Beneficiary List Info">
+              <field name="program_id" readonly="1"/>
+              <field name="mnemonic" string="List Mnemonic" readonly="1"/>
+              <field name="brief" string="Brief" readonly="1"/>
+            </group>
+            <group string="Enrollment Cycle Info" invisible="list_stage != 'enrollment'">
+              <field name="enrollment_cycle_id" readonly="1"/>
+              <field name="enrollment_start_date" readonly="1"/>
+              <field name="enrollment_end_date" readonly="1"/>
+            </group>
+            <group string="Disbursement Cycle Info" invisible="list_stage != 'disbursement'">
+              <field name="disbursement_cycle_mnemonic" readonly="1"/>
+            </group>
+          </group>
+
+          <notebook>
+            <!-- Statistics: eligibility/entitlement statistics from API -->
+            <page string="Statistics">
+              <group colspan="2">
+                <group>
+                  <div style="white-space: nowrap; margin-bottom: 10px;">
+                    <strong>
+                      <field name="eligibility_group_title" readonly="1" widget="handle_display"/>
+                    </strong>
+                  </div>
+                  <field name="summary_eligibility_line_ids" nolabel="1" colspan="2">
+                    <tree class="summary_tree_view" create="false" edit="false">
+                      <field name="summary_type" nolabel="1" invisible="1"/>
+                      <field name="key" nolabel="1"/>
+                      <field name="value" nolabel="1"/>
+                    </tree>
+                  </field>
+                </group>
+                <group invisible="list_stage == 'enrollment'">
+                  <div style="white-space: nowrap; margin-bottom: 10px;">
+                    <strong>
+                      <field name="entitlement_group_title" readonly="1" widget="handle_display"/>
+                    </strong>
+                  </div>
+                  <field name="summary_entitlement_line_ids" nolabel="1" colspan="2">
+                    <tree class="summary_tree_view" create="false" edit="false">
+                      <field name="summary_type" nolabel="1" invisible="1"/>
+                      <field name="key" nolabel="1"/>
+                      <field name="value" nolabel="1"/>
+                    </tree>
+                  </field>
+                </group>
+              </group>
+            </page>
+
+            <!-- Beneficiaries: registry search widget -->
+            <page string="Beneficiaries">
+              <group>
+                <field name="target_registry" invisible="1"/>
+              </group>
+            </page>
+
+            <!-- Approvals -->
+            <!-- <page string="Verifications">
+              <field name="verification_ids" readonly="1" nolabel="1">
+                <tree>
+                  <field name="verified_by"/>
+                  <field name="comment"/>
+                  <field name="verification_timestamp"/>
+                  <field name="data" widget="download_binary" filename="data_filename"/>
+                </tree>
+              </field>
+            </page> -->
+
+            <!-- Approval History: stage history of the current list -->
+            <page string="Approval History">
+              <field name="stage_history_ids" readonly="1" nolabel="1">
+                <tree create="0" delete="0" default_order="acted_at asc">
+                  <field name="stage_number" string="Stage #"/>
+                  <field name="stage_name" string="Stage"/>
+                  <field name="enqueued_at" string="Enqueued At"/>
+                  <field name="status" string="Status" widget="badge"
+                         decoration-success="status == 'APPROVED'"
+                         decoration-danger="status == 'REJECTED'"
+                         decoration-warning="status == 'PENDING'"/>
+                  <field name="reason" string="Reason"/>
+                  <field name="acted_by" string="By"/>
+                  <field name="acted_at" string="On"/>
+                </tree>
+              </field>
+            </page>
+
+            <!-- Previous Versions: other lists in same cycle -->
+            <page string="Previous Versions" invisible="not has_previous_versions">
+              <field name="previous_list_ids" readonly="1" nolabel="1">
+                <tree create="0" delete="0" default_order="list_number desc">
+                  <field name="list_number" column_invisible="1"/>
+                  <field name="mnemonic" string="Version"/>
+                  <field name="creation_date" string="Created On" readonly="1"/>
+                  <field name="brief_truncated" string="Brief" widget="char"/>
+                  <field name="brief" column_invisible="1"/>
+                  <field name="final_stage_number" string="Stage #"/>
+                  <field name="final_stage_name" string="Stage"/>
+                  <field name="workflow_approval_status" string="Status" widget="badge"
+                         decoration-success="workflow_approval_status == 'APPROVED'"
+                         decoration-danger="workflow_approval_status == 'REJECTED'"/>
+                  <field name="final_acted_by" string="Acted By"/>
+                  <field name="final_acted_at" string="Acted On"/>
+                  <field name="number_of_registrants" string="# of Beneficiaries"/>
+                  <button name="action_view_stage_history" type="object"
+                          string="View" class="oe_link" title="View Approval History"/>
+                </tree>
+              </field>
+            </page>
+
+            <!-- Disbursement Rules: priority rules for the disbursement cycle -->
+            <page string="Disbursement Rules" invisible="list_stage != 'disbursement'">
+              <!-- Readonly view: shown when cycle is not editable (previous/approved cycles) -->
+              <field name="priority_rule_ids" nolabel="1"
+                     readonly="1"
+                     invisible="can_create_list"
+                     options="{'no_quick_create': True}"
+                     context="{'default_target_registry': target_registry, 'default_disbursement_cycle_id': disbursement_cycle_m2o_id}">
+                <tree create="0" delete="0">
+                  <field name="mnemonic" string="Rule"/>
+                  <field name="description" string="Description"/>
+                  <field name="pbms_domain" string="Domain"/>
+                </tree>
+              </field>
+              <!-- Editable view: shown when a new list can be created -->
+              <field name="priority_rule_ids" nolabel="1"
+                     invisible="not can_create_list"
+                     options="{'no_quick_create': True}"
+                     context="{'default_target_registry': target_registry, 'default_disbursement_cycle_id': disbursement_cycle_m2o_id}">
+                <tree>
+                  <field name="mnemonic" string="Rule"/>
+                  <field name="description" string="Description"/>
+                  <field name="pbms_domain" string="Domain"/>
+                </tree>
+              </field>
+            </page>
+
+            <!-- Disbursement-only tabs — only visible for the approved list -->
+            <page string="Disbursement Envelopes" invisible="list_stage != 'disbursement' or current_approval_status != 'APPROVED'">
+              <field name="disbursement_envelope_line_ids" readonly="1" nolabel="1">
+                <tree limit="10">
+                  <field name="disbursement_envelope_id" string="Envelope ID"/>
+                  <field name="benefit_code_mnemonic" string="Benefit Code"/>
+                  <field name="number_of_beneficiaries" string="# Beneficiaries"/>
+                  <field name="total_disbursement_quantity" string="Disbursement Qty"/>
+                  <field name="measurement_unit" string="Units"/>
+                  <button name="action_view_disbursement_envelope" type="object"
+                          string="View Envelope" class="oe_link" title="View Disbursement Envelope"/>
+                </tree>
+              </field>
+            </page>
+            <page string="Disbursement Batches" invisible="list_stage != 'disbursement' or current_approval_status != 'APPROVED'">
+              <field name="disbursement_batch_line_ids" readonly="1" nolabel="1">
+                <tree limit="10">
+                  <field name="disbursement_envelope_id" string="Envelope ID"/>
+                  <field name="benefit_code_mnemonic" string="Benefit Code"/>
+                  <field name="number_of_beneficiaries" string="# Beneficiaries"/>
+                  <field name="total_disbursement_quantity" string="Disbursement Qty"/>
+                  <field name="measurement_unit" string="Units"/>
+                  <field name="batch_id"/>
+                  <field name="disbursement_status" string="Sent to Bridge" widget="badge"/>
+                  <button name="action_view_disbursement_batch" type="object"
+                          string="View Batch" class="oe_link" title="View Disbursement Batch"
+                          invisible="disbursement_status != 'complete'"/>
+                </tree>
+              </field>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+</odoo>

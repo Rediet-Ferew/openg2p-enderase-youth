@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Actions for Program Benefit Codes -->
+    <record id="action_g2p_program_benefit_codes" model="ir.actions.act_window">
+        <field name="name">Program Benefit Codes</field>
+        <field name="res_model">g2p.program.benefit.codes</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Views for Program Benefit Codes -->
+    <record id="view_g2p_program_benefit_codes_form" model="ir.ui.view">
+        <field name="name">g2p.program.benefit.codes.form</field>
+        <field name="model">g2p.program.benefit.codes</field>
+        <field name="arch" type="xml">
+            <form string="Program Benefit Codes">
+                <sheet>
+                    <group>
+                        <field name="benefit_code_id" options="{'no_create': True, 'no_create_edit': True, 'no_quick_create': True}" readonly="context.get('benefit_code_form_edit')"/>
+                        <field name="max_quantity" readonly="context.get('benefit_code_form_edit')"/>
+                        <field name="measurement_unit" readonly="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="view_g2p_program_benefit_codes_tree" model="ir.ui.view">
+        <field name="name">g2p.program.benefit.codes.tree</field>
+        <field name="model">g2p.program.benefit.codes</field>
+        <field name="arch" type="xml">
+            <tree string="Program Program Benefit Codes">
+            <control>
+                <create string="Add Program Benefit Code"/>
+            </control>
+                <field name="benefit_mnemonic"/>
+                <field name="benefit_type"/>
+                <field name="max_quantity"/>
+                <field name="measurement_unit"/>
+                <field name="benefit_description"/>
+            </tree>
+        </field>
+    </record>
+</odoo>

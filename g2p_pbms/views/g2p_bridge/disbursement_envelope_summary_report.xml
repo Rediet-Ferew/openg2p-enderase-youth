@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="0">
+    <record id="action_generate_disbursement_envelope_summary" model="ir.actions.report">
+        <field name="name">Disbursement Envelope Summary</field>
+        <field name="model">g2p.disbursement.envelope.summary.wizard</field>
+        <field name="report_type">qweb-html</field>
+        <field name="report_name">g2p_pbms.print_disbursement_envelope_summary</field>
+        <field name="report_file">g2p_pbms.print_disbursement_envelope_summary</field>
+        <field name="binding_model_id" ref="model_g2p_disbursement_envelope_summary_wizard" />
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="print_disbursement_envelope_summary">
+        <t t-call="web.report_layout">
+            <t t-call="web.basic_layout">
+                <div class="page" style="border: 1px solid black; padding: 20px;">
+                    <p style="margin-bottom: -3px;">Date: <span t-esc="time.strftime('%d %b %Y')" /></p>
+                    <p>Place: <strong>localhost</strong></p>
+                    <div style="margin-bottom: 20px;">
+                        <center>
+                            <img
+                                t-att-src="'/g2p_pbms/static/description/icon.png'"
+                                alt="OpenG2P Logo"
+                                style="max-height: 100px;"
+                            />
+                        </center>
+                        <h2>
+                            <center><strong>Disbursement Envelope Summary</strong></center>
+                        </h2>
+                    </div>
+                    <t t-foreach="docs" t-as="doc">
+                        <table class="table table-sm" style="width: 100%;">
+                            <!-- Envelope Details -->
+                            <tr>
+                                <th colspan="2"><h3>Envelope Details</h3></th>
+                            </tr>
+                            <tr>
+                                <td style="width: 50%; text-align: left;"><strong>Disbursement Envelope ID:</strong></td>
+                                <td style="text-align: left;"><span t-esc="doc.disbursement_envelope_id" /></td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: left;"><strong>Benefit Code ID:</strong></td>
+                                <td style="text-align: left;"><span t-esc="doc.benefit_code_id" /></td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: left;"><strong>Benefit Code Mnemonic:</strong></td>
+                                <td style="text-align: left;"><span t-esc="doc.benefit_code_mnemonic" /></td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: left;"><strong>Benefit Type:</strong></td>
+                                <td style="text-align: left;"><span t-esc="doc.benefit_type" /></td>
+                            </tr>
+
+                            <!-- Beneficiary and Disbursement Counts -->
+                            <tr>
+                                <th colspan="2"><h3>Beneficiary &amp; Disbursement Counts</h3></th>
+                            </tr>
+                            <tr>
+                                <td style="text-align: left;"><strong>No. of Beneficiaries Declared:</strong></td>
+                                <td style="text-align: left;"><span t-esc="doc.number_of_beneficiaries_declared" /></td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: left;"><strong>No. of Beneficiaries Received:</strong></td>
+                                <td style="text-align: left;"><span t-esc="doc.number_of_beneficiaries_received" /></td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: left;"><strong>No. of Disbursements Declared:</strong></td>
+                                <td style="text-align: left;"><span t-esc="doc.number_of_disbursements_declared" /></td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: left;"><strong>No. of Disbursements Received:</strong></td>
+                                <td style="text-align: left;"><span t-esc="doc.number_of_disbursements_received" /></td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: left;"><strong>Total Disbursement Quantity Declared:</strong></td>
+                                <td style="text-align: left;"><span t-esc="doc.total_disbursement_quantity_declared" /></td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: left;"><strong>Total Disbursement Quantity Received:</strong></td>
+                                <td style="text-align: left;"><span t-esc="doc.total_disbursement_quantity_received" /></td>
+                            </tr>
+
+                            <!-- Funds Available With Bank -->
+                            <t t-if="doc.benefit_type == 'CASH_DIGITAL' or doc.benefit_type == 'CASH_PHYSICAL'">
+                                <tr>
+                                    <th colspan="2"><h3>Funds Available With Bank</h3></th>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: left;"><strong>Funds Available:</strong></td>
+                                    <td style="text-align: left;"><span t-esc="doc.funds_available_with_bank" /></td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: left;"><strong>Latest Timestamp:</strong></td>
+                                    <td style="text-align: left;"><span t-esc="doc.funds_available_latest_timestamp" /></td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: left;"><strong>Latest Error Code:</strong></td>
+                                    <td style="text-align: left;"><span t-esc="doc.funds_available_latest_error_code" /></td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: left;"><strong>Attempts:</strong></td>
+                                    <td style="text-align: left;"><span t-esc="doc.funds_available_attempts" /></td>
+                                </tr>
+                            </t>
+
+                            <!-- Funds Blocked With Bank -->
+                            <t t-if="doc.benefit_type == 'CASH_DIGITAL' or doc.benefit_type == 'CASH_PHYSICAL'">
+                                <tr>
+                                    <th colspan="2"><h3>Funds Blocked With Bank</h3></th>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: left;"><strong>Funds Blocked:</strong></td>
+                                    <td style="text-align: left;"><span t-esc="doc.funds_blocked_with_bank" /></td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: left;"><strong>Latest Timestamp:</strong></td>
+                                    <td style="text-align: left;"><span t-esc="doc.funds_blocked_latest_timestamp" /></td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: left;"><strong>Latest Error Code:</strong></td>
+                                    <td style="text-align: left;"><span t-esc="doc.funds_blocked_latest_error_code" /></td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: left;"><strong>Attempts:</strong></td>
+                                    <td style="text-align: left;"><span t-esc="doc.funds_blocked_attempts" /></td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: left;"><strong>Reference Number:</strong></td>
+                                    <td style="text-align: left;"><span t-esc="doc.funds_blocked_reference_number" /></td>
+                                </tr>
+                            </t>
+
+                            <!-- Disbursement Statuses -->
+                            <t t-if="doc.benefit_type == 'CASH_DIGITAL' or doc.benefit_type == 'CASH_PHYSICAL'">
+                                <tr>
+                                    <th colspan="2"><h3>Disbursement Statuses</h3></th>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: left;"><strong>No. of Disbursements Shipped:</strong></td>
+                                    <td style="text-align: left;"><span t-esc="doc.number_of_disbursements_shipped" /></td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: left;"><strong>No. of Disbursements Reconciled:</strong></td>
+                                    <td style="text-align: left;"><span t-esc="doc.number_of_disbursements_reconciled" /></td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: left;"><strong>No. of Disbursements Reversed:</strong></td>
+                                    <td style="text-align: left;"><span t-esc="doc.number_of_disbursements_reversed" /></td>
+                                </tr>
+                            </t>
+
+                            <!-- Warehouse/Agency/PODs -->
+                            <t t-if="doc.benefit_type == 'CASH_PHYSICAL' or doc.benefit_type == 'COMMODITY' ">
+                                <tr>
+                                    <th colspan="2"><h3>Warehouse, Agency &amp; PODs</h3></th>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: left;"><strong>No. of Warehouses Allocated:</strong></td>
+                                    <td style="text-align: left;"><span t-esc="doc.no_of_warehouses_allocated" /></td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: left;"><strong>No. of Warehouses Notified:</strong></td>
+                                    <td style="text-align: left;"><span t-esc="doc.no_of_warehouses_notified" /></td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: left;"><strong>No. of Agencies Allocated:</strong></td>
+                                    <td style="text-align: left;"><span t-esc="doc.no_of_agencies_allocated" /></td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: left;"><strong>No. of Agencies Notified:</strong></td>
+                                    <td style="text-align: left;"><span t-esc="doc.no_of_agencies_notified" /></td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: left;"><strong>No. of Beneficiaries Notified:</strong></td>
+                                    <td style="text-align: left;"><span t-esc="doc.no_of_beneficiaries_notified" /></td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: left;"><strong>No. of PODs Received:</strong></td>
+                                    <td style="text-align: left;"><span t-esc="doc.no_of_pods_received" /></td>
+                                </tr>
+                            </t>
+                        </table>
+
+                        <!-- Related Geos Table -->
+                        <t t-if="doc.benefit_type != 'CASH_DIGITAL'">
+                            <h3 style="margin-top: 30px;">Related Geos</h3>
+                            <table class="table table-bordered" style="width: 100%;">
+                                <thead>
+                                    <tr>
+                                        <th>Large Zone Mnemonic</th>
+                                        <th>Small Zone Mnemonic</th>
+                                        <th>No. of Beneficiaries</th>
+                                        <th>Total Quantity</th>
+                                        <t t-if="doc.benefit_type != 'CASH_PHYSICAL'">
+                                            <th>Warehouse</th>
+                                            <th>Warehouse Notified</th>
+                                        </t>
+                                        <th>Agency</th>
+                                        <th>Agency Notified</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="doc.disbursement_envelope_summary_geo_ids" t-as="geo">
+                                        <tr>
+                                            <td><span t-esc="geo.administrative_zone_mnemonic_large" /></td>
+                                            <td><span t-esc="geo.administrative_zone_mnemonic_small" /></td>
+                                            <td><span t-esc="geo.no_of_beneficiaries" /></td>
+                                            <td><span t-esc="geo.total_quantity" /></td>
+                                            <t t-if="doc.benefit_type != 'CASH_PHYSICAL'">
+                                                <td><span t-esc="geo.warehouse_mnemonic" /></td>
+                                                <td><span t-esc="geo.warehouse_notification_status" /></td>
+                                            </t>
+                                            <td><span t-esc="geo.agency_mnemonic" /></td>
+                                            <td><span t-esc="geo.agency_notification_status" /></td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </t>
+                    </t>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

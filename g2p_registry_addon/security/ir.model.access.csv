@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+g2p_household_registry_read,Read Household Registry,model_g2p_household_registry,g2p_pbms.group_beneficiary_list_viewer,1,0,0,0
+g2p_household_registry_write,Write Household Registry,model_g2p_household_registry,g2p_pbms.group_beneficiary_list_editor,1,1,1,1
+g2p_individual_registry_read,Read Individual Registry,model_g2p_individual_registry,g2p_pbms.group_beneficiary_list_viewer,1,0,0,0
+g2p_individual_registry_write,Write Individual Registry,model_g2p_individual_registry,g2p_pbms.group_beneficiary_list_editor,1,1,1,1
+g2p_youth_registry_read,Read Youth Registry,model_g2p_youth_registry,g2p_pbms.group_beneficiary_list_viewer,1,0,0,0
+g2p_youth_registry_write,Write Youth Registry,model_g2p_youth_registry,g2p_pbms.group_beneficiary_list_editor,1,1,1,1
+g2p_registry_database_read,Read Registry Database,model_g2p_registry_database,g2p_pbms.group_program_viewer,1,0,0,0
+g2p_registry_database_write,Write Registry Database,model_g2p_registry_database,g2p_pbms.group_program_editor,1,1,1,1

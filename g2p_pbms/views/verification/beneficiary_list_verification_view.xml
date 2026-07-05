@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Actions for Beneficiary List Verification -->
+    <record id="action_g2p_beneficiary_list_verification" model="ir.actions.act_window">
+        <field name="name">Beneficiary List Verification</field>
+        <field name="res_model">storage.file</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Views for Beneficiary List Verification -->
+    <record id="view_g2p_beneficiary_list_verification_form" model="ir.ui.view">
+        <field name="name">storage.file.form</field>
+        <field name="model">storage.file</field>
+        <field name="arch" type="xml">
+            <form string="Beneficiary List Verification">
+                <sheet>
+                    <group>
+                        <field name="beneficiary_list_id" string="Enrollment List" readonly="1"/>
+                        <field name="verified_by" readonly="1"/>
+                        <field name="comment" string="Comment" readonly="not context.get('beneficiary_list_verification_form_edit')"/>
+                        <field name="backend_id" string="Storage" readonly="1" invisible="1"/>
+                        <field name="data" string="Data" widget="pdf_viewer" readonly="not context.get('beneficiary_list_verification_form_edit')"/>
+                        <field name="url" string="Url" readonly="1" invisible="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="view_g2p_beneficiary_list_verification_tree" model="ir.ui.view">
+        <field name="name">storage.file.tree</field>
+        <field name="model">storage.file</field>
+        <field name="arch" type="xml">
+            <tree string="Beneficiary List Verification">
+                <field name="verified_by"/>
+                <field name="comment"/>
+                <field name="verification_timestamp"/>
+            </tree>
+        </field>
+    </record>
+</odoo>

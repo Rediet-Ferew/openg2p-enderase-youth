@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_g2p_ati_embed_superset_config,Superset Configuration,model_g2p_superset_dashboard_config,group_g2p_ati_embed_user,1,1,1,1
+access_g2p_ati_embed_superset_config_g2p_admin,Superset Configuration G2P Admin,model_g2p_superset_dashboard_config,g2p_registry_base.group_g2p_admin,1,1,1,1

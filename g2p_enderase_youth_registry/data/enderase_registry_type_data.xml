@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="enderase_individual_type_member" model="g2p.enderase.individual.type">
+        <field name="code">member</field>
+        <field name="name">Member</field>
+        <field name="sets_member" eval="True"/>
+    </record>
+
+    <record id="enderase_individual_type_beneficiary" model="g2p.enderase.individual.type">
+        <field name="code">beneficiary</field>
+        <field name="name">Beneficiary</field>
+        <field name="sets_beneficiary" eval="True"/>
+    </record>
+
+    <record id="enderase_group_type_group" model="g2p.enderase.group.type">
+        <field name="code">group</field>
+        <field name="name">Group</field>
+        <field name="sets_group" eval="True"/>
+        <field name="sets_beneficiary" eval="True"/>
+        <field name="legacy_group_type">other</field>
+    </record>
+
+    <record id="enderase_group_type_startup" model="g2p.enderase.group.type">
+        <field name="code">startup</field>
+        <field name="name">Startup</field>
+        <field name="sets_group" eval="True"/>
+        <field name="sets_startup" eval="True"/>
+        <field name="sets_beneficiary" eval="True"/>
+        <field name="legacy_group_type">startup</field>
+    </record>
+
+    <record id="enderase_group_type_association" model="g2p.enderase.group.type">
+        <field name="code">association</field>
+        <field name="name">Association</field>
+        <field name="sets_group" eval="True"/>
+        <field name="sets_beneficiary" eval="True"/>
+        <field name="legacy_group_type">association</field>
+    </record>
+
+    <record id="enderase_group_type_collective" model="g2p.enderase.group.type">
+        <field name="code">collective</field>
+        <field name="name">Collective</field>
+        <field name="sets_group" eval="True"/>
+        <field name="sets_beneficiary" eval="True"/>
+        <field name="legacy_group_type">collective</field>
+    </record>
+
+    <record id="enderase_group_type_community" model="g2p.enderase.group.type">
+        <field name="code">community</field>
+        <field name="name">Community</field>
+        <field name="sets_group" eval="True"/>
+        <field name="sets_beneficiary" eval="True"/>
+        <field name="legacy_group_type">community</field>
+    </record>
+
+    <record id="enderase_group_type_organization" model="g2p.enderase.group.type">
+        <field name="code">organization</field>
+        <field name="name">Organization</field>
+        <field name="sets_group" eval="True"/>
+        <field name="sets_beneficiary" eval="True"/>
+        <field name="legacy_group_type">organization</field>
+    </record>
+
+    <record id="enderase_group_type_other" model="g2p.enderase.group.type">
+        <field name="code">other</field>
+        <field name="name">Other</field>
+        <field name="sets_group" eval="True"/>
+        <field name="sets_beneficiary" eval="True"/>
+        <field name="legacy_group_type">other</field>
+    </record>
+</odoo>

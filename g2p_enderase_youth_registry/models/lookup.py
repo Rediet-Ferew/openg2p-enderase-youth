@@ -151,3 +151,41 @@ class EnderaseMembershipType(models.Model):
     _sql_constraints = [
         ("enderase_membership_type_code_unique", "unique(code)", "The code must be unique."),
     ]
+
+
+class EnderaseIndividualType(models.Model):
+    _name = "g2p.enderase.individual.type"
+    _description = "Enderase Individual Type"
+    _inherit = "g2p.enderase.lookup.mixin"
+    _order = "name"
+    _sql_constraints = [
+        ("enderase_individual_type_code_unique", "unique(code)", "The code must be unique."),
+    ]
+
+    sets_member = fields.Boolean(string="Member Flag")
+    sets_beneficiary = fields.Boolean(string="Beneficiary Flag")
+
+
+class EnderaseGroupType(models.Model):
+    _name = "g2p.enderase.group.type"
+    _description = "Enderase Group Type"
+    _inherit = "g2p.enderase.lookup.mixin"
+    _order = "name"
+    _sql_constraints = [
+        ("enderase_group_type_code_unique", "unique(code)", "The code must be unique."),
+    ]
+
+    sets_group = fields.Boolean(string="Group Flag", default=True)
+    sets_startup = fields.Boolean(string="Startup Flag")
+    sets_beneficiary = fields.Boolean(string="Beneficiary Flag", default=True)
+    legacy_group_type = fields.Selection(
+        [
+            ("startup", "Startup"),
+            ("collective", "Collective"),
+            ("community", "Community"),
+            ("association", "Association"),
+            ("organization", "Organization"),
+            ("other", "Other"),
+        ],
+        string="Legacy Group Type",
+    )
