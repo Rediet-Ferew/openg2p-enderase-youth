@@ -165,4 +165,4 @@ export class G2PSupersetDashboardEmbedded extends Component {
     }
 }
 G2PSupersetDashboardEmbedded.template = "g2p_ati_embed.G2PSupersetDashboardEmbedded";
-registry.category("actions").add("g2p.superset_dashboard_embedded", G2PSupersetDashboardEmbedded);
+registry.category("actions").add("g2p.ati_superset_dashboard_embedded", G2PSupersetDashboardEmbedded);

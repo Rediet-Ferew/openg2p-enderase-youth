@@ -57,7 +57,7 @@ class SupersetDashboardConfig(models.Model):
 
         action_vals = {
             "name": f"{vals.get('menu_name')} Action",
-            "tag": "g2p.superset_dashboard_embedded",
+            "tag": "g2p.ati_superset_dashboard_embedded",
         }
         action = self.env["ir.actions.client"].create(action_vals)
         action_id = action.id

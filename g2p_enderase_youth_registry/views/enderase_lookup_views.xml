@@ -370,6 +370,78 @@
         </field>
     </record>
 
+    <record id="view_enderase_individual_type_tree" model="ir.ui.view">
+        <field name="name">enderase.individual.type.tree</field>
+        <field name="model">g2p.enderase.individual.type</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="sets_member"/>
+                <field name="sets_beneficiary"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_enderase_individual_type_form" model="ir.ui.view">
+        <field name="name">enderase.individual.type.form</field>
+        <field name="model">g2p.enderase.individual.type</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="code"/>
+                        <field name="name"/>
+                        <field name="active"/>
+                    </group>
+                    <group string="Computed Flags">
+                        <field name="sets_member"/>
+                        <field name="sets_beneficiary"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_enderase_group_type_tree" model="ir.ui.view">
+        <field name="name">enderase.group.type.tree</field>
+        <field name="model">g2p.enderase.group.type</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="sets_group"/>
+                <field name="sets_startup"/>
+                <field name="sets_beneficiary"/>
+                <field name="legacy_group_type"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_enderase_group_type_form" model="ir.ui.view">
+        <field name="name">enderase.group.type.form</field>
+        <field name="model">g2p.enderase.group.type</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="code"/>
+                        <field name="name"/>
+                        <field name="active"/>
+                    </group>
+                    <group string="Computed Flags">
+                        <field name="sets_group"/>
+                        <field name="sets_startup"/>
+                        <field name="sets_beneficiary"/>
+                        <field name="legacy_group_type"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
     <record id="action_enderase_admin_regions" model="ir.actions.act_window">
         <field name="name">Regions</field>
         <field name="res_model">g2p.enderase.admin.region</field>
@@ -433,6 +505,16 @@
     <record id="action_enderase_membership_types" model="ir.actions.act_window">
         <field name="name">Membership Types</field>
         <field name="res_model">g2p.enderase.membership.type</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <record id="action_enderase_individual_types" model="ir.actions.act_window">
+        <field name="name">Individual Types</field>
+        <field name="res_model">g2p.enderase.individual.type</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <record id="action_enderase_group_types" model="ir.actions.act_window">
+        <field name="name">Group Types</field>
+        <field name="res_model">g2p.enderase.group.type</field>
         <field name="view_mode">tree,form</field>
     </record>
 </odoo>

@@ -13,6 +13,7 @@
     "data": [
         "security/ir.model.access.csv",
         "data/enderase_group_kind.xml",
+        "data/enderase_registry_type_data.xml",
         "data/enderase_lookup_data.xml",
         "data/g2p.enderase.admin.region.csv",
         "data/g2p.enderase.admin.zone.csv",

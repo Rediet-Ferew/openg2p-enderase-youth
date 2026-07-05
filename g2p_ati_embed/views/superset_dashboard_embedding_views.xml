@@ -1,7 +1,7 @@
 <odoo>
     <record id="action_superset_dashboard_embedded" model="ir.actions.client">
         <field name="name">Embedded</field>
-        <field name="tag">g2p.superset_dashboard_embedded</field>
+        <field name="tag">g2p.ati_superset_dashboard_embedded</field>
     </record>
 
 
