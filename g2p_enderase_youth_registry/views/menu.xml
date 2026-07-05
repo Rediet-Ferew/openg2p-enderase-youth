@@ -1,14 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <menuitem
-        id="menu_enderase_registry_root"
-        name="Enderase Registry"
-        sequence="3"
-        groups="base.group_user"
-    />
-    <menuitem id="menu_enderase_members" name="Members" parent="menu_enderase_registry_root" action="action_enderase_members" sequence="10"/>
-    <menuitem id="menu_enderase_groups" name="Groups" parent="menu_enderase_registry_root" action="action_enderase_groups" sequence="20"/>
-    <menuitem id="menu_enderase_configuration" name="Configuration" parent="menu_enderase_registry_root" sequence="90" groups="g2p_registry_base.group_g2p_admin"/>
+    <record id="g2p_registry_base.g2p_main_menu_root" model="ir.ui.menu">
+        <field name="name">Enderase Registry</field>
+        <field name="sequence" eval="3"/>
+    </record>
+
+    <record id="g2p_registry_individual.menu_individuals_list" model="ir.ui.menu">
+        <field name="name">Members</field>
+        <field name="parent_id" ref="g2p_registry_base.g2p_main_menu_root"/>
+        <field name="action" eval="'ir.actions.act_window,%d' % ref('action_enderase_members')"/>
+        <field name="sequence" eval="10"/>
+        <field name="active" eval="True"/>
+    </record>
+
+    <record id="g2p_registry_group.menu_groups_list" model="ir.ui.menu">
+        <field name="name">Groups</field>
+        <field name="parent_id" ref="g2p_registry_base.g2p_main_menu_root"/>
+        <field name="action" eval="'ir.actions.act_window,%d' % ref('action_enderase_groups')"/>
+        <field name="sequence" eval="20"/>
+        <field name="active" eval="True"/>
+    </record>
+
+    <record id="menu_enderase_registry_root" model="ir.ui.menu">
+        <field name="name">Enderase Registry</field>
+        <field name="active" eval="False"/>
+    </record>
+    <record id="menu_enderase_members" model="ir.ui.menu">
+        <field name="name">Members</field>
+        <field name="parent_id" ref="g2p_registry_base.g2p_main_menu_root"/>
+        <field name="action" eval="'ir.actions.act_window,%d' % ref('action_enderase_members')"/>
+        <field name="active" eval="False"/>
+    </record>
+    <record id="menu_enderase_groups" model="ir.ui.menu">
+        <field name="name">Groups</field>
+        <field name="parent_id" ref="g2p_registry_base.g2p_main_menu_root"/>
+        <field name="action" eval="'ir.actions.act_window,%d' % ref('action_enderase_groups')"/>
+        <field name="active" eval="False"/>
+    </record>
+
+    <menuitem id="menu_enderase_configuration" name="Enderase" parent="g2p_registry_base.g2p_configuration_menu_root" sequence="10" groups="g2p_registry_base.group_g2p_admin"/>
     <menuitem id="menu_enderase_admin_regions" name="Regions" parent="menu_enderase_configuration" action="action_enderase_admin_regions" sequence="10"/>
     <menuitem id="menu_enderase_admin_zones" name="Zones" parent="menu_enderase_configuration" action="action_enderase_admin_zones" sequence="20"/>
     <menuitem id="menu_enderase_admin_woredas" name="Woredas" parent="menu_enderase_configuration" action="action_enderase_admin_woredas" sequence="30"/>
