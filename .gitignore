@@ -1,0 +1,11 @@
+__pycache__/
+*.py[cod]
+
+enderase_dashboard/web/node_modules/
+enderase_dashboard/web/.next/
+enderase_dashboard/web/out/
+enderase_dashboard/web/build/
+enderase_dashboard/web/*.tsbuildinfo
+enderase_dashboard/web/.env*
+
+enderase_dashboard/**/__pycache__/

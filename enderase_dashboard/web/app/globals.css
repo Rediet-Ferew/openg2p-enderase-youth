@@ -1,0 +1,108 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Enderase Youth Association — living data story design system.
+   Palette extracted from logo: deep brown, coffee brown, golden yellow,
+   warm yellow, cream, white, black. No blue/purple. All colors HSL. */
+
+@layer base {
+  :root {
+    --background: 40 43% 96%;        /* cream */
+    --foreground: 25 40% 12%;        /* near-black brown */
+
+    --card: 40 50% 98%;
+    --card-foreground: 25 40% 12%;
+
+    --popover: 40 50% 98%;
+    --popover-foreground: 25 40% 12%;
+
+    --primary: 28 62% 22%;           /* deep brown */
+    --primary-foreground: 40 43% 96%;
+
+    --secondary: 30 45% 34%;         /* coffee brown */
+    --secondary-foreground: 40 43% 96%;
+
+    --muted: 38 30% 90%;
+    --muted-foreground: 28 20% 40%;
+
+    --accent: 44 92% 52%;            /* golden yellow */
+    --accent-foreground: 25 45% 14%;
+
+    --gold: 44 92% 52%;              /* golden yellow */
+    --gold-warm: 38 88% 58%;         /* warm yellow */
+    --coffee: 30 45% 34%;            /* coffee brown */
+    --brown-deep: 28 62% 22%;        /* deep brown */
+    --cream: 40 43% 96%;
+    --ink: 25 40% 10%;
+
+    --destructive: 8 70% 45%;
+    --destructive-foreground: 40 43% 96%;
+
+    --border: 33 28% 84%;
+    --input: 33 28% 84%;
+    --ring: 44 92% 52%;
+
+    --radius: 1.25rem;
+
+    --gradient-gold: linear-gradient(135deg, hsl(44 92% 55%), hsl(38 88% 52%));
+    --gradient-brown: linear-gradient(150deg, hsl(30 45% 30%), hsl(28 62% 18%));
+    --gradient-sun: radial-gradient(circle at 50% 40%, hsl(44 95% 60%), hsl(38 82% 48%) 55%, hsl(30 55% 32%) 100%);
+    --gradient-cream: linear-gradient(180deg, hsl(40 50% 98%), hsl(38 40% 92%));
+
+    --shadow-soft: 0 20px 60px -25px hsl(28 62% 22% / 0.35);
+    --shadow-gold: 0 24px 60px -20px hsl(44 92% 45% / 0.5);
+    --shadow-block: 0 12px 40px -18px hsl(28 62% 22% / 0.45);
+
+    /* sidebar */
+    --sidebar-background: 28 62% 16%;
+    --sidebar-foreground: 40 40% 88%;
+    --sidebar-primary: 44 92% 52%;
+    --sidebar-primary-foreground: 28 62% 16%;
+    --sidebar-accent: 30 45% 24%;
+    --sidebar-accent-foreground: 40 43% 96%;
+    --sidebar-border: 30 40% 26%;
+    --sidebar-ring: 44 92% 52%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "ss01", "cv01";
+  }
+  h1, h2, h3, .font-display {
+    font-family: "Sora", system-ui, sans-serif;
+    letter-spacing: 0;
+  }
+}
+
+@layer utilities {
+  .text-gradient-gold {
+    background: var(--gradient-gold);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .bg-gradient-gold { background: var(--gradient-gold); }
+  .bg-gradient-brown { background: var(--gradient-brown); }
+  .bg-gradient-sun { background: var(--gradient-sun); }
+  .bg-gradient-cream { background: var(--gradient-cream); }
+  .shadow-soft { box-shadow: var(--shadow-soft); }
+  .shadow-gold { box-shadow: var(--shadow-gold); }
+  .shadow-block { box-shadow: var(--shadow-block); }
+  .blob {
+    border-radius: 42% 58% 63% 37% / 41% 44% 56% 59%;
+  }
+  .blob-2 {
+    border-radius: 63% 37% 41% 59% / 43% 57% 43% 57%;
+  }
+  .hexagon {
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+}
