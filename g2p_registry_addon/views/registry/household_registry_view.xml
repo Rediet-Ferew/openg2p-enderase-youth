@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_g2p_household_registry" model="ir.actions.act_window">
+        <field name="name">Household Registry</field>
+        <field name="res_model">g2p.household.registry</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="view_g2p_household_registry_form" model="ir.ui.view">
+        <field name="name">g2p.household.registry.form</field>
+        <field name="model">g2p.household.registry</field>
+        <field name="arch" type="xml">
+            <form string="Household Registry">
+                <sheet>
+                    <group>
+                        <field name="link_registry_id"/>
+                        <field name="internal_record_id"/>
+                        <field name="household_head_name"/>
+                        <field name="household_head_internal_record_id"/>
+                        <field name="first_name"/>
+                        <field name="last_name"/>
+                        <field name="headship_type"/>
+                        <field name="registration_date"/>
+                    </group>
+                    <notebook>
+                        <page string="Roster">
+                            <group>
+                                <field name="size_total"/>
+                                <field name="size_adults"/>
+                                <field name="size_children_u5"/>
+                                <field name="size_school_age"/>
+                                <field name="size_elderly"/>
+                                <field name="number_of_female_members"/>
+                                <field name="number_of_male_members"/>
+                                <field name="elderly_member_present"/>
+                            </group>
+                        </page>
+                        <page string="Clinical">
+                            <group>
+                                <field name="last_clinical_visit"/>
+                                <field name="last_clinical_visit_facility"/>
+                            </group>
+                        </page>
+                        <page string="Housing">
+                            <group>
+                                <field name="dwelling_type"/>
+                                <field name="tenure_status"/>
+                                <field name="roof_material"/>
+                                <field name="wall_material"/>
+                                <field name="floor_material"/>
+                                <field name="rooms_count"/>
+                                <field name="overcrowding_indicator"/>
+                            </group>
+                        </page>
+                        <page string="Services">
+                            <group>
+                                <field name="water_source_type"/>
+                                <field name="water_distance_minutes"/>
+                                <field name="sanitation_type"/>
+                                <field name="lighting_source"/>
+                                <field name="cooking_fuel_type"/>
+                                <field name="mobile_phone_type"/>
+                            </group>
+                        </page>
+                        <page string="Location">
+                            <group>
+                                <field name="large_area_id"/>
+                                <field name="large_area_code"/>
+                                <field name="small_area_id"/>
+                                <field name="small_area_code"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_g2p_household_registry_tree" model="ir.ui.view">
+        <field name="name">g2p.household.registry.tree</field>
+        <field name="model">g2p.household.registry</field>
+        <field name="arch" type="xml">
+            <tree string="Household Registry">
+                <field name="link_registry_id"/>
+                <field name="internal_record_id"/>
+                <field name="household_head_name"/>
+                <field name="first_name"/>
+                <field name="last_name"/>
+                <field name="headship_type"/>
+                <field name="size_total"/>
+                <field name="small_area_code"/>
+                <field name="large_area_code"/>
+                <button name="action_open_view" type="object" class="fa fa-eye" title="View"/>
+            </tree>
+        </field>
+    </record>
+</odoo>

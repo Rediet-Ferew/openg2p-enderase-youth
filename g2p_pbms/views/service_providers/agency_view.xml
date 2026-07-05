@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Actions for Agency -->
+    <record id="action_g2p_agency" model="ir.actions.act_window">
+        <field name="name">Agency</field>
+        <field name="res_model">g2p.agency</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Views for G2P Agency -->
+    <record id="view_g2p_agency_form" model="ir.ui.view">
+        <field name="name">g2p.agency.form</field>
+        <field name="model">g2p.agency</field>
+        <field name="arch" type="xml">
+            <form string="G2P Agency">
+                <sheet>
+                    <group colspan="2">
+                        <group string="Agency Details">
+                            <field name="name" readonly="not context.get('agency_form_edit')"/>
+                            <field name="agency_mnemonic" readonly="not context.get('agency_form_edit')"/>
+                        </group>
+                        <group string="Administrator Details">
+                            <field name="admin_name" string="Admin Name" readonly="not context.get('agency_form_edit')"/>
+                            <field name="admin_email" string="Admin Email" readonly="not context.get('agency_form_edit')"/>
+                            <field name="admin_mobile" string="Admin Mobile" readonly="not context.get('agency_form_edit')"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Agency Program Benefit Code">
+                            <field name="agency_program_benefit_codes" nolabel="1" options="{'no_quick_create': True}"/>
+                        </page>
+                        <page string="Administrative Areas (Small)">
+                            <field name="administrative_area_small_ids" nolabel="1" options="{'no_quick_create': True}"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="view_g2p_agency_tree" model="ir.ui.view">
+        <field name="name">g2p.agency.tree</field>
+        <field name="model">g2p.agency</field>
+        <field name="arch" type="xml">
+            <tree string="G2P Agency" limit="10">
+                <control>
+                    <create string="Add Agency"/>
+                </control>
+                <field name="name"/>
+                <field name="agency_mnemonic"/>
+                <button name="action_open_edit" type="object" class="fa fa-pencil" title="Edit" groups="g2p_pbms.group_agency_editor"/>
+            </tree>
+        </field>
+    </record>
+</odoo>

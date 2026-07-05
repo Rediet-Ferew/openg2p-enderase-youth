@@ -1,0 +1,28 @@
+<odoo>
+    <!-- PBMS root menu item -->
+    <menuitem id="menu_g2p_root" name="PBMS" sequence="0"/>
+
+    <!-- Approval Queue -->
+    <menuitem id="menu_g2p_approval_queue" name="Approvals" parent="menu_g2p_root" action="action_g2p_approvals_client" sequence="1" groups="g2p_pbms.group_enrolment_1,g2p_pbms.group_enrolment_2,g2p_pbms.group_disbursement_1,g2p_pbms.group_disbursement_2,g2p_pbms.group_program_super_administration"/>
+
+    <!-- Programs (direct) -->
+    <menuitem id="menu_g2p_programs" name="Programs" parent="menu_g2p_root" action="action_g2p_programs_config" sequence="2" groups="g2p_pbms.group_program_editor,g2p_pbms.group_program_viewer"/>
+
+    <!-- Enrolment Cycles -->
+    <menuitem id="menu_g2p_enrollment_cycles" name="Enrolment Cycles" parent="menu_g2p_root" action="action_g2p_programs_enrolment_cycles" sequence="3" groups="g2p_pbms.group_enrolment_operation,g2p_pbms.group_enrolment_verification,g2p_pbms.group_enrolment_approval,g2p_pbms.group_program_administration,g2p_pbms.group_program_super_administration"/>
+
+    <!-- Disbursement Cycles -->
+    <menuitem id="menu_g2p_disbursement_cycles" name="Disbursement Cycles" parent="menu_g2p_root" action="action_g2p_programs_disbursement_cycles" sequence="4" groups="g2p_pbms.group_disbursement_operation,g2p_pbms.group_disbursement_verification,g2p_pbms.group_disbursement_approval,g2p_pbms.group_program_administration,g2p_pbms.group_program_super_administration"/>
+
+    <!-- Master Data -->
+    <menuitem id="menu_g2p_master_data" name="Master Data" parent="menu_g2p_root" sequence="5"/>
+    <menuitem id="menu_g2p_warehouse_action" name="Warehouses" parent="menu_g2p_master_data" action="action_g2p_warehouse" sequence="1" groups="g2p_pbms.group_warehouse_editor,g2p_pbms.group_warehouse_viewer"/>
+    <menuitem id="menu_g2p_agency_action" name="Agencies" parent="menu_g2p_master_data" action="action_g2p_agency" sequence="2" groups="g2p_pbms.group_agency_viewer,g2p_pbms.group_agency_editor"/>
+    <menuitem id="menu_g2p_sponsor_bank_action" name="Sponsor Banks" parent="menu_g2p_master_data" action="action_g2p_sponsor_bank" sequence="3" groups="g2p_pbms.group_warehouse_editor,g2p_pbms.group_warehouse_viewer"/>
+    <menuitem id="menu_g2p_benefit_codes" name="Benefit Codes" parent="menu_g2p_master_data" action="action_g2p_benefit_codes" sequence="4" groups="g2p_pbms.group_benefit_code_editor,g2p_pbms.group_benefit_code_viewer"/>
+    <menuitem id="menu_g2p_administrative_area_large_action" name="Administrative Areas (Large)" parent="menu_g2p_master_data" action="action_g2p_administrative_area_large" sequence="5" groups="g2p_pbms.group_geography_viewer,g2p_pbms.group_geography_editor"/>
+    <menuitem id="menu_g2p_administrative_area_small_action" name="Administrative Areas (Small)" parent="menu_g2p_master_data" action="action_g2p_administrative_area_small" sequence="6" groups="g2p_pbms.group_geography_viewer,g2p_pbms.group_geography_editor"/>
+
+    <!-- Registry Models (hidden; child menus from g2p_registry_addon attach here) -->
+    <menuitem id="menu_g2p_registry" name="Registry Models" parent="menu_g2p_root" sequence="99" groups="base.group_no_one" active="False"/>
+</odoo>

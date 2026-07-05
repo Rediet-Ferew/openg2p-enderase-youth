@@ -1,0 +1,112 @@
+.o_field_domain_panel.d-flex {
+    display: none !important;
+}
+
+.o_form_button_save_new {
+    display: none !important;
+}
+
+.o_form_label.o_form_label_readonly {
+    opacity: 1 !important;
+    font-weight: 500 !important;
+}
+
+.o_resize {
+    display: none !important;
+    pointer-events: none !important;
+}
+
+.o_list_table th[data-name="brief"],
+.o_list_table td[name="brief"] {
+    width: 60% !important;
+}
+
+.o_list_table th[data-name="enumeration_status"],
+.o_list_table td[name="enumeration_status"] {
+    width: 8% !important;
+}
+
+.o_list_table th[data-name="creation_date"],
+.o_list_table td[name="creation_date"] {
+    width: 16% !important;
+}
+
+.o_list_table .o_field_badge {
+    text-align: left !important;
+}
+
+.o_list_table th[data-name="processed_date"],
+.o_list_table td[name="processed_date"] {
+    width: 16% !important;
+}
+
+/* Remove table lines */
+.summary_tree_view > div > table > tbody > tr {
+    border-style : hidden !important;
+}
+
+/* Cycle list: previous (non-current) cycles in brand grey */
+.o_list_table tr.text-muted td {
+    color: #C4C4C4 !important;
+}
+
+/* Cycle list: Cycle # column value in bold */
+.o_list_table td[name="cycle_name"],
+.o_list_table td[name="cycle_mnemonic"] {
+    font-weight: bold !important;
+}
+
+/* Make statusbar buttons fill full width so ms-auto pushes cycle nav to the right */
+.o_form_statusbar .o_statusbar_buttons {
+    flex: 1 1 auto;
+}
+
+/* Approvals tabbed action */
+.g2p-approvals-action {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+}
+
+.g2p-tab-wrapper {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 0;
+    min-height: 0;
+}
+
+.g2p-tab-headers {
+    flex-shrink: 0;
+}
+
+.g2p-tab-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 0;
+    min-height: 0;
+}
+
+/* View component root fills the tab */
+.g2p-tab-content > * {
+    flex: 1 1 0 !important;
+    min-height: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+/* List content scrolls; control panel (pager) stays fixed at top */
+.g2p-tab-content .o_content {
+    flex: 1 1 0 !important;
+    overflow: auto !important;
+    min-height: 0 !important;
+}
+
+/* Remove search bar, keep pager */
+.g2p-tab-content .o_searchview {
+    display: none !important;
+}
+
+.g2p-tab-content .o_control_panel_navigation {
+    margin-left: auto;
+}

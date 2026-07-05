@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Actions -->
+    <record id="action_g2p_priority_rule_definition" model="ir.actions.act_window">
+        <field name="name">Priority Rule</field>
+        <field name="res_model">g2p.priority.rule.definition</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="view_g2p_priority_rule_definition_form" model="ir.ui.view">
+        <field name="name">g2p.priority.rule.definition.form</field>
+        <field name="model">g2p.priority.rule.definition</field>
+        <field name="arch" type="xml">
+            <form string="Disbursement Rule">
+                <sheet>
+                    <group>
+                        <field name="mnemonic"/>
+                        <field name="description"/>
+                        <field name="target_registry" invisible="0"/>
+                    </group>
+                </sheet>
+                <sheet>
+                    <group>
+                        <field name="sql_query"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_g2p_priority_rule_definition_tree" model="ir.ui.view">
+        <field name="name">g2p.priority.rule.definition.tree</field>
+        <field name="model">g2p.priority.rule.definition</field>
+        <field name="arch" type="xml">
+            <tree string="Disbursement Rule" >
+                <control>
+                    <create string="Add Disbursement Rule"/>
+                </control>
+                <field name="mnemonic"/>
+                <field name="description"/>
+                <field name="target_registry" invisible="0"/>
+                <button name="action_open_view" type="object" string="View Disbursement Rule" class="oe_link" title="View Disbursement Rule"/>
+            </tree>
+        </field>
+    </record>
+
+  </odoo>

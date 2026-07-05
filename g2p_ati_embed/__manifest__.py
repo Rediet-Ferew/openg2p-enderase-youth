@@ -7,7 +7,7 @@
     "author": "OpenG2P",
     "website": "",
     "license": "Other OSI approved licence",
-    "depends": ["base", "web"],
+    "depends": ["base", "web", "g2p_registry_base"],
     "external_dependencies": {},
     "data": [
         "security/groups.xml",

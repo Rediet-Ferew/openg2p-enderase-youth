@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ================================================================
+         Approval Queue
+         Model: g2p.workflow.pending.stage
+    ================================================================ -->
+
+    <!-- Tree / List view -->
+    <record id="view_g2p_approval_queue_tree" model="ir.ui.view">
+        <field name="name">g2p.workflow.pending.stage.tree</field>
+        <field name="model">g2p.workflow.pending.stage</field>
+        <field name="arch" type="xml">
+            <tree create="0" delete="0" default_order="enqueued_at asc">
+                <field name="program_mnemonic" string="Program"/>
+                <field name="cycle_name" string="Cycle #"/>
+                <field name="list_stage" string="Type" widget="badge"
+                       decoration-info="list_stage == 'enrollment'"
+                       decoration-warning="list_stage == 'disbursement'"/>
+                <field name="current_stage_name" string="Current Stage"/>
+                <field name="list_number" string="List #"/>
+                <field name="enqueued_at" string="Queued Date"/>
+                <field name="number_of_registrants" string="# of Beneficiaries"/>
+                <button name="action_open_form" type="object" string="View Details" class="btn-primary"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form / Detail view -->
+    <record id="view_g2p_approval_queue_form" model="ir.ui.view">
+        <field name="name">g2p.workflow.pending.stage.form</field>
+        <field name="model">g2p.workflow.pending.stage</field>
+        <field name="arch" type="xml">
+            <form create="0" delete="0">
+                <header>
+                    <button name="action_approve" type="object" string="Approve"
+                            class="btn-success"
+                            invisible="stage_status != 'PENDING'"
+                            groups="g2p_pbms.group_enrolment_approver,g2p_pbms.group_disbursement_approver"/>
+                    <button name="action_reject" type="object" string="Reject"
+                            class="btn-danger"
+                            invisible="stage_status != 'PENDING'"
+                            groups="g2p_pbms.group_enrolment_approver,g2p_pbms.group_disbursement_approver"/>
+                    <field name="stage_status" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <!-- 3-column summary header -->
+                    <div class="row">
+                        <!-- Program column -->
+                        <div class="col-4">
+                            <group string="Program">
+                                <field name="program_mnemonic" string="Program" readonly="1"/>
+                                <field name="program_description" string="Description" readonly="1"/>
+                                <field name="list_stage" string="Type" widget="badge" readonly="1"/>
+                            </group>
+                        </div>
+                        <!-- Cycle column -->
+                        <div class="col-4">
+                            <group string="Cycle">
+                                <field name="cycle_name" string="Cycle #" readonly="1"/>
+                                <field name="cycle_created_on" string="Created On" readonly="1"/>
+                                <field name="cycle_created_by" string="Created By" readonly="1"/>
+                                <field name="list_number" string="List #" readonly="1"/>
+                                <field name="current_stage_name" string="Current Stage" readonly="1"/>
+                                <field name="previous_stage_name" string="Previous Stage" readonly="1" invisible="not previous_stage_name"/>
+                                <field name="enqueued_at" string="Queued On" readonly="1"/>
+                            </group>
+                        </div>
+                        <!-- Summary column -->
+                        <div class="col-4">
+                            <group string="Summary">
+                                <field name="number_of_registrants" string="# of Beneficiaries" readonly="1"/>
+                                <field name="approved_by" string="Approved By" readonly="1" invisible="not approved_by"/>
+                                <field name="approved_at" string="Approved On" readonly="1" invisible="not approved_at"/>
+                            </group>
+                        </div>
+                    </div>
+
+                    <notebook>
+                        <!-- Statistics tab (placeholder for custom analytics) -->
+                        <page string="Statistics">
+                            <p class="text-muted">Custom statistics will be shown here.</p>
+                        </page>
+
+                        <!-- Beneficiaries: the full API/processing status view of the list -->
+                        <page string="Beneficiaries">
+                            <div>
+                                <button name="action_open_list_detail" type="object"
+                                        string="Search / View Beneficiary List"
+                                        class="btn-primary mb-3"/>
+                            </div>
+                            <group string="List Processing Status">
+                                <field name="list_id" readonly="1" string="Current List"/>
+                                <field name="number_of_registrants" string="# of Registrants" readonly="1"/>
+                            </group>
+                        </page>
+
+                        <!-- Approval History: stage history of the current list -->
+                        <page string="Approval History">
+                            <field name="stage_history_ids" readonly="1" nolabel="1">
+                                <tree create="0" delete="0" default_order="acted_at asc">
+                                    <field name="stage_number" string="Stage #"/>
+                                    <field name="stage_name" string="Stage"/>
+                                    <field name="enqueued_at" string="Enqueued At"/>
+                                    <field name="status" string="Status" widget="badge"
+                                           decoration-success="status == 'APPROVED'"
+                                           decoration-danger="status == 'REJECTED'"
+                                           decoration-warning="status == 'PENDING'"/>
+                                    <field name="reason" string="Reason"/>
+                                    <field name="acted_by" string="By"/>
+                                    <field name="acted_at" string="On"/>
+                                </tree>
+                            </field>
+                        </page>
+
+                        <!-- Previous Versions: all lists in this cycle except the current one -->
+                        <page string="Previous Versions" invisible="not previous_list_ids">
+                            <field name="previous_list_ids" readonly="1" nolabel="1">
+                                <tree create="0" delete="0" default_order="list_number desc">
+                                    <field name="list_number" column_invisible="1"/>
+                                    <field name="mnemonic" string="Version"/>
+                                    <field name="creation_date" string="Created On" readonly="1"/>
+                                    <field name="brief_truncated" string="Brief" widget="char"/>
+                                    <field name="brief" column_invisible="1"/>
+                                    <field name="final_stage_number" string="Stage #"/>
+                                    <field name="final_stage_name" string="Stage"/>
+                                    <field name="workflow_approval_status" string="Status" widget="badge"
+                                           decoration-success="workflow_approval_status == 'APPROVED'"
+                                           decoration-danger="workflow_approval_status == 'REJECTED'"/>
+                                    <field name="final_acted_by" string="Acted By"/>
+                                    <field name="final_acted_at" string="Acted On"/>
+                                    <field name="number_of_registrants" string="# of Beneficiaries"/>
+                                    <button name="action_view_stage_history" type="object"
+                                            string="View" class="oe_link" title="View Approval History"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action: separate id from the old ir.actions.client record -->
+    <record id="action_g2p_approval_queue_window" model="ir.actions.act_window">
+        <field name="name">Approval Queue</field>
+        <field name="res_model">g2p.workflow.pending.stage</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('stage_status', '=', 'PENDING')]</field>
+        <field name="context">{'approval_queue': True}</field>
+        <field name="view_ids" eval="[
+            (5, 0, 0),
+            (0, 0, {'view_mode': 'tree', 'view_id': ref('view_g2p_approval_queue_tree')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('view_g2p_approval_queue_form')}),
+        ]"/>
+    </record>
+
+    <!-- Server action to open approval queue with role-based domain -->
+    <record id="action_g2p_approval_queue_server" model="ir.actions.server">
+        <field name="name">Open Approval Queue</field>
+        <field name="model_id" ref="model_g2p_workflow_pending_stage"/>
+        <field name="state">code</field>
+        <field name="code">
+domain = model.get_approval_queue_domain()
+action = env.ref('g2p_pbms.action_g2p_approval_queue_window').read()[0]
+action['domain'] = domain
+action = action
+        </field>
+    </record>
+
+    <!-- Client action: Approvals page with tabs -->
+    <record id="action_g2p_approvals_client" model="ir.actions.client">
+        <field name="name">Approvals</field>
+        <field name="tag">g2p_approvals_tabbed</field>
+    </record>
+
+    <!-- ================================================================
+         Approval History (current user's own approvals/rejections)
+         Model: g2p.workflow.stage.history
+    ================================================================ -->
+
+    <!-- Tree view -->
+    <record id="view_g2p_approval_history_tree" model="ir.ui.view">
+        <field name="name">g2p.workflow.stage.history.approval.tree</field>
+        <field name="model">g2p.workflow.stage.history</field>
+        <field name="arch" type="xml">
+            <tree create="0" delete="0" default_order="acted_at desc">
+                <field name="list_type" string="Type" widget="badge"
+                       decoration-info="list_type == 'ENROLMENT'"
+                       decoration-warning="list_type == 'DISBURSEMENT'"/>
+                <field name="stage_name" string="Stage"/>
+                <field name="stage_number" string="Stage #"/>
+                <field name="status" string="Status" widget="badge"
+                       decoration-success="status == 'APPROVED'"
+                       decoration-danger="status == 'REJECTED'"
+                       decoration-warning="status == 'PENDING'"/>
+                <field name="enqueued_at" string="Enqueued At"/>
+                <field name="acted_at" string="Acted On"/>
+                <field name="acted_by" string="Acted By"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Action: My Approval History -->
+    <record id="action_g2p_approval_history" model="ir.actions.act_window">
+        <field name="name">My Approval History</field>
+        <field name="res_model">g2p.workflow.stage.history</field>
+        <field name="view_mode">tree</field>
+        <field name="domain">[('acted_by', '=', uid), ('status', 'in', ['APPROVED', 'REJECTED'])]</field>
+        <field name="view_id" ref="view_g2p_approval_history_tree"/>
+    </record>
+</odoo>

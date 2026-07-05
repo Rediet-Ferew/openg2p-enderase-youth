@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_disbursement_cycle_create_wizard_form" model="ir.ui.view">
+        <field name="name">g2p.disbursement.cycle.create.wizard.form</field>
+        <field name="model">g2p.disbursement.cycle.create.wizard</field>
+        <field name="arch" type="xml">
+            <form string="New Disbursement Cycle">
+                <group>
+                    <field name="program_id" readonly="1"/>
+                    <field name="cycle_name"/>
+                    <field name="cycle_number" readonly="1"/>
+                    <field name="creation_date" readonly="1"/>
+                    <field name="disbursement_schedule_date"/>
+                </group>
+                <footer>
+                    <button name="action_confirm" type="object" string="Create" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_g2p_individual_registry" model="ir.actions.act_window">
+        <field name="name">Individual Registry</field>
+        <field name="res_model">g2p.individual.registry</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="view_g2p_individual_registry_form" model="ir.ui.view">
+        <field name="name">g2p.individual.registry.form</field>
+        <field name="model">g2p.individual.registry</field>
+        <field name="arch" type="xml">
+            <form string="Individual Registry">
+                <sheet>
+                    <group>
+                        <field name="link_registry_id"/>
+                        <field name="internal_record_id"/>
+                        <field name="full_name"/>
+                        <field name="gender"/>
+                        <field name="date_of_birth"/>
+                        <field name="estimated_age"/>
+                        <field name="registration_date"/>
+                    </group>
+                    <notebook>
+                        <page string="Identity">
+                            <group>
+                                <field name="foundational_id_masked"/>
+                                <field name="foundational_id_verification_status"/>
+                                <field name="identity_evidence_type"/>
+                                <field name="alias_names"/>
+                                <field name="citizenship_category"/>
+                            </group>
+                        </page>
+                        <page string="Household">
+                            <group>
+                                <field name="household_internal_record_id"/>
+                                <field name="relationship_to_head"/>
+                                <field name="is_head"/>
+                                <field name="residency_status"/>
+                                <field name="dependency_indicator"/>
+                            </group>
+                        </page>
+                        <page string="Vulnerability">
+                            <group>
+                                <field name="disability_status"/>
+                                <field name="plw_status"/>
+                                <field name="plw_status_date"/>
+                                <field name="orphanhood_flag"/>
+                                <field name="chronic_illness_flag"/>
+                                <field name="displacement_status"/>
+                                <field name="pastoralist_classification"/>
+                                <field name="high_mobility_indicator"/>
+                            </group>
+                        </page>
+                        <page string="Livelihood">
+                            <group>
+                                <field name="primary_livelihood"/>
+                                <field name="secondary_livelihood"/>
+                                <field name="employment_status"/>
+                                <field name="coping_strategies_index"/>
+                            </group>
+                        </page>
+                        <page string="Location">
+                            <group>
+                                <field name="large_area_id"/>
+                                <field name="large_area_code"/>
+                                <field name="small_area_id"/>
+                                <field name="small_area_code"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_g2p_individual_registry_tree" model="ir.ui.view">
+        <field name="name">g2p.individual.registry.tree</field>
+        <field name="model">g2p.individual.registry</field>
+        <field name="arch" type="xml">
+            <tree string="Individual Registry">
+                <field name="link_registry_id"/>
+                <field name="internal_record_id"/>
+                <field name="full_name"/>
+                <field name="gender"/>
+                <field name="estimated_age"/>
+                <field name="relationship_to_head"/>
+                <field name="small_area_code"/>
+                <button name="action_open_view" type="object" class="fa fa-eye" title="View"/>
+            </tree>
+        </field>
+    </record>
+</odoo>
+

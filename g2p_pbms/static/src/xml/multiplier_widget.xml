@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="g2p_pbms.MultiplierFieldWidget" t-inherit="web.CharField" t-inherit-mode="primary">
+        <xpath expr="//input" position="replace">
+            <select class="o_input" t-ref="input">
+                <option value="">None</option>
+                <t t-foreach="state.options" t-as="opt" t-key="opt.value">
+                    <option t-att-value="opt.value" t-att-selected="opt.value === props.value">
+                        <t t-esc="opt.label"/>
+                    </option>
+                </t>
+            </select>
+        </xpath>
+    </t>
+</templates>

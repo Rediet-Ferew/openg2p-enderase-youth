@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Actions -->
+    <record id="action_g2p_eligibility_rule_definition" model="ir.actions.act_window">
+        <field name="name">Eligibility Rule</field>
+        <field name="res_model">g2p.eligibility.rule.definition</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="view_g2p_eligibility_rule_definition_form" model="ir.ui.view">
+        <field name="name">g2p.eligibility.rule.definition.form</field>
+        <field name="model">g2p.eligibility.rule.definition</field>
+        <field name="arch" type="xml">
+            <form string="Eligibility Rule">
+                <sheet>
+                    <group>
+                        <field name="rule_number" readonly="rule_number==1"/>
+                        <field name="mnemonic"/>
+                        <field name="description"/>
+                        <field name="target_registry"/>
+                        <field name="set_operator" readonly="rule_number==1"/>
+                    </group>
+                </sheet>
+                <sheet>
+                    <group>
+                        <field name='sql_query'/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    
+    <record id="view_g2p_eligibility_rule_definition_tree" model="ir.ui.view">
+        <field name="name">g2p.eligibility.rule.definition.tree</field>
+        <field name="model">g2p.eligibility.rule.definition</field>
+        <field name="arch" type="xml">
+            <tree string="Eligibility Rule" default_order="rule_number asc" >
+                <control>
+                  <create string="Add Eligibility Rule"/>
+                </control>
+                <field name="rule_number"/>
+                <field name="mnemonic"/>
+                <field name="target_registry"/>
+                <field name="set_operator"/>
+                <field name="description"/>
+                <button name="action_open_view" type="object" string="View Eligibility Rule" class="oe_link" title="View Eligibility Rule"/>
+            </tree>
+        </field>
+    </record>
+    
+</odoo>

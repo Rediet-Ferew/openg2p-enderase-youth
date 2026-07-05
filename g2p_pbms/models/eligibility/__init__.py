@@ -1,0 +1,1 @@
+from .eligibility_rule_definition import G2PEligibilityRuleDefinition

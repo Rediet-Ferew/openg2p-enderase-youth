@@ -25,7 +25,7 @@
         sequence="910"
         parent="g2p_ati_embed.menu_g2p_ati_embed_dashboards"
         action="action_superset_dashboard_config"
-        groups="g2p_ati_embed.group_g2p_ati_embed_admin"
+        groups="g2p_registry_base.group_g2p_admin,g2p_ati_embed.group_g2p_ati_embed_admin"
     />
 
     

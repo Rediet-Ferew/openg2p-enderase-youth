@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="enderase_theme.WebClientSidebar" t-inherit="web.WebClient" t-inherit-mode="extension">
+        <xpath expr="//ActionContainer" position="before">
+            <EnderaseSidebar t-if="!state.fullscreen"/>
+        </xpath>
+    </t>
+
+    <t t-name="enderase_theme.Sidebar" owl="1">
+        <nav
+            t-att-class="{
+                'o_enderase_sidebar': true,
+                'o_enderase_sidebar_expanded': state.expanded,
+            }"
+            aria-label="Enderase app navigation"
+        >
+            <div class="o_enderase_sidebar_header">
+                <button
+                    type="button"
+                    class="o_enderase_sidebar_logo"
+                    title="Home"
+                    aria-label="Home"
+                    t-on-click="openHomeMenu"
+                >
+                    <img t-att-src="logoUrl" alt="Enderase Youth Association"/>
+                </button>
+                <div class="o_enderase_sidebar_brand">
+                    <span class="o_enderase_sidebar_brand_name">Enderase</span>
+                    <span class="o_enderase_sidebar_brand_caption">Youth Association</span>
+                </div>
+            </div>
+
+            <div class="o_enderase_sidebar_apps" role="menu">
+                <a
+                    t-foreach="apps"
+                    t-as="app"
+                    t-key="app.id"
+                    t-att-class="{
+                        'o_enderase_sidebar_app': true,
+                        'o_enderase_sidebar_app_active': isCurrentApp(app),
+                    }"
+                    role="menuitem"
+                    t-att-href="getAppHref(app)"
+                    t-att-title="app.name"
+                    t-att-data-menu-xmlid="app.xmlid"
+                    t-att-data-section="app.id"
+                    t-on-click.prevent="() => this.openApp(app)"
+                >
+                    <img
+                        class="o_enderase_sidebar_app_icon"
+                        t-att-src="getAppIcon(app)"
+                        t-att-alt="app.name"
+                    />
+                    <span class="o_enderase_sidebar_label">
+                        <t t-out="app.name"/>
+                    </span>
+                    <span class="o_enderase_sidebar_tooltip">
+                        <t t-out="app.name"/>
+                    </span>
+                </a>
+            </div>
+
+            <button
+                type="button"
+                class="o_enderase_sidebar_toggle"
+                t-att-title="state.expanded ? 'Collapse sidebar' : 'Expand sidebar'"
+                t-att-aria-label="state.expanded ? 'Collapse sidebar' : 'Expand sidebar'"
+                t-on-click="toggleExpanded"
+            >
+                <span class="o_enderase_sidebar_toggle_mark"/>
+                <span class="o_enderase_sidebar_toggle_label">
+                    <t t-out="state.expanded ? 'Collapse' : 'Expand'"/>
+                </span>
+            </button>
+        </nav>
+    </t>
+</templates>

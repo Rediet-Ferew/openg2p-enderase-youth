@@ -8,7 +8,7 @@
     "author": "OpenG2P",
     "website": "https://openg2p.org",
     "license": "LGPL-3",
-    "depends": ["g2p_ati", "muk_web_theme"],
+    "depends": ["muk_web_theme"],
     "data": [],
     "assets": {
         "web.assets_backend": [
@@ -23,4 +23,3 @@
     "installable": True,
     "auto_install": False,
 }
-

@@ -1,0 +1,36 @@
+<odoo noupdate="0">
+
+  <!-- Restrictive Rule: program access tied to program_mnemonic -->
+  <record id="rule_program_restrictive" model="ir.rule">
+    <field name="name">Program Restrictive Access</field>
+    <field name="model_id" ref="g2p_pbms.model_g2p_program_definition"/>
+    <field name="domain_force">[('program_mnemonic', 'in', user.groups_id.mapped('name'))]</field>
+    <field name="perm_read" eval="1"/>
+    <field name="perm_write" eval="1"/>
+    <field name="perm_create" eval="0"/>
+    <field name="perm_unlink" eval="0"/>
+    <field name="groups" eval="[(4, ref('g2p_pbms.group_program_administration')),
+                                (4, ref('g2p_pbms.group_enrolment_operation')),
+                                (4, ref('g2p_pbms.group_enrolment_verification')),
+                                (4, ref('g2p_pbms.group_enrolment_approval')),
+                                (4, ref('g2p_pbms.group_disbursement_operation')),
+                                (4, ref('g2p_pbms.group_disbursement_verification')),
+                                (4, ref('g2p_pbms.group_disbursement_approval')),
+                                (4, ref('g2p_pbms.group_geography_operation')),
+                                (4, ref('g2p_pbms.group_service_provider_operation')),
+                                (4, ref('g2p_pbms.group_audit_operation'))]"/>
+  </record>
+
+  <!-- Super Admin Rule: bypass program access rule -->
+  <record id="rule_program_super_access" model="ir.rule">
+    <field name="name">Program Super Access</field>
+    <field name="model_id" ref="g2p_pbms.model_g2p_program_definition"/>
+    <field name="domain_force">[(1,'=',1)]</field>
+    <field name="perm_read" eval="1"/>
+    <field name="perm_write" eval="1"/>
+    <field name="perm_create" eval="1"/>
+    <field name="perm_unlink" eval="1"/>
+    <field name="groups" eval="[(4, ref('g2p_pbms.group_program_super_administration'))]"/>
+  </record>
+
+</odoo>

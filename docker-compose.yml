@@ -1,0 +1,349 @@
+name: enderase-dashboard
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: enderase-postgres
+    environment:
+      POSTGRES_DB: ${PG_DATABASE:-enderase}
+      POSTGRES_USER: ${PG_USER:-odoo}
+      POSTGRES_PASSWORD: ${PG_PASSWORD:-odoo}
+    ports:
+      - "${PG_PORT:-5432}:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+
+  pbms-postgres:
+    image: postgres:15-alpine
+    container_name: enderase-pbms-postgres
+    environment:
+      POSTGRES_DB: ${PBMS_ODOO_DATABASE:-pbms_odoo}
+      POSTGRES_USER: ${PBMS_PG_USER:-pbms}
+      POSTGRES_PASSWORD: ${PBMS_PG_PASSWORD:-pbms}
+    ports:
+      - "${PBMS_PG_PORT:-5433}:5432"
+    volumes:
+      - pbms-postgres-data:/var/lib/postgresql/data
+      - ./pbms/docker/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+
+  # OpenG2P Social Registry on Odoo 17 with the local Enderase addons
+  # mounted in. First boot installs g2p_enderase_youth_registry (and its
+  # whole OpenG2P dependency chain) plus the embed and Enderase theme addons into the database —
+  # expect several minutes before http://localhost:8069 answers. Later boots
+  # upgrade the local Enderase modules.
+  odoo:
+    build: ../odoo
+    container_name: enderase-odoo
+    environment:
+      ODOO_DATABASE_HOST: postgres
+      ODOO_DATABASE_PORT_NUMBER: 5432
+      ODOO_DATABASE_NAME: ${PG_DATABASE:-enderase}
+      ODOO_DATABASE_USER: ${PG_USER:-odoo}
+      ODOO_DATABASE_PASSWORD: ${PG_PASSWORD:-odoo}
+      ODOO_PASSWORD: ${ODOO_ADMIN_PASSWORD:-admin}
+      ODOO_EMAIL: ${ODOO_EMAIL:-admin@example.com}
+      # The image's odoo.conf template renders these unconditionally and
+      # odoo rejects an empty smtp_port; no mail is actually sent locally.
+      ODOO_SMTP_HOST: localhost
+      ODOO_SMTP_PORT_NUMBER: 25
+      ODOO_ADDONS_DIR: /opt/odoo/customaddons
+      # /var/lib/odoo exists in the image owned by the odoo user, so the
+      # named volume inherits writable ownership (the /bitnami/odoo default
+      # would be created root-owned and break bootstrap).
+      ODOO_VOLUME_DIR: /var/lib/odoo
+      ODOO_SKIP_BOOTSTRAP: "no"
+      ODOO_BOOTSTRAP_MODULES: g2p_enderase_youth_registry,g2p_ati_embed,enderase_theme
+      ODOO_SKIP_MODULES_UPDATE: "no"
+      ODOO_UPDATE_MODULES: g2p_enderase_youth_registry,g2p_ati_embed,enderase_theme
+    volumes:
+      - odoo-data:/var/lib/odoo
+      - ./g2p_enderase_youth_registry:/opt/odoo/customaddons/g2p_enderase_youth_registry:ro
+      - ./g2p_ati_embed:/opt/odoo/customaddons/g2p_ati_embed:ro
+      - ./enderase_theme:/opt/odoo/customaddons/enderase_theme:ro
+      # Mask account_payment — see odoo/disabled-addons/account_payment/README.md
+      - ../odoo/disabled-addons/account_payment:/usr/lib/python3/dist-packages/odoo/addons/account_payment:ro
+      # Python-only stubs for core imports the image stripped — see the
+      # README.md in each stub directory
+      - ../odoo/stub-addons/hr_work_entry_contract:/usr/lib/python3/dist-packages/odoo/addons/hr_work_entry_contract:ro
+      - ../odoo/stub-addons/stock:/usr/lib/python3/dist-packages/odoo/addons/stock:ro
+    ports:
+      - "${ODOO_PORT:-8069}:8069"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8069/web/health', timeout=5)"]
+      interval: 15s
+      timeout: 10s
+      retries: 20
+      start_period: 600s
+    restart: unless-stopped
+
+  # OpenG2P PBMS runs as its own Odoo instance on its own database.
+  # It reads the Enderase registry through the existing postgres/enderase DB
+  # only when eligibility, entitlement, and beneficiary-search jobs execute.
+  pbms-odoo:
+    image: openg2p/openg2p-pbms-core:3.1.0
+    container_name: enderase-pbms-odoo
+    environment:
+      ODOO_DATABASE_HOST: pbms-postgres
+      ODOO_DATABASE_PORT_NUMBER: 5432
+      ODOO_DATABASE_NAME: ${PBMS_ODOO_DATABASE:-pbms_odoo}
+      ODOO_DATABASE_USER: ${PBMS_PG_USER:-pbms}
+      ODOO_DATABASE_PASSWORD: ${PBMS_PG_PASSWORD:-pbms}
+      ODOO_PASSWORD: ${PBMS_ODOO_ADMIN_PASSWORD:-admin}
+      ODOO_EMAIL: ${PBMS_ODOO_EMAIL:-admin@example.com}
+      ODOO_SMTP_HOST: localhost
+      ODOO_SMTP_PORT_NUMBER: 25
+      ODOO_ADDONS_DIR: /opt/odoo/customaddons
+      ODOO_VOLUME_DIR: /var/lib/odoo
+      ODOO_SKIP_BOOTSTRAP: "no"
+      ODOO_BOOTSTRAP_MODULES: g2p_registry_type_addon,g2p_pbms,g2p_pbms_program_access,g2p_registry_addon,enderase_theme
+      ODOO_SKIP_MODULES_UPDATE: "no"
+      ODOO_UPDATE_MODULES: g2p_registry_type_addon,g2p_pbms,g2p_pbms_program_access,g2p_registry_addon,enderase_theme
+      WAIT_FOR_POSTGRES: 120
+    volumes:
+      - pbms-odoo-data:/var/lib/odoo
+      - ./g2p_registry_type_addon:/opt/odoo/customaddons/g2p_registry_type_addon:ro
+      - ./g2p_pbms:/opt/odoo/customaddons/g2p_pbms:ro
+      - ./g2p_pbms_program_access:/opt/odoo/customaddons/g2p_pbms_program_access:ro
+      - ./g2p_registry_addon:/opt/odoo/customaddons/g2p_registry_addon:ro
+      - ./enderase_theme:/opt/odoo/customaddons/enderase_theme:ro
+    ports:
+      - "${PBMS_ODOO_PORT:-8070}:8069"
+    depends_on:
+      pbms-postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8069/web/health', timeout=5)"]
+      interval: 15s
+      timeout: 10s
+      retries: 20
+      start_period: 600s
+    restart: unless-stopped
+
+  clickhouse:
+    image: clickhouse/clickhouse-server:24.8
+    container_name: enderase-clickhouse
+    environment:
+      CLICKHOUSE_USER: ${CLICKHOUSE_USER:-enderase}
+      CLICKHOUSE_PASSWORD: ${CLICKHOUSE_PASSWORD:-enderase-local-dev}
+      CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: "1"
+    ports:
+      - "${CLICKHOUSE_HTTP_PORT:-8123}:8123"
+      - "${CLICKHOUSE_NATIVE_PORT:-9000}:9000"
+    volumes:
+      - clickhouse-data:/var/lib/clickhouse
+      - ./enderase_dashboard/clickhouse/init:/docker-entrypoint-initdb.d:ro
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8123/ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    container_name: enderase-redis
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+
+  pbms-staff-portal-api:
+    image: openg2p-pbms-staff-portal-api-enderase:dev
+    container_name: enderase-pbms-staff-portal-api
+    environment:
+      STAFF_PORTAL_API_DB_DRIVER: postgresql+asyncpg
+      STAFF_PORTAL_API_DB_USERNAME: ${PBMS_PG_USER:-pbms}
+      STAFF_PORTAL_API_DB_PASSWORD: ${PBMS_PG_PASSWORD:-pbms}
+      STAFF_PORTAL_API_DB_HOSTNAME: pbms-postgres
+      STAFF_PORTAL_API_DB_PORT: 5432
+      STAFF_PORTAL_API_DB_DBNAME: bgtask
+      STAFF_PORTAL_API_DB_USERNAME_SR: ${PG_USER:-odoo}
+      STAFF_PORTAL_API_DB_PASSWORD_SR: ${PG_PASSWORD:-odoo}
+      STAFF_PORTAL_API_DB_HOSTNAME_SR: postgres
+      STAFF_PORTAL_API_DB_PORT_SR: 5432
+      STAFF_PORTAL_API_DB_DBNAME_SR: ${PG_DATABASE:-enderase}
+      BG_TASK_NO_OF_WORKERS: ${PBMS_API_WORKERS:-2}
+    volumes:
+      - ./openg2p-enderase-pbms-bg-tasks-extensions/openg2p-bg-task-registry-adapters/src/openg2p_bg_task_registry_adapters:/usr/local/lib/python3.12/site-packages/openg2p_bg_task_registry_adapters:ro
+    ports:
+      - "${PBMS_API_PORT:-8001}:8000"
+    depends_on:
+      pbms-postgres:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/docs', timeout=5)"]
+      interval: 15s
+      timeout: 10s
+      retries: 20
+      start_period: 120s
+    restart: unless-stopped
+
+  pbms-bg-task-worker:
+    image: openg2p-pbms-bg-task-celery-workers-enderase:dev
+    container_name: enderase-pbms-bg-task-worker
+    environment:
+      BG_TASK_CELERY_WORKERS_DB_DRIVER: postgresql
+      BG_TASK_CELERY_WORKERS_DB_USERNAME: ${PBMS_PG_USER:-pbms}
+      BG_TASK_CELERY_WORKERS_DB_PASSWORD: ${PBMS_PG_PASSWORD:-pbms}
+      BG_TASK_CELERY_WORKERS_DB_HOSTNAME: pbms-postgres
+      BG_TASK_CELERY_WORKERS_DB_PORT: 5432
+      BG_TASK_CELERY_WORKERS_DB_DBNAME: bgtask
+      BG_TASK_CELERY_WORKERS_DB_DRIVER_ASYNC: postgresql+asyncpg
+      BG_TASK_CELERY_WORKERS_DB_USERNAME_ASYNC: ${PBMS_PG_USER:-pbms}
+      BG_TASK_CELERY_WORKERS_DB_PASSWORD_ASYNC: ${PBMS_PG_PASSWORD:-pbms}
+      BG_TASK_CELERY_WORKERS_DB_HOSTNAME_ASYNC: pbms-postgres
+      BG_TASK_CELERY_WORKERS_DB_PORT_ASYNC: 5432
+      BG_TASK_CELERY_WORKERS_DB_DBNAME_ASYNC: bgtask
+      BG_TASK_CELERY_WORKERS_DB_USERNAME_SR: ${PG_USER:-odoo}
+      BG_TASK_CELERY_WORKERS_DB_PASSWORD_SR: ${PG_PASSWORD:-odoo}
+      BG_TASK_CELERY_WORKERS_DB_HOSTNAME_SR: postgres
+      BG_TASK_CELERY_WORKERS_DB_PORT_SR: 5432
+      BG_TASK_CELERY_WORKERS_DB_DBNAME_SR: ${PG_DATABASE:-enderase}
+      BG_TASK_CELERY_WORKERS_DB_USERNAME_PBMS: ${PBMS_PG_USER:-pbms}
+      BG_TASK_CELERY_WORKERS_DB_PASSWORD_PBMS: ${PBMS_PG_PASSWORD:-pbms}
+      BG_TASK_CELERY_WORKERS_DB_HOSTNAME_PBMS: pbms-postgres
+      BG_TASK_CELERY_WORKERS_DB_PORT_PBMS: 5432
+      BG_TASK_CELERY_WORKERS_DB_DBNAME_PBMS: ${PBMS_ODOO_DATABASE:-pbms_odoo}
+      BG_TASK_CELERY_WORKERS_CELERY_BROKER_URL: redis://redis:6379/0
+      BG_TASK_CELERY_WORKERS_CELERY_BACKEND_URL: redis://redis:6379/0
+    volumes:
+      - ./openg2p-enderase-pbms-bg-tasks-extensions/openg2p-bg-task-registry-adapters/src/openg2p_bg_task_registry_adapters:/usr/local/lib/python3.12/site-packages/openg2p_bg_task_registry_adapters:ro
+    depends_on:
+      pbms-odoo:
+        condition: service_healthy
+      pbms-staff-portal-api:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  pbms-bg-task-beat:
+    image: openg2p-pbms-bg-task-celery-beat-producers-enderase:dev
+    container_name: enderase-pbms-bg-task-beat
+    environment:
+      BG_TASK_CELERY_BEAT_DB_DRIVER: postgresql
+      BG_TASK_CELERY_BEAT_DB_USERNAME: ${PBMS_PG_USER:-pbms}
+      BG_TASK_CELERY_BEAT_DB_PASSWORD: ${PBMS_PG_PASSWORD:-pbms}
+      BG_TASK_CELERY_BEAT_DB_HOSTNAME: pbms-postgres
+      BG_TASK_CELERY_BEAT_DB_PORT: 5432
+      BG_TASK_CELERY_BEAT_DB_DBNAME: bgtask
+      BG_TASK_CELERY_BEAT_DB_USERNAME_SR: ${PG_USER:-odoo}
+      BG_TASK_CELERY_BEAT_DB_PASSWORD_SR: ${PG_PASSWORD:-odoo}
+      BG_TASK_CELERY_BEAT_DB_HOSTNAME_SR: postgres
+      BG_TASK_CELERY_BEAT_DB_PORT_SR: 5432
+      BG_TASK_CELERY_BEAT_DB_DBNAME_SR: ${PG_DATABASE:-enderase}
+      BG_TASK_CELERY_BEAT_DB_USERNAME_PBMS: ${PBMS_PG_USER:-pbms}
+      BG_TASK_CELERY_BEAT_DB_PASSWORD_PBMS: ${PBMS_PG_PASSWORD:-pbms}
+      BG_TASK_CELERY_BEAT_DB_HOSTNAME_PBMS: pbms-postgres
+      BG_TASK_CELERY_BEAT_DB_PORT_PBMS: 5432
+      BG_TASK_CELERY_BEAT_DB_DBNAME_PBMS: ${PBMS_ODOO_DATABASE:-pbms_odoo}
+      BG_TASK_CELERY_BEAT_CELERY_BROKER_URL: redis://redis:6379/0
+      BG_TASK_CELERY_BEAT_CELERY_BACKEND_URL: redis://redis:6379/0
+    volumes:
+      - ./openg2p-enderase-pbms-bg-tasks-extensions/openg2p-bg-task-registry-adapters/src/openg2p_bg_task_registry_adapters:/usr/local/lib/python3.12/site-packages/openg2p_bg_task_registry_adapters:ro
+    depends_on:
+      pbms-odoo:
+        condition: service_healthy
+      pbms-staff-portal-api:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  dashboard-api:
+    build: ./enderase_dashboard/api
+    container_name: enderase-dashboard-api
+    environment:
+      CLICKHOUSE_HOST: clickhouse
+      CLICKHOUSE_USER: ${CLICKHOUSE_USER:-enderase}
+      CLICKHOUSE_PASSWORD: ${CLICKHOUSE_PASSWORD:-enderase-local-dev}
+      REDIS_HOST: redis
+      CACHE_TTL_SECONDS: ${CACHE_TTL_SECONDS:-30}
+    ports:
+      - "${DASHBOARD_API_PORT:-8000}:8000"
+    depends_on:
+      clickhouse:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/healthz', timeout=3)"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  # Pulls registry data from the Odoo (OpenG2P) PostgreSQL into ClickHouse
+  # on an interval. Sync cycles fail harmlessly (and retry) until the odoo
+  # service finishes installing the registry module on first boot. Replace
+  # with CDC (Debezium/PeerDB) when volumes grow — see
+  # enderase_dashboard/docs/DASHBOARD_ARCHITECTURE.md.
+  metrics-sync:
+    build: ./enderase_dashboard/metrics-sync
+    container_name: enderase-metrics-sync
+    environment:
+      PG_HOST: ${PG_HOST:-postgres}
+      PG_PORT: 5432
+      PG_DATABASE: ${PG_DATABASE:-enderase}
+      PG_USER: ${PG_USER:-odoo}
+      PG_PASSWORD: ${PG_PASSWORD:-odoo}
+      CLICKHOUSE_HOST: clickhouse
+      CLICKHOUSE_USER: ${CLICKHOUSE_USER:-enderase}
+      CLICKHOUSE_PASSWORD: ${CLICKHOUSE_PASSWORD:-enderase-local-dev}
+      SYNC_INTERVAL_SECONDS: ${SYNC_INTERVAL_SECONDS:-60}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      clickhouse:
+        condition: service_healthy
+    restart: unless-stopped
+
+  web:
+    build: ./enderase_dashboard/web
+    container_name: enderase-dashboard-web
+    ports:
+      - "${WEB_PORT:-8080}:3000"
+    depends_on:
+      dashboard-api:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  postgres-data:
+  pbms-postgres-data:
+  odoo-data:
+  pbms-odoo-data:
+  clickhouse-data:
+  redis-data:

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<template xml:space="preserve">
+    <!-- Combined custom list view buttons -->
+    <t t-name="CustomListViewButtons" t-inherit="web.ListView.Buttons" t-inherit-mode="extension">
+        <xpath expr="//div[contains(@class, 'o_list_buttons')]" position="inside">
+            <t t-set-slot="control-panel-create-button">
+                <button
+                    t-if="props.resModel == 'g2p.agency' and permissions.canCreateAgency"
+                    type="button"
+                    class="btn btn-primary o_list_button_add_agency"
+                    title="Create a New Agency"
+                    t-on-click="load_agency_wizard">
+                    Create Agency
+                </button>
+                <button
+                    t-if="model.root.resModel == 'g2p.warehouse' and env.searchModel and env.searchModel.context and !env.searchModel.context.default_is_sponsor_bank and permissions.canCreateWarehouse"
+                    type="button"
+                    class="btn btn-primary o_list_button_add_warehouse"
+                    title="Create a New Warehouse"
+                    t-on-click="load_warehouse_wizard">
+                    Create Warehouse
+                </button>
+                <button
+                    t-if="model.root.resModel == 'g2p.warehouse' and env.searchModel and env.searchModel.context and env.searchModel.context.default_is_sponsor_bank and permissions.canCreateSponsorBank"
+                    type="button"
+                    class="btn btn-primary o_list_button_add_sponsor_bank"
+                    title="Create a New Sponsor Bank"
+                    t-on-click="load_sponsor_bank_wizard">
+                    Create Sponsor Bank
+                </button>
+                <button
+                    t-if="model.root.resModel == 'g2p.benefit.codes' and permissions.canCreateBenefitCode"
+                    type="button"
+                    class="btn btn-primary o_list_button_add_codes"
+                    accesskey="p"
+                    title="Create a New Benefit Code"
+                    t-on-click="load_benefit_code_wizard">
+                    Create Code
+                </button>
+                <button
+                    t-if="model.root.resModel == 'g2p.program.definition' and permissions.canCreateProgram and env.searchModel and env.searchModel.context and env.searchModel.context.program_view_mode and env.searchModel.context.program_view_mode != 'management'"
+                    type="button"
+                    class="btn btn-primary o_list_button_add_program"
+                    title="Create a New Program"
+                    t-on-click="load_program_wizard">
+                    Create Program
+                </button>
+                <button
+                    t-if="model.root.resModel == 'g2p.administrative.area.large' and permissions.canCreateGeography"
+                    type="button"
+                    class="btn btn-primary o_list_button_add_large_area"
+                    title="Create a New Large Administrative Area"
+                    t-on-click="load_administrative_area_large_wizard">
+                    Create Large Area
+                </button>
+                <button
+                    t-if="model.root.resModel == 'g2p.administrative.area.small' and permissions.canCreateGeography"
+                    type="button"
+                    class="btn btn-primary o_list_button_add_small_area"
+                    title="Create a New Small Administrative Area"
+                    t-on-click="load_administrative_area_small_wizard">
+                    Create Small Area
+                </button>
+                <button
+                    t-if="model.root.resModel == 'g2p.enrollment.cycle'"
+                    type="button"
+                    class="btn btn-primary o_list_button_add_enrollment_cycle"
+                    title="Create a New Enrolment Cycle"
+                    t-on-click="load_enrollment_cycle_wizard">
+                    Create New Cycle
+                </button>
+                <button
+                    t-if="model.root.resModel == 'g2p.disbursement.cycle'"
+                    type="button"
+                    class="btn btn-primary o_list_button_add_disbursement_cycle"
+                    title="Create a New Disbursement Cycle"
+                    t-on-click="load_disbursement_cycle_wizard">
+                    Create New Cycle
+                </button>
+            </t>
+        </xpath>
+    </t>
+
+    <!-- Hide default create buttons for custom models -->
+    <t t-inherit="web.ListView" t-inherit-mode="extension">
+        <xpath expr="//button[contains(@class, 'o_list_button_add')]" position="attributes">
+            <attribute name="t-if">
+                model.root.resModel != 'g2p.agency' and
+                model.root.resModel != 'g2p.warehouse' and
+                model.root.resModel != 'g2p.benefit.classification.codes' and
+                model.root.resModel != 'g2p.benefit.codes' and
+                model.root.resModel != 'g2p.program.definition' and
+                model.root.resModel != 'g2p.administrative.area.large' and
+                model.root.resModel != 'g2p.administrative.area.small' and
+                model.root.resModel != 'g2p.enrollment.cycle' and
+                model.root.resModel != 'g2p.disbursement.cycle'
+            </attribute>
+        </xpath>
+    </t>
+    <t t-inherit="web.FormView" t-inherit-mode="extension">
+        <xpath expr="//button[contains(@class, 'o_form_button_create')]" position="attributes">
+            <attribute name="t-if">
+                model.root.resModel != 'g2p.agency' and
+                model.root.resModel != 'g2p.warehouse' and
+                model.root.resModel != 'g2p.benefit.classification.codes' and
+                model.root.resModel != 'g2p.benefit.codes' and
+                model.root.resModel != 'g2p.program.definition' and
+                model.root.resModel != 'g2p.administrative.area.large' and
+                model.root.resModel != 'g2p.administrative.area.small' and
+                model.root.resModel != 'g2p.enrollment.cycle' and
+                model.root.resModel != 'g2p.disbursement.cycle'
+            </attribute>
+        </xpath>
+        <xpath expr="//button[contains(@class, 'btn-outline-primary o_form_button_create')]" position="attributes">
+            <attribute name="t-if">
+                model.root.resModel != 'g2p.agency' and
+                model.root.resModel != 'g2p.warehouse' and
+                model.root.resModel != 'g2p.benefit.classification.codes' and
+                model.root.resModel != 'g2p.benefit.codes' and
+                model.root.resModel != 'g2p.program.definition' and
+                model.root.resModel != 'g2p.administrative.area.large' and
+                model.root.resModel != 'g2p.administrative.area.small' and
+                model.root.resModel != 'g2p.enrollment.cycle' and
+                model.root.resModel != 'g2p.disbursement.cycle'
+            </attribute>
+        </xpath>
+    </t>
+</template>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_g2p_beneficiary_list_form" model="ir.ui.view">
+        <field name="name">g2p.beneficiary.list.form</field>
+        <field name="model">g2p.beneficiary.list</field>
+        <field name="arch" type="xml">
+            <form create="0" delete="0">
+                <footer>
+                    <button name="action_save_and_open_summary"
+                            type="object"
+                            string="Create"
+                            class="btn-primary"/>
+                    <button string="Discard" class="btn-secondary" special="cancel"/>
+                </footer>
+                <group>
+                    <field name="program_id" readonly="1"/>
+                    <field name="cycle_name_display" string="Cycle" readonly="1"/>
+                    <field name="next_list_number" string="List #" readonly="1"/>
+                    <field name="cycle_creation_date" string="Creation Date" readonly="1"/>
+                    <field name="disbursement_schedule_date" invisible="list_stage != 'disbursement'"/>
+                    <field name="brief" placeholder="Enter a brief description…"/>
+                </group>
+                <!-- Hidden fields -->
+                <field name="enrollment_cycle_id" invisible="1"/>
+                <field name="disbursement_cycle_id" invisible="1"/>
+                <field name="mnemonic" invisible="1"/>
+                <field name="list_stage" invisible="1"/>
+                <field name="eligibility_process_status" invisible="1"/>
+                <field name="processed_date" invisible="1"/>
+                <field name="creation_date" invisible="1"/>
+                <div class="alert alert-info" role="alert" invisible="list_stage != 'enrollment'">
+                    <p>A version is a list of beneficiaries generated from the registry based on eligibility rules. The list is created in the background and may take some time for large datasets.</p>
+                    <p>The <strong>Resolution Status</strong> (PENDING / COMPLETE) indicates whether the list is ready.</p>
+                </div>
+                <div class="alert alert-info" role="alert" invisible="list_stage != 'disbursement'">
+                    <p>A version includes beneficiaries selected using eligibility and disbursement rules, along with their entitlements. It is processed in two background steps: Resolution (list creation) and Computation (entitlement calculation).</p>
+                    <p><strong>Resolution Status</strong> indicates if the list is ready.</p>
+                    <p><strong>Computation Status</strong> indicates if entitlements are ready (PENDING / COMPLETE).</p>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_g2p_beneficiary_list" model="ir.actions.act_window">
+        <field name="name">Beneficiary List</field>
+        <field name="res_model">g2p.beneficiary.list</field>
+        <field name="view_mode">tree</field>
+        <field name="context">{}</field>
+    </record>
+
+    <record id="view_g2p_beneficiary_list_tree" model="ir.ui.view">
+        <field name="name">g2p.beneficiary.list.tree</field>
+        <field name="model">g2p.beneficiary.list</field>
+        <field name="arch" type="xml">
+            <tree default_order="creation_date desc" delete="false">
+                <control>
+                    <create string="Create New Beneficiary List"/>
+                </control>
+                <field name="mnemonic" string="Mnemonic" options="{'title': 'brief'}"/>
+                <field name="eligibility_process_status" string="Eligibility Process Status" widget="badge"/>
+                <field name="creation_date" string="Created On" readonly="1"/>
+                <field name="processed_date" string="Processed On" readonly="1"/>
+                <button name="action_open_summary_wizard" type="object" string="View Beneficiary List" class="oe_link" invisible="eligibility_process_status!='complete'"/>
+            </tree>
+        </field>
+    </record>
+</odoo>

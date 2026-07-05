@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+    <t t-name="g2p_pbms.ApprovalsAction">
+        <div class="o_action g2p-approvals-action">
+            <div class="g2p-tab-wrapper">
+                <div class="g2p-tab-headers">
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item">
+                            <a t-attf-class="nav-link #{state.activeTab === 'queue' ? 'active' : ''}"
+                               href="#" t-on-click.prevent="() => this.onTabClick('queue')">
+                                Approval Queue
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a t-attf-class="nav-link #{state.activeTab === 'history' ? 'active' : ''}"
+                               href="#" t-on-click.prevent="() => this.onTabClick('history')">
+                                Approval History
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="g2p-tab-content">
+                    <t t-if="state.activeTab === 'queue'">
+                        <View t-props="queueViewProps" t-key="'queue'"/>
+                    </t>
+                    <t t-if="state.activeTab === 'history'">
+                        <View t-props="historyViewProps" t-key="'history'"/>
+                    </t>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

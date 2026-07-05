@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="g2p_pbms.BenefitUnitWidget" t-inherit="web.CharField" t-inherit-mode="primary">
+
+        <xpath expr="//input" position="attributes">
+            <attribute name="t-if">state.record_data.benefit_type != 'CASH_DIGITAL' and state.record_data.benefit_type != 'CASH_PHYSICAL'</attribute>
+        </xpath>
+
+        <xpath expr="//input" position="after">
+            <select t-ref="input" t-else="">
+                <t t-foreach="currencyOptions" t-as="opt" t-key="opt.value">
+                    <option t-att-value="opt.value" t-esc="opt.label"/>
+                </t>
+            </select>
+        </xpath>
+    </t>
+</templates>

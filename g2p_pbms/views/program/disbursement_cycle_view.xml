@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_g2p_disbursement_cycle_form" model="ir.ui.view">
+        <field name="name">g2p.disbursement.cycle.form</field>
+        <field name="model">g2p.disbursement.cycle</field>
+        <field name="arch" type="xml">
+            <form delete="0">
+                <header>
+                    <button name="action_refresh_data" type="object" string="Refresh Data" class="btn-secondary" icon="fa-refresh" invisible="not id"/>
+                </header>
+                <sheet>
+                    <!-- hidden helpers -->
+                    <field name="is_current_cycle" invisible="1"/>
+                    <widget name="web_ribbon" title="History" bg_color="bg-secondary" invisible="is_current_cycle"/>
+                    <field name="is_readonly" invisible="1"/>
+                    <field name="has_wip_list" invisible="1"/>
+                    <field name="can_create_list" invisible="1"/>
+                    <field name="current_list_id" invisible="1"/>
+                    <field name="target_registry" invisible="1"/>
+                    <field name="number_of_lists" invisible="1"/>
+
+                    <!-- only show on new record to set program -->
+                    <group invisible="id">
+                        <field name="program_id"/>
+                        <field name="disbursement_schedule_date"/>
+                    </group>
+
+                    <!-- Summary info from latest list -->
+                    <group invisible="not id">
+                        <group>
+                            <field name="creation_date" string="Cycle Created On" readonly="1"/>
+                            <field name="create_uid" string="Cycle Created By" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="current_stage_display" string="Current Stage" readonly="1"/>
+                            <field name="current_enqueued_at" string="Enqueued On" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="current_beneficiary_count" string="# of Beneficiaries" readonly="1"/>
+                            <field name="number_of_lists_display" string="# of Versions" readonly="1"/>
+                        </group>
+                    </group>
+
+                    <!-- Status row -->
+                    <group invisible="not id or not current_approval_status">
+                        <group>
+                            <field name="current_approval_status" string="Status" widget="badge" readonly="1"/>
+                        </group>
+                        <group invisible="current_approval_status != 'APPROVED'">
+                            <field name="current_acted_at" string="Approved On" readonly="1"/>
+                            <field name="current_acted_by" string="Approved By" readonly="1"/>
+                        </group>
+                        <group invisible="current_approval_status != 'REJECTED'">
+                            <field name="current_acted_at" string="Rejected On" readonly="1"/>
+                            <field name="current_acted_by" string="Rejected By" readonly="1"/>
+                        </group>
+                    </group>
+
+                    <notebook invisible="not id">
+                        <!-- Disbursement Rules -->
+                        <page string="Disbursement Rules">
+                            <field name="priority_rule_ids" nolabel="1" options="{'no_quick_create': True}" context="{'default_target_registry': target_registry}"/>
+                        </page>
+
+                        <!-- Approval History: stage history of current list -->
+                        <page string="Approval History">
+                            <field name="current_stage_history_ids" readonly="1" nolabel="1">
+                                <tree create="0" delete="0" default_order="acted_at asc">
+                                    <field name="stage_number" string="Stage #"/>
+                                    <field name="stage_name" string="Stage"/>
+                                    <field name="enqueued_at" string="Enqueued At"/>
+                                    <field name="status" string="Status" widget="badge"
+                                           decoration-success="status == 'APPROVED'"
+                                           decoration-danger="status == 'REJECTED'"
+                                           decoration-warning="status == 'PENDING'"/>
+                                    <field name="reason" string="Reason"/>
+                                    <field name="acted_by" string="By"/>
+                                    <field name="acted_at" string="On"/>
+                                </tree>
+                            </field>
+                        </page>
+
+                        <!-- Previous Versions: all lists except current -->
+                        <page string="Previous Versions" invisible="number_of_lists &lt;= 1">
+                            <field name="beneficiary_list_ids" nolabel="1" readonly="1"
+                                   domain="[('id', '!=', current_list_id)]">
+                                <tree create="0" delete="0" default_order="list_number desc">
+                                    <field name="list_number" column_invisible="1"/>
+                                    <field name="mnemonic" string="Version"/>
+                                    <field name="creation_date" string="Created On" readonly="1"/>
+                                    <field name="brief_truncated" string="Brief" widget="char"/>
+                                    <field name="brief" column_invisible="1"/>
+                                    <field name="final_stage_number" string="Stage #"/>
+                                    <field name="final_stage_name" string="Stage"/>
+                                    <field name="workflow_approval_status" string="Status" widget="badge"
+                                           decoration-success="workflow_approval_status == 'APPROVED'"
+                                           decoration-danger="workflow_approval_status == 'REJECTED'"/>
+                                    <field name="final_acted_by" string="Acted By"/>
+                                    <field name="final_acted_at" string="Acted On"/>
+                                    <field name="number_of_registrants" string="# of Beneficiaries"/>
+                                    <button name="action_view_stage_history" type="object"
+                                            string="View" class="oe_link" title="View Approval History"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_disbursement_cycle" model="ir.actions.act_window">
+        <field name="name">Disbursement Cycles</field>
+        <field name="res_model">g2p.disbursement.cycle</field>
+        <field name="view_mode">tree</field>
+        <field name="context">{}</field>
+    </record>
+
+    <record id="view_g2p_disbursement_cycle_tree" model="ir.ui.view">
+        <field name="name">g2p.disbursement.cycle.tree</field>
+        <field name="model">g2p.disbursement.cycle</field>
+        <field name="arch" type="xml">
+            <tree default_order="cycle_number desc" delete="false"
+                  decoration-muted="not is_current_cycle">
+                <control>
+                    <create string="Create New Disbursement Cycle"/>
+                </control>
+                <field name="is_current_cycle" column_invisible="1"/>
+                <field name="cycle_name" string="Cycle #"/>
+                <field name="creation_date" string="Created On"/>
+                <field name="number_of_lists_display" string="# of Versions"/>
+                <field name="current_stage_display" string="Stage"/>
+                <field name="current_approval_status" string="Status" widget="badge"
+                       decoration-success="current_approval_status == 'APPROVED'"
+                       decoration-danger="current_approval_status == 'REJECTED'"
+                       decoration-warning="current_approval_status == 'PENDING'"/>
+                <field name="current_acted_at" string="Acted On"/>
+                <field name="current_beneficiary_count" string="# of Beneficiaries"/>
+                <button name="action_open_view" type="object" string="View" class="oe_link"/>
+            </tree>
+        </field>
+    </record>
+</odoo>

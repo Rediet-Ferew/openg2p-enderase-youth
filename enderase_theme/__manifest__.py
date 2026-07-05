@@ -1,0 +1,30 @@
+{
+    "name": "Enderase Theme",
+    "summary": "Standalone Enderase backend theme for Odoo",
+    "description": "Applies the Enderase visual system to native Odoo backend views and the app home menu.",
+    "category": "Themes/Backend",
+    "version": "17.0.1.0.0",
+    "sequence": 3,
+    "author": "Enderase Youth Association",
+    "website": "",
+    "license": "LGPL-3",
+    "depends": ["web"],
+    "data": [],
+    "assets": {
+        "web._assets_primary_variables": [
+            "enderase_theme/static/src/scss/primary_variables.scss",
+        ],
+        "web.assets_backend": [
+            "enderase_theme/static/src/scss/backend.scss",
+            "enderase_theme/static/src/sidebar/sidebar.xml",
+            "enderase_theme/static/src/sidebar/sidebar.js",
+            "enderase_theme/static/src/home_menu/home_menu.xml",
+            "enderase_theme/static/src/home_menu/home_menu.js",
+            "enderase_theme/static/src/home_menu/home_menu.scss",
+        ],
+    },
+    "images": ["static/src/img/enderase-icon.png"],
+    "application": False,
+    "installable": True,
+    "auto_install": False,
+}

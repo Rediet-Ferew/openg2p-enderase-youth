@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Actions for Administrative Area Small -->
+    <record id="action_g2p_administrative_area_small" model="ir.actions.act_window">
+        <field name="name">Administrative Area Small</field>
+        <field name="res_model">g2p.administrative.area.small</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Views for G2P Administrative Area Small -->
+    <record id="view_g2p_administrative_area_small_form" model="ir.ui.view">
+        <field name="name">g2p.administrative.area.small.form</field>
+        <field name="model">g2p.administrative.area.small</field>
+        <field name="arch" type="xml">
+            <form string="G2P Administrative Area Small">
+                <sheet>
+                    <group>
+                        <field name="area_mnemonic" />
+                        <field name="area_description" />
+                        <field name="administrative_area_large_id" options="{'no_create': True, 'no_create_edit': True}"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="view_g2p_administrative_area_small_tree" model="ir.ui.view">
+        <field name="name">g2p.administrative.area.small.tree</field>
+        <field name="model">g2p.administrative.area.small</field>
+        <field name="arch" type="xml">
+            <tree string="G2P Administrative Area Small" limit="10">
+                <control>
+                    <create string="Add Administrative Area (Small)"/>
+                </control>
+                <field name="area_mnemonic"/>
+                <field name="area_description"/>
+                <field name="administrative_area_large_mnemonic"/>
+                <field name="administrative_area_large_description"/>
+                <button name="action_open_edit" type="object" class="fa fa-pencil" title="Edit" groups="g2p_pbms.group_geography_editor"/>
+            </tree>
+        </field>
+    </record>
+</odoo>

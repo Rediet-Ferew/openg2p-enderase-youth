@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Actions for Benefit Codes -->
+    <record id="action_g2p_benefit_codes" model="ir.actions.act_window">
+        <field name="name">Benefit Codes</field>
+        <field name="res_model">g2p.benefit.codes</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Views for Benefit Codes -->
+    <record id="view_g2p_benefit_codes_form" model="ir.ui.view">
+        <field name="name">g2p.benefit.codes.form</field>
+        <field name="model">g2p.benefit.codes</field>
+        <field name="arch" type="xml">
+            <form string="Benefit Codes">
+                <sheet>
+                    <group>
+                        <field name="benefit_mnemonic" readonly="not context.get('benefit_code_form_edit')"/>
+                        <field name="benefit_type" readonly="not context.get('benefit_code_form_edit')"/>
+                        <field name="measurement_unit" widget="g2p_pbms.benefit_unit_widget" readonly="not context.get('benefit_code_form_edit')"/>
+                        <field name="decimal_places" readonly="not context.get('benefit_code_form_edit')"/>
+                        <field name="benefit_description" readonly="not context.get('benefit_code_form_edit')"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="view_g2p_benefit_codes_tree" model="ir.ui.view">
+        <field name="name">g2p.benefit.codes.tree</field>
+        <field name="model">g2p.benefit.codes</field>
+        <field name="arch" type="xml">
+            <tree string="Benefit Codes">
+                <field name="benefit_mnemonic"/>
+                <field name="benefit_type"/>
+                <field name="measurement_unit"/>
+                <field name="benefit_description"/>
+                <button name="action_open_edit" type="object" class="fa fa-pencil" title="Edit" groups="g2p_pbms.group_benefit_code_editor"/>
+            </tree>
+        </field>
+    </record>
+</odoo>

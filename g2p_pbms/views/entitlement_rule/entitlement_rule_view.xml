@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Actions -->
+    <record id="action_g2p_entitlement_rule_definition" model="ir.actions.act_window">
+        <field name="name">Entitlement Rule</field>
+        <field name="res_model">g2p.entitlement.rule.definition</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="view_g2p_entitlement_rule_definition_form" model="ir.ui.view">
+        <field name="name">g2p.entitlement.rule.definition.form</field>
+        <field name="model">g2p.entitlement.rule.definition</field>
+        <field name="arch" type="xml">
+            <form string="Entitlement Rule">
+                <sheet>
+                    <group>
+                        <field name="allowed_benefit_code_ids" invisible="1"/>
+                        <field name="allowed_multipliers" invisible="1"/>
+                        <field name="mnemonic"/>
+                        <field name="description"/>
+                        <field name="target_registry" invisible="0"/>
+                        <field name="benefit_code_id" domain="[('id', 'in', allowed_benefit_code_ids)]" options="{'no_quick_create': True}"/>
+                        <field name="quantity"/>
+                        <field name="multiplier" widget="g2p_pbms.multiplier_widget"/>
+                        <field name="measurement_unit" readonly="1" no_label="1"/>
+                    </group>
+                </sheet>
+                <sheet>
+                    <group>
+                        <field name="sql_query"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_g2p_entitlement_rule_definition_tree" model="ir.ui.view">
+        <field name="name">g2p.entitlement.rule.definition.tree</field>
+        <field name="model">g2p.entitlement.rule.definition</field>
+        <field name="arch" type="xml">
+            <tree string="Entitlement Rule">
+                <control>
+                    <create string="Add Entitlement Rule"/>
+                  </control>
+                <field name="mnemonic" string="Rule Mnemonic" options="{'no_create': True, 'no_edit': True}"/>
+                <field name="benefit_code_id" string="Benefit Code"/>
+                <field name="target_registry"/>
+                <field name="quantity" string="Quantity"/>
+                <field name="measurement_unit" string="Measurement Unit"/>
+                <field name="multiplier" string="Multiplier"/>
+                <field name="description" string="Description"/>
+                <button name="action_open_view" type="object" string="View Entitlement Rule" class="oe_link" title="View Entitlement Rule"/>
+            </tree>
+        </field>
+    </record>
+
+  </odoo>

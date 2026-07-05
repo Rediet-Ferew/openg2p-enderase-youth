@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_g2p_programs_form_inherit_registry_database" model="ir.ui.view">
+        <field name="name">g2p.programs.form.inherit.registry.database</field>
+        <field name="model">g2p.program.definition</field>
+        <field name="inherit_id" ref="g2p_pbms.view_g2p_programs_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='target_registry']" position="before">
+                <field name="registry_database_id" readonly="not context.get('program_form_create')"/>
+                <field name="registry_model_name" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='target_registry']" position="attributes">
+                <attribute name="readonly">1</attribute>
+                <attribute name="force_save">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='eligibility_rule_ids']" position="attributes">
+                <attribute name="context">{'default_program_id': id, 'default_target_registry': target_registry}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='entitlement_rule_ids']" position="attributes">
+                <attribute name="context">{'default_program_id': id, 'default_target_registry': target_registry, 'default_allowed_benefit_code_ids': benefit_code_ids}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_g2p_programs_config_form_inherit_registry_database" model="ir.ui.view">
+        <field name="name">g2p.programs.config.form.inherit.registry.database</field>
+        <field name="model">g2p.program.definition</field>
+        <field name="inherit_id" ref="g2p_pbms.view_g2p_programs_config_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='target_registry']" position="before">
+                <field name="registry_database_id" readonly="not context.get('program_form_create')"/>
+                <field name="registry_model_name" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='target_registry']" position="attributes">
+                <attribute name="readonly">1</attribute>
+                <attribute name="force_save">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='eligibility_rule_ids']" position="attributes">
+                <attribute name="context">{'default_program_id': id, 'default_target_registry': target_registry}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='entitlement_rule_ids']" position="attributes">
+                <attribute name="context">{'default_program_id': id, 'default_target_registry': target_registry, 'default_allowed_benefit_code_ids': benefit_code_ids}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_g2p_programs_tree_inherit_registry_database" model="ir.ui.view">
+        <field name="name">g2p.programs.tree.inherit.registry.database</field>
+        <field name="model">g2p.program.definition</field>
+        <field name="inherit_id" ref="g2p_pbms.view_g2p_programs_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='target_registry']" position="before">
+                <field name="registry_database_id"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

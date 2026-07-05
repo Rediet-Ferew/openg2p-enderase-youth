@@ -1,0 +1,19 @@
+.o_widget.o_widget_g2p_beneficiaries_widget {
+    width: 100% !important;
+    box-sizing: border-box;
+}
+
+.g2p-beneficiaries {
+    overflow-x: auto;
+}
+
+.g2p-beneficiaries-table {
+    min-width: 960px;
+    font-size: 0.95rem;
+}
+
+.o_beneficiary_pager {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+}
