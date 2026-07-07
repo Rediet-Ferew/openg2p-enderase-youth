@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!--
+        Gender options for registrants. The res.partner.gender selection is built
+        dynamically from gender.type as (value, code); the ODK membership form
+        submits the lowercase value (male/female).
+    -->
+    <record id="gender_type_female" model="gender.type">
+        <field name="value">female</field>
+        <field name="code">Female</field>
+    </record>
+    <record id="gender_type_male" model="gender.type">
+        <field name="value">male</field>
+        <field name="code">Male</field>
+    </record>
+</odoo>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="enderase_fonts" inherit_id="web.layout" name="Enderase Fonts">
+        <xpath expr="//head/link[last()]" position="after">
+            <link rel="preconnect" href="https://fonts.googleapis.com"/>
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="crossorigin"/>
+            <link
+                rel="stylesheet"
+                href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&amp;family=Manrope:wght@400;500;600;700&amp;display=swap"
+            />
+        </xpath>
+    </template>
+</odoo>

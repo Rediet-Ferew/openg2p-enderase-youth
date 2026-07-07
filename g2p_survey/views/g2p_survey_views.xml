@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_survey_survey_form_odk_inherit" model="ir.ui.view">
+        <field name="name">survey.survey.form.odk.inherit</field>
+        <field name="model">survey.survey</field>
+        <field name="inherit_id" ref="survey.survey_survey_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header/button[@name='action_print_survey']" position="after">
+                <button
+                    name="action_g2p_push_to_odk"
+                    type="object"
+                    string="Push to ODK"
+                    class="btn-primary"
+                    groups="survey.group_survey_manager"
+                    invisible="g2p_odk_delivery_mode == 'online'"
+                />
+                <button
+                    name="action_g2p_sync_odk_choices"
+                    type="object"
+                    string="Sync ODK Choices"
+                    groups="survey.group_survey_manager"
+                    help="Populate model-backed select questions with stored answers so the online survey renders their options."
+                />
+                <button
+                    name="action_g2p_import_odk_submissions"
+                    type="object"
+                    string="Import ODK Submissions"
+                    groups="survey.group_survey_manager"
+                    invisible="not g2p_odk_xml_form_id"
+                />
+                <button
+                    name="action_g2p_assign_odk_app_users"
+                    type="object"
+                    string="Assign ODK Users"
+                    groups="survey.group_survey_manager"
+                    invisible="not g2p_odk_xml_form_id"
+                />
+            </xpath>
+            <xpath expr="//notebook/page[@name='options']" position="after">
+                <page string="ODK" name="g2p_odk">
+                    <group>
+                        <group string="Delivery">
+                            <field name="g2p_odk_delivery_mode"/>
+                            <field name="g2p_odk_server_id"/>
+                            <field name="g2p_odk_project_name" placeholder="e.g. Enderase (auto-created if missing)"/>
+                            <field name="g2p_odk_project_id"/>
+                            <field name="g2p_odk_xml_form_id" readonly="1"/>
+                            <field name="g2p_odk_version" readonly="1"/>
+                        </group>
+                        <group string="Status">
+                            <field name="g2p_odk_state" readonly="1"/>
+                            <field name="g2p_odk_published_at" readonly="1"/>
+                            <field name="g2p_odk_last_sync_at" readonly="1"/>
+                            <field name="g2p_odk_last_import_at" readonly="1"/>
+                            <field name="g2p_odk_last_error" readonly="1"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_survey_user_input_tree_odk_inherit" model="ir.ui.view">
+        <field name="name">survey.user_input.tree.odk.inherit</field>
+        <field name="model">survey.user_input</field>
+        <field name="inherit_id" ref="survey.survey_user_input_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='survey_id']" position="after">
+                <field name="g2p_response_source" optional="show"/>
+                <field name="g2p_odk_instance_id" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_survey_user_input_form_odk_inherit" model="ir.ui.view">
+        <field name="name">survey.user_input.form.odk.inherit</field>
+        <field name="model">survey.user_input</field>
+        <field name="inherit_id" ref="survey.survey_user_input_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="before">
+                <div class="oe_button_box" name="button_box" invisible="g2p_response_source != 'odk'">
+                    <button
+                        type="object"
+                        name="action_g2p_view_odk_attachments"
+                        class="oe_stat_button"
+                        icon="fa-paperclip"
+                        invisible="g2p_odk_attachment_count == 0"
+                    >
+                        <field name="g2p_odk_attachment_count" widget="statinfo" string="ODK Media"/>
+                    </button>
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='email']" position="after">
+                <field name="g2p_response_source"/>
+                <field name="g2p_odk_instance_id" invisible="g2p_response_source != 'odk'"/>
+                <field name="g2p_odk_submitter_id" invisible="g2p_response_source != 'odk'"/>
+                <field name="g2p_odk_device_id" invisible="g2p_response_source != 'odk'"/>
+            </xpath>
+            <xpath expr="//notebook/page[@name='page_answers']" position="after">
+                <page string="ODK Payload" name="g2p_odk_payload" invisible="g2p_response_source != 'odk'">
+                    <group string="Submission Metadata">
+                        <field name="g2p_odk_submission_meta" nolabel="1"/>
+                    </group>
+                    <group string="Raw XML">
+                        <field name="g2p_odk_raw_payload" nolabel="1"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_survey_user_input_search_odk_inherit" model="ir.ui.view">
+        <field name="name">survey.user_input.search.odk.inherit</field>
+        <field name="model">survey.user_input</field>
+        <field name="inherit_id" ref="survey.survey_user_input_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='completed']" position="after">
+                <filter name="source_odoo" string="Odoo Online" domain="[('g2p_response_source', '=', 'odoo')]"/>
+                <filter name="source_odk" string="ODK Offline" domain="[('g2p_response_source', '=', 'odk')]"/>
+            </xpath>
+            <xpath expr="//filter[@name='group_by_survey']" position="after">
+                <filter string="Source" name="group_by_g2p_response_source" domain="[]" context="{'group_by': 'g2p_response_source'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_g2p_survey_odk_server_tree" model="ir.ui.view">
+        <field name="name">g2p.survey.odk.server.tree</field>
+        <field name="model">g2p.survey.odk.server</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="base_url"/>
+                <field name="api_email"/>
+                <field name="default_project_id"/>
+                <field name="last_connection_status"/>
+                <field name="last_connection_at"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_g2p_survey_odk_server_form" model="ir.ui.view">
+        <field name="name">g2p.survey.odk.server.form</field>
+        <field name="model">g2p.survey.odk.server</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_test_connection" type="object" string="Test Connection" class="btn-primary"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="base_url"/>
+                            <field name="api_email"/>
+                            <field name="api_password" password="True"/>
+                        </group>
+                        <group>
+                            <field name="default_project_id"/>
+                            <field name="timeout"/>
+                            <field name="verify_ssl"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <group string="Last Connection">
+                        <field name="last_connection_status" readonly="1"/>
+                        <field name="last_connection_at" readonly="1"/>
+                        <field name="last_error" readonly="1"/>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_g2p_survey_odk_user_tree" model="ir.ui.view">
+        <field name="name">g2p.survey.odk.user.tree</field>
+        <field name="model">g2p.survey.odk.user</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="user_type"/>
+                <field name="email"/>
+                <field name="server_id"/>
+                <field name="project_id"/>
+                <field name="actor_id"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_g2p_survey_odk_user_form" model="ir.ui.view">
+        <field name="name">g2p.survey.odk.user.form</field>
+        <field name="model">g2p.survey.odk.user</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_create_in_odk" type="object" string="Create in ODK" class="btn-primary" invisible="state == 'created'"/>
+                    <button name="action_assign_to_surveys" type="object" string="Assign Survey Access" invisible="state != 'created'"/>
+                    <button name="action_revoke" type="object" string="Revoke App User" confirm="Revoke this ODK Collect app user? Its token will stop working." invisible="state != 'created' or user_type != 'app_user'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,created"/>
+                </header>
+                <sheet>
+                    <field name="active" invisible="1"/>
+                    <widget name="web_ribbon" title="Revoked" bg_color="text-bg-danger" invisible="state != 'revoked'"/>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="user_type"/>
+                            <field name="email" invisible="user_type != 'staff'"/>
+                            <field name="password" password="True" invisible="user_type != 'staff'"/>
+                            <field name="server_id"/>
+                            <field name="project_id"/>
+                        </group>
+                        <group>
+                            <field name="actor_id" readonly="1"/>
+                            <field name="token" readonly="1" password="True"/>
+                            <field name="form_role"/>
+                            <field name="last_sync_at" readonly="1"/>
+                            <field name="last_error" readonly="1"/>
+                        </group>
+                    </group>
+                    <group string="Allowed Surveys">
+                        <field name="survey_ids" widget="many2many_tags"/>
+                    </group>
+                    <group
+                        string="ODK Collect Setup"
+                        name="g2p_odk_collect_setup"
+                        invisible="user_type != 'app_user' or state != 'created'"
+                    >
+                        <field name="g2p_odk_config_url" readonly="1" widget="CopyClipboardChar"/>
+                        <field name="g2p_odk_qr_code" widget="image" nolabel="1" options="{'size': [220, 220]}"/>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_g2p_surveys" model="ir.actions.act_window">
+        <field name="name">Surveys</field>
+        <field name="res_model">survey.survey</field>
+        <field name="view_mode">kanban,tree,form,activity</field>
+    </record>
+
+    <record id="action_g2p_survey_responses" model="ir.actions.act_window">
+        <field name="name">Survey Responses</field>
+        <field name="res_model">survey.user_input</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_group_by_survey': True}</field>
+    </record>
+
+    <record id="action_g2p_survey_odk_servers" model="ir.actions.act_window">
+        <field name="name">ODK Servers</field>
+        <field name="res_model">g2p.survey.odk.server</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="action_g2p_survey_odk_users" model="ir.actions.act_window">
+        <field name="name">ODK Users</field>
+        <field name="res_model">g2p.survey.odk.user</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="view_survey_question_form_odk_inherit" model="ir.ui.view">
+        <field name="name">survey.question.form.odk.inherit</field>
+        <field name="model">survey.question</field>
+        <field name="inherit_id" ref="survey.survey_question_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="ODK / XLSForm" name="g2p_odk">
+                    <group>
+                        <group string="Field">
+                            <field name="g2p_odk_name" placeholder="e.g. admin_region"/>
+                            <field name="g2p_odk_appearance" placeholder="e.g. minimal, multiline"/>
+                            <field name="g2p_odk_relevant" placeholder="${occupation_profession}='other'"/>
+                            <field name="g2p_odk_constraint" placeholder=". &lt;= today()"/>
+                            <field name="g2p_odk_constraint_message"/>
+                        </group>
+                        <group
+                            string="Choices from a model"
+                            invisible="question_type not in ('simple_choice', 'multiple_choice')"
+                        >
+                            <field name="g2p_odk_choice_model" placeholder="g2p.enderase.admin.zone"/>
+                            <field name="g2p_odk_choice_value_field"/>
+                            <field name="g2p_odk_choice_label_field"/>
+                            <field name="g2p_odk_choice_domain"/>
+                            <field name="g2p_odk_choice_order"/>
+                            <separator string="Cascading select"/>
+                            <field name="g2p_odk_choice_filter_parent" placeholder="admin_region"/>
+                            <field name="g2p_odk_choice_filter_column" placeholder="region_code"/>
+                            <field name="g2p_odk_choice_parent_path" placeholder="region_id.code"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

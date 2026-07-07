@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Force native Survey app menu back to top-level and keep it visible.
+         g2p_registry archives it on install/upgrade; models/ir_module.py
+         re-enables it, this just sets the initial state. -->
+    <record id="survey.menu_surveys" model="ir.ui.menu">
+        <field name="parent_id" eval="False"/>
+        <field name="sequence">130</field>
+        <field name="active" eval="True"/>
+        <field name="groups_id" eval="[(6, 0, [ref('survey.group_survey_user')])]"/>
+    </record>
+    <record id="survey.menu_survey_form" model="ir.ui.menu">
+        <field name="parent_id" ref="survey.menu_surveys"/>
+    </record>
+    <record id="survey.menu_survey_type_form1" model="ir.ui.menu">
+        <field name="parent_id" ref="survey.menu_surveys"/>
+    </record>
+    <record id="survey.survey_menu_questions" model="ir.ui.menu">
+        <field name="parent_id" ref="survey.menu_surveys"/>
+    </record>
+
+    <menuitem
+        id="menu_g2p_survey_odk_root"
+        name="ODK Integration"
+        parent="survey.menu_surveys"
+        sequence="80"
+        groups="survey.group_survey_manager"
+    />
+    <menuitem
+        id="menu_g2p_survey_odk_users"
+        name="ODK Users"
+        parent="menu_g2p_survey_odk_root"
+        action="action_g2p_survey_odk_users"
+        sequence="10"
+        groups="survey.group_survey_manager"
+    />
+    <menuitem
+        id="menu_g2p_survey_odk_servers"
+        name="ODK Servers"
+        parent="menu_g2p_survey_odk_root"
+        action="action_g2p_survey_odk_servers"
+        sequence="20"
+    />
+</odoo>

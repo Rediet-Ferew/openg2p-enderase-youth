@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_survey_survey_form_enderase_member" model="ir.ui.view">
+        <field name="name">survey.survey.form.enderase.member</field>
+        <field name="model">survey.survey</field>
+        <field name="inherit_id" ref="survey.survey_survey_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='options']" position="inside">
+                <group string="Enderase Registry">
+                    <field name="enderase_creates_member"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_survey_question_form_enderase_member" model="ir.ui.view">
+        <field name="name">survey.question.form.enderase.member</field>
+        <field name="model">survey.question</field>
+        <field name="inherit_id" ref="survey.survey_question_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='question_type']" position="after">
+                <field name="enderase_member_field"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_survey_user_input_form_enderase_member" model="ir.ui.view">
+        <field name="name">survey.user_input.form.enderase.member</field>
+        <field name="model">survey.user_input</field>
+        <field name="inherit_id" ref="survey.survey_user_input_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='email']" position="after">
+                <field name="enderase_member_id" readonly="1"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

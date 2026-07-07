@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="enderase_theme.ListKpi">
+        <div class="o_enderase_kpi_strip" t-if="cards.length">
+            <div
+                t-foreach="cards"
+                t-as="card"
+                t-key="card.label"
+                t-attf-class="o_enderase_kpi_card o_enderase_kpi_card_{{ card.variant }}"
+            >
+                <div class="o_enderase_kpi_value" t-esc="card.value"/>
+                <div class="o_enderase_kpi_label" t-esc="card.label"/>
+            </div>
+        </div>
+    </t>
+
+    <t t-inherit="web.ListView" t-inherit-mode="extension">
+        <xpath expr="//t[@t-component='props.Renderer']" position="before">
+            <EnderaseListKpi
+                resModel="model.root.resModel"
+                total="nbTotal"
+                pageCount="model.root.records.length"
+            />
+            <div class="o_enderase_list_toolbar"/>
+        </xpath>
+    </t>
+
+</templates>

@@ -1,0 +1,51 @@
+.o_enderase_kpi_strip {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    animation: o-enderase-fade-up 400ms var(--enderase-ease) both;
+
+    @media (min-width: 768px) {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+}
+
+.o_enderase_kpi_card {
+    padding: 1rem 1.25rem;
+    border-radius: 1.5rem;
+    transition: transform 200ms var(--enderase-ease), box-shadow 200ms var(--enderase-ease);
+
+    &:hover {
+        transform: translateY(-2px);
+    }
+}
+
+.o_enderase_kpi_card_gold {
+    border: 1px solid transparent;
+    background: var(--enderase-gradient-gold);
+    box-shadow: var(--enderase-shadow-gold);
+    color: var(--enderase-brown-deep);
+}
+
+.o_enderase_kpi_card_cream {
+    border: 1px solid var(--enderase-border);
+    background: var(--enderase-card);
+    box-shadow: var(--enderase-shadow-block);
+    color: var(--enderase-ink);
+}
+
+.o_enderase_kpi_value {
+    font-family: Sora, sans-serif;
+    font-size: clamp(1.5rem, 2.5vw, 1.875rem);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    font-variant-numeric: tabular-nums;
+}
+
+.o_enderase_kpi_label {
+    margin-top: 0.25rem;
+    font-family: Manrope, sans-serif;
+    font-size: 0.875rem;
+    font-weight: 600;
+    opacity: 0.82;
+}

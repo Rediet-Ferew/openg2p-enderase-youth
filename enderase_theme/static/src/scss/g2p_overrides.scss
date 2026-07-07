@@ -1,0 +1,23 @@
+// Neutralize g2p_social_registry_theme when co-installed with enderase_theme.
+
+body.o_web_client {
+    font-family: Manrope, ui-sans-serif, system-ui, sans-serif !important;
+}
+
+.o_main_navbar .o_menu_sections {
+    background-image: none !important;
+}
+
+.o_required_modifier.o_input,
+.o_required_modifier .o_input {
+    background: hsl(40, 50%, 98%) !important;
+    border-color: #e2d7cb !important;
+    box-shadow: none !important;
+}
+
+.btn-success,
+.btn-success:hover {
+    background: linear-gradient(135deg, hsl(44, 92%, 55%), hsl(38, 88%, 52%)) !important;
+    border-color: hsl(38, 88%, 48%) !important;
+    color: #5b3615 !important;
+}

@@ -1,0 +1,148 @@
+// Storyteller typography — Sora (display) + Manrope (body)
+
+:root {
+    --enderase-font-body: Manrope, ui-sans-serif, system-ui, sans-serif;
+    --enderase-font-display: Sora, ui-sans-serif, system-ui, sans-serif;
+    --enderase-fw-regular: 400;
+    --enderase-fw-medium: 500;
+    --enderase-fw-semibold: 600;
+    --enderase-fw-bold: 700;
+    --enderase-fw-extrabold: 800;
+}
+
+body.o_web_client,
+.o_web_client {
+    font-family: var(--enderase-font-body);
+    font-weight: var(--enderase-fw-regular);
+    font-feature-settings: "ss01", "cv01";
+}
+
+// Display — Sora extrabold
+h1, h2, h3,
+.font-display,
+.o_control_panel .o_last_breadcrumb_item,
+.o_form_view .o_horizontal_separator,
+.o_form_view .oe_title h1,
+.o_form_view .oe_title h2,
+.o_enderase_kpi_value,
+.o_enderase_home_menu_title {
+    font-family: var(--enderase-font-display);
+    letter-spacing: -0.03em;
+}
+
+// Body UI — Manrope with storyteller weights
+.o_control_panel,
+.o_list_renderer,
+.o_form_view,
+.o_searchview,
+.o_search_panel,
+.btn,
+.dropdown-item,
+.o_main_navbar {
+    font-family: var(--enderase-font-body);
+}
+
+// Page title — AppShell h1: text-2xl font-extrabold
+.o_control_panel .o_last_breadcrumb_item {
+    font-size: 1.5rem !important;
+    font-weight: var(--enderase-fw-extrabold) !important;
+    line-height: 1.15;
+}
+
+// Breadcrumb trail — text-xs font-semibold equivalent
+.o_control_panel .o_breadcrumb .breadcrumb-item,
+.o_control_panel .o_breadcrumb .breadcrumb-item a {
+    font-size: 0.75rem;
+    font-weight: var(--enderase-fw-semibold);
+}
+
+// Sidebar nav — text-sm font-medium
+.o_enderase_sidebar_app {
+    font-weight: var(--enderase-fw-medium);
+}
+
+.o_enderase_sidebar_group_label {
+    font-weight: var(--enderase-fw-bold);
+}
+
+.o_enderase_sidebar_brand_name {
+    font-weight: var(--enderase-fw-extrabold);
+}
+
+// Form labels — text-xs font-semibold uppercase
+.o_form_view .o_form_label,
+.o_form_view label.o_form_label,
+.o_form_view .o_wrap_label .o_form_label {
+    font-weight: var(--enderase-fw-semibold) !important;
+}
+
+// Form section title — text-xl font-extrabold
+.o_form_view .o_horizontal_separator {
+    font-size: 1.25rem !important;
+    font-weight: var(--enderase-fw-extrabold) !important;
+}
+
+// Form inputs — text-sm font-medium
+.o_form_view .o_input,
+.o_form_view .form-control,
+.o_form_view .o_field_widget input,
+.o_form_view .o_field_widget textarea,
+.o_form_view .o_field_widget select {
+    font-weight: var(--enderase-fw-medium);
+}
+
+// List table header — text-xs font-bold uppercase
+.o_list_renderer .o_list_table thead th {
+    font-weight: var(--enderase-fw-bold) !important;
+}
+
+// List primary cell — font-semibold
+.o_list_renderer .o_data_cell[name="name"],
+.o_list_renderer .o_data_cell[name="display_name"],
+.o_list_renderer .o_data_cell[name="complete_name"] {
+    font-weight: var(--enderase-fw-semibold);
+}
+
+// List body — text-sm font-medium default
+.o_list_renderer .o_data_cell {
+    font-weight: var(--enderase-fw-medium);
+}
+
+// Badges — text-xs font-semibold
+.o_list_renderer .badge,
+.o_list_renderer .o_field_badge span,
+.o_searchview .o_searchview_facet {
+    font-weight: var(--enderase-fw-semibold);
+}
+
+// Primary buttons — text-sm font-bold
+.btn-primary,
+.o_list_button_add,
+.o_form_button_save {
+    font-weight: var(--enderase-fw-bold) !important;
+}
+
+// Secondary buttons — text-sm font-medium
+.btn-secondary,
+.btn-light,
+.o_control_panel .o_cp_switch_buttons .btn {
+    font-weight: var(--enderase-fw-medium) !important;
+}
+
+// Search input — text-sm font-medium, muted placeholder
+.o_searchview .o_searchview_input,
+.o_searchview input {
+    font-size: 0.875rem;
+    font-weight: var(--enderase-fw-medium);
+}
+
+.o_searchview .o_searchview_input::placeholder,
+.o_searchview input::placeholder {
+    color: var(--enderase-muted-fg);
+    font-weight: var(--enderase-fw-medium);
+}
+
+// KPI labels — text-sm font-medium
+.o_enderase_kpi_label {
+    font-weight: var(--enderase-fw-medium);
+}
