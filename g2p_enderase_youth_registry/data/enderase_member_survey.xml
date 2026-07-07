@@ -1,0 +1,487 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!--
+        Default survey that provisions an Enderase member on completion.
+
+        The survey CONFIGURATION is the single source of truth: pushing it to ODK
+        (g2p_survey) generates the XLSForm, and select questions pull their choices
+        directly from the registry lookup models at push time (value = code,
+        label = name), including the cascading Region -> Zone -> Woreda selects.
+        Imported submissions map each node back onto the member by code.
+    -->
+    <record id="survey_enderase_member_registration" model="survey.survey">
+        <field name="title">Enderase Youth Membership Registration</field>
+        <field name="description"><![CDATA[<p>Register a new Enderase youth member. Completing this form (online or via ODK Collect) creates the member in the Enderase registry.</p>]]></field>
+        <field name="access_mode">public</field>
+        <field name="users_login_required" eval="False"/>
+        <field name="questions_layout">one_page</field>
+        <field name="enderase_creates_member" eval="True"/>
+        <field name="g2p_odk_delivery_mode">both</field>
+        <field name="g2p_odk_project_name">Enderase</field>
+    </record>
+
+    <!-- ===================== Personal information ===================== -->
+    <record id="q_full_name" model="survey.question">
+        <field name="survey_id" ref="survey_enderase_member_registration"/>
+        <field name="sequence">10</field>
+        <field name="title">Full Name</field>
+        <field name="question_type">char_box</field>
+        <field name="constr_mandatory" eval="True"/>
+        <field name="g2p_odk_name">full_name</field>
+        <field name="enderase_member_field">enderase_full_name</field>
+    </record>
+
+    <record id="q_fayda_national_id" model="survey.question">
+        <field name="survey_id" ref="survey_enderase_member_registration"/>
+        <field name="sequence">20</field>
+        <field name="title">Fayda / National ID</field>
+        <field name="question_type">char_box</field>
+        <field name="g2p_odk_name">fayda_national_id</field>
+        <field name="enderase_member_field">fayda_national_id</field>
+    </record>
+
+    <record id="q_date_of_birth" model="survey.question">
+        <field name="survey_id" ref="survey_enderase_member_registration"/>
+        <field name="sequence">30</field>
+        <field name="title">Date of Birth</field>
+        <field name="question_type">date</field>
+        <field name="g2p_odk_name">date_of_birth</field>
+        <field name="g2p_odk_constraint">. &lt;= today()</field>
+        <field name="g2p_odk_constraint_message">Date of birth cannot be in the future.</field>
+        <field name="enderase_member_field">date_of_birth</field>
+    </record>
+
+    <record id="q_gender" model="survey.question">
+        <field name="survey_id" ref="survey_enderase_member_registration"/>
+        <field name="sequence">40</field>
+        <field name="title">Gender</field>
+        <field name="question_type">simple_choice</field>
+        <field name="g2p_odk_name">gender</field>
+        <field name="g2p_odk_appearance">minimal</field>
+        <field name="g2p_odk_choice_model">gender.type</field>
+        <field name="g2p_odk_choice_value_field">value</field>
+        <field name="g2p_odk_choice_label_field">code</field>
+        <field name="enderase_member_field">gender</field>
+    </record>
+
+    <record id="q_nationality" model="survey.question">
+        <field name="survey_id" ref="survey_enderase_member_registration"/>
+        <field name="sequence">50</field>
+        <field name="title">Nationality</field>
+        <field name="question_type">char_box</field>
+        <field name="g2p_odk_name">nationality</field>
+        <field name="enderase_member_field">enderase_nationality</field>
+    </record>
+
+    <record id="q_phone_number" model="survey.question">
+        <field name="survey_id" ref="survey_enderase_member_registration"/>
+        <field name="sequence">60</field>
+        <field name="title">Phone Number</field>
+        <field name="question_type">char_box</field>
+        <field name="g2p_odk_name">phone_number</field>
+        <field name="enderase_member_field">phone</field>
+    </record>
+
+    <record id="q_email_address" model="survey.question">
+        <field name="survey_id" ref="survey_enderase_member_registration"/>
+        <field name="sequence">70</field>
+        <field name="title">Email Address</field>
+        <field name="question_type">char_box</field>
+        <field name="validation_email" eval="True"/>
+        <field name="g2p_odk_name">email_address</field>
+        <field name="g2p_odk_constraint">regex(., '^[^@]+@[^@]+\.[^@]+$')</field>
+        <field name="g2p_odk_constraint_message">Enter a valid email address.</field>
+        <field name="enderase_member_field">email</field>
+    </record>
+
+    <!-- ===================== Address (cascading) ===================== -->
+    <record id="q_address" model="survey.question">
+        <field name="survey_id" ref="survey_enderase_member_registration"/>
+        <field name="sequence">80</field>
+        <field name="title">Address</field>
+        <field name="question_type">char_box</field>
+        <field name="g2p_odk_name">address</field>
+        <field name="enderase_member_field">street</field>
+    </record>
+
+    <record id="q_admin_region" model="survey.question">
+        <field name="survey_id" ref="survey_enderase_member_registration"/>
+        <field name="sequence">90</field>
+        <field name="title">Region</field>
+        <field name="question_type">simple_choice</field>
+        <field name="g2p_odk_name">admin_region</field>
+        <field name="g2p_odk_appearance">minimal</field>
+        <field name="g2p_odk_choice_model">g2p.enderase.admin.region</field>
+        <field name="enderase_member_field">enderase_admin_region_id</field>
+    </record>
+
+    <record id="q_admin_zone" model="survey.question">
+        <field name="survey_id" ref="survey_enderase_member_registration"/>
+        <field name="sequence">100</field>
+        <field name="title">Zone</field>
+        <field name="question_type">simple_choice</field>
+        <field name="g2p_odk_name">admin_zone</field>
+        <field name="g2p_odk_appearance">minimal</field>
+        <field name="g2p_odk_choice_model">g2p.enderase.admin.zone</field>
+        <field name="g2p_odk_choice_filter_column">region_code</field>
+        <field name="g2p_odk_choice_parent_path">region_id.code</field>
+        <field name="g2p_odk_choice_filter_parent">admin_region</field>
+        <field name="enderase_member_field">enderase_admin_zone_id</field>
+    </record>
+
+    <record id="q_admin_woreda" model="survey.question">
+        <field name="survey_id" ref="survey_enderase_member_registration"/>
+        <field name="sequence">110</field>
+        <field name="title">Woreda</field>
+        <field name="question_type">simple_choice</field>
+        <field name="g2p_odk_name">admin_woreda</field>
+        <field name="g2p_odk_appearance">minimal</field>
+        <field name="g2p_odk_choice_model">g2p.enderase.admin.woreda</field>
+        <field name="g2p_odk_choice_filter_column">zone_code</field>
+        <field name="g2p_odk_choice_parent_path">zone_id.code</field>
+        <field name="g2p_odk_choice_filter_parent">admin_zone</field>
+        <field name="enderase_member_field">enderase_admin_woreda_id</field>
+    </record>
+
+    <record id="q_kebele_name" model="survey.question">
+        <field name="survey_id" ref="survey_enderase_member_registration"/>
+        <field name="sequence">120</field>
+        <field name="title">Kebele Name</field>
+        <field name="question_type">char_box</field>
+        <field name="g2p_odk_name">kebele_name</field>
+        <field name="enderase_member_field">enderase_kebele_name</field>
+    </record>
+
+    <record id="q_subcity" model="survey.question">
+        <field name="survey_id" ref="survey_enderase_member_registration"/>
+        <field name="sequence">130</field>
+        <field name="title">Subcity</field>
+        <field name="question_type">simple_choice</field>
+        <field name="g2p_odk_name">subcity</field>
+        <field name="g2p_odk_appearance">minimal</field>
+        <field name="g2p_odk_choice_model">g2p.enderase.subcity</field>
+        <field name="g2p_odk_relevant">${admin_region}='ET14' or ${admin_region}='ET15'</field>
+        <field name="enderase_member_field">enderase_subcity_id</field>
+    </record>
+
+    <!-- ===================== Education &amp; profession ===================== -->
+    <record id="q_occupation_profession" model="survey.question">
+        <field name="survey_id" ref="survey_enderase_member_registration"/>
+        <field name="sequence">140</field>
+        <field name="title">Occupation / Profession</field>
+        <field name="question_type">simple_choice</field>
+        <field name="g2p_odk_name">occupation_profession</field>
+        <field name="g2p_odk_appearance">minimal</field>
+        <field name="g2p_odk_choice_model">g2p.enderase.profession</field>
+        <field name="enderase_member_field">occupation_profession_id</field>
+    </record>
+
+    <record id="q_profession_other" model="survey.question">
+        <field name="survey_id" ref="survey_enderase_member_registration"/>
+        <field name="sequence">150</field>
+        <field name="title">Other Occupation / Profession</field>
+        <field name="question_type">char_box</field>
+        <field name="g2p_odk_name">profession_other</field>
+        <field name="g2p_odk_relevant">${occupation_profession}='other'</field>
+        <field name="enderase_member_field">profession_other</field>
+    </record>
+
+    <record id="q_educational_level" model="survey.question">
+        <field name="survey_id" ref="survey_enderase_member_registration"/>
+        <field name="sequence">160</field>
+        <field name="title">Educational Level</field>
+        <field name="question_type">simple_choice</field>
+        <field name="g2p_odk_name">educational_level</field>
+        <field name="g2p_odk_appearance">minimal</field>
+        <field name="g2p_odk_choice_model">g2p.enderase.education.level</field>
+        <field name="enderase_member_field">educational_level_id</field>
+    </record>
+
+    <record id="q_employment_status" model="survey.question">
+        <field name="survey_id" ref="survey_enderase_member_registration"/>
+        <field name="sequence">170</field>
+        <field name="title">Employment Status</field>
+        <field name="question_type">simple_choice</field>
+        <field name="g2p_odk_name">employment_status</field>
+        <field name="g2p_odk_appearance">minimal</field>
+        <field name="g2p_odk_choice_model">g2p.enderase.employment.status</field>
+        <field name="enderase_member_field">employment_status_id</field>
+    </record>
+
+    <!-- ===================== Skills &amp; training ===================== -->
+    <record id="q_current_skills" model="survey.question">
+        <field name="survey_id" ref="survey_enderase_member_registration"/>
+        <field name="sequence">180</field>
+        <field name="title">Current Skills</field>
+        <field name="question_type">text_box</field>
+        <field name="g2p_odk_name">current_skills</field>
+        <field name="enderase_member_field">current_skills</field>
+    </record>
+
+    <record id="q_previous_training_received" model="survey.question">
+        <field name="survey_id" ref="survey_enderase_member_registration"/>
+        <field name="sequence">190</field>
+        <field name="title">Previous Training Received</field>
+        <field name="question_type">text_box</field>
+        <field name="g2p_odk_name">previous_training_received</field>
+        <field name="enderase_member_field">previous_training_received</field>
+    </record>
+
+    <record id="q_certifications_held" model="survey.question">
+        <field name="survey_id" ref="survey_enderase_member_registration"/>
+        <field name="sequence">200</field>
+        <field name="title">Certifications Held</field>
+        <field name="question_type">text_box</field>
+        <field name="g2p_odk_name">certifications_held</field>
+        <field name="enderase_member_field">certifications_held</field>
+    </record>
+
+    <record id="q_desired_training_areas" model="survey.question">
+        <field name="survey_id" ref="survey_enderase_member_registration"/>
+        <field name="sequence">210</field>
+        <field name="title">Desired Training Areas</field>
+        <field name="question_type">multiple_choice</field>
+        <field name="g2p_odk_name">desired_training_areas</field>
+        <field name="g2p_odk_choice_model">g2p.enderase.training.area</field>
+        <field name="enderase_member_field">desired_training_area_ids</field>
+    </record>
+
+    <record id="q_training_area_other" model="survey.question">
+        <field name="survey_id" ref="survey_enderase_member_registration"/>
+        <field name="sequence">220</field>
+        <field name="title">Other Desired Training Area</field>
+        <field name="question_type">char_box</field>
+        <field name="g2p_odk_name">training_area_other</field>
+        <field name="g2p_odk_relevant">selected(${desired_training_areas}, 'other')</field>
+        <field name="enderase_member_field">training_area_other</field>
+    </record>
+
+    <record id="q_preferred_training_schedule" model="survey.question">
+        <field name="survey_id" ref="survey_enderase_member_registration"/>
+        <field name="sequence">230</field>
+        <field name="title">Preferred Training Schedule</field>
+        <field name="question_type">multiple_choice</field>
+        <field name="g2p_odk_name">preferred_training_schedule</field>
+        <field name="g2p_odk_choice_model">g2p.enderase.training.schedule</field>
+        <field name="enderase_member_field">preferred_training_schedule_ids</field>
+    </record>
+
+    <!-- ===================== Entrepreneurship &amp; support ===================== -->
+    <record id="q_interested_starting_business" model="survey.question">
+        <field name="survey_id" ref="survey_enderase_member_registration"/>
+        <field name="sequence">240</field>
+        <field name="title">Interested in starting a business?</field>
+        <field name="question_type">simple_choice</field>
+        <field name="g2p_odk_name">interested_starting_business</field>
+        <field name="g2p_odk_appearance">minimal</field>
+        <field name="enderase_member_field">interested_starting_business</field>
+    </record>
+    <record id="a_isb_yes" model="survey.question.answer">
+        <field name="question_id" ref="q_interested_starting_business"/>
+        <field name="sequence">1</field>
+        <field name="value">Yes</field>
+        <field name="g2p_odk_value">yes</field>
+    </record>
+    <record id="a_isb_no" model="survey.question.answer">
+        <field name="question_id" ref="q_interested_starting_business"/>
+        <field name="sequence">2</field>
+        <field name="value">No</field>
+        <field name="g2p_odk_value">no</field>
+    </record>
+
+    <record id="q_business_area_interest" model="survey.question">
+        <field name="survey_id" ref="survey_enderase_member_registration"/>
+        <field name="sequence">250</field>
+        <field name="title">Business Area of Interest</field>
+        <field name="question_type">char_box</field>
+        <field name="g2p_odk_name">business_area_interest</field>
+        <field name="g2p_odk_relevant">${interested_starting_business}='yes'</field>
+        <field name="enderase_member_field">business_area_interest</field>
+    </record>
+
+    <record id="q_required_support" model="survey.question">
+        <field name="survey_id" ref="survey_enderase_member_registration"/>
+        <field name="sequence">260</field>
+        <field name="title">Required Support</field>
+        <field name="question_type">multiple_choice</field>
+        <field name="g2p_odk_name">required_support</field>
+        <field name="g2p_odk_choice_model">g2p.enderase.support.service</field>
+        <field name="enderase_member_field">required_support_ids</field>
+    </record>
+
+    <!-- ===================== Membership &amp; motivation ===================== -->
+    <record id="q_previous_membership" model="survey.question">
+        <field name="survey_id" ref="survey_enderase_member_registration"/>
+        <field name="sequence">270</field>
+        <field name="title">Previous Membership</field>
+        <field name="question_type">char_box</field>
+        <field name="g2p_odk_name">previous_membership</field>
+        <field name="enderase_member_field">previous_membership</field>
+    </record>
+
+    <record id="q_experience_skill_area" model="survey.question">
+        <field name="survey_id" ref="survey_enderase_member_registration"/>
+        <field name="sequence">280</field>
+        <field name="title">Experience / Skill Area</field>
+        <field name="question_type">text_box</field>
+        <field name="g2p_odk_name">experience_skill_area</field>
+        <field name="enderase_member_field">experience_skill_area</field>
+    </record>
+
+    <record id="q_reason_for_joining" model="survey.question">
+        <field name="survey_id" ref="survey_enderase_member_registration"/>
+        <field name="sequence">290</field>
+        <field name="title">Reason for Joining</field>
+        <field name="question_type">text_box</field>
+        <field name="g2p_odk_name">reason_for_joining</field>
+        <field name="enderase_member_field">reason_for_joining</field>
+    </record>
+
+    <record id="q_interest_areas" model="survey.question">
+        <field name="survey_id" ref="survey_enderase_member_registration"/>
+        <field name="sequence">300</field>
+        <field name="title">Interest Areas</field>
+        <field name="question_type">multiple_choice</field>
+        <field name="g2p_odk_name">interest_areas</field>
+        <field name="g2p_odk_choice_model">g2p.enderase.interest.area</field>
+        <field name="enderase_member_field">interest_area_ids</field>
+    </record>
+
+    <record id="q_interest_area_other" model="survey.question">
+        <field name="survey_id" ref="survey_enderase_member_registration"/>
+        <field name="sequence">310</field>
+        <field name="title">Other Interest Area</field>
+        <field name="question_type">char_box</field>
+        <field name="g2p_odk_name">interest_area_other</field>
+        <field name="g2p_odk_relevant">selected(${interest_areas}, 'other')</field>
+        <field name="enderase_member_field">interest_area_other</field>
+    </record>
+
+    <record id="q_why_join" model="survey.question">
+        <field name="survey_id" ref="survey_enderase_member_registration"/>
+        <field name="sequence">320</field>
+        <field name="title">Why do you want to join Enderase?</field>
+        <field name="question_type">text_box</field>
+        <field name="g2p_odk_name">why_join</field>
+        <field name="enderase_member_field">why_join</field>
+    </record>
+
+    <record id="q_career_path" model="survey.question">
+        <field name="survey_id" ref="survey_enderase_member_registration"/>
+        <field name="sequence">330</field>
+        <field name="title">Career / Life Path</field>
+        <field name="question_type">text_box</field>
+        <field name="g2p_odk_name">career_path</field>
+        <field name="enderase_member_field">career_path</field>
+    </record>
+
+    <record id="q_skills_to_develop" model="survey.question">
+        <field name="survey_id" ref="survey_enderase_member_registration"/>
+        <field name="sequence">340</field>
+        <field name="title">Skills / Talents to Develop</field>
+        <field name="question_type">text_box</field>
+        <field name="g2p_odk_name">skills_to_develop</field>
+        <field name="enderase_member_field">skills_to_develop</field>
+    </record>
+
+    <record id="q_challenges_faced" model="survey.question">
+        <field name="survey_id" ref="survey_enderase_member_registration"/>
+        <field name="sequence">350</field>
+        <field name="title">Challenges Faced</field>
+        <field name="question_type">text_box</field>
+        <field name="g2p_odk_name">challenges_faced</field>
+        <field name="enderase_member_field">challenges_faced</field>
+    </record>
+
+    <record id="q_support_ambitions" model="survey.question">
+        <field name="survey_id" ref="survey_enderase_member_registration"/>
+        <field name="sequence">360</field>
+        <field name="title">How can Enderase support your ambitions?</field>
+        <field name="question_type">text_box</field>
+        <field name="g2p_odk_name">support_ambitions</field>
+        <field name="enderase_member_field">support_ambitions</field>
+    </record>
+
+    <record id="q_leadership_growth" model="survey.question">
+        <field name="survey_id" ref="survey_enderase_member_registration"/>
+        <field name="sequence">370</field>
+        <field name="title">Leadership Growth</field>
+        <field name="question_type">text_box</field>
+        <field name="g2p_odk_name">leadership_growth</field>
+        <field name="enderase_member_field">leadership_growth</field>
+    </record>
+
+    <record id="q_view_of_enderase" model="survey.question">
+        <field name="survey_id" ref="survey_enderase_member_registration"/>
+        <field name="sequence">380</field>
+        <field name="title">View of Enderase</field>
+        <field name="question_type">text_box</field>
+        <field name="g2p_odk_name">view_of_enderase</field>
+        <field name="enderase_member_field">view_of_enderase</field>
+    </record>
+
+    <record id="q_value_to_members_community" model="survey.question">
+        <field name="survey_id" ref="survey_enderase_member_registration"/>
+        <field name="sequence">390</field>
+        <field name="title">Value to Members / Community</field>
+        <field name="question_type">text_box</field>
+        <field name="g2p_odk_name">value_to_members_community</field>
+        <field name="enderase_member_field">value_to_members_community</field>
+    </record>
+
+    <record id="q_hear_about" model="survey.question">
+        <field name="survey_id" ref="survey_enderase_member_registration"/>
+        <field name="sequence">400</field>
+        <field name="title">How did you hear about Enderase?</field>
+        <field name="question_type">simple_choice</field>
+        <field name="g2p_odk_name">hear_about</field>
+        <field name="g2p_odk_appearance">minimal</field>
+        <field name="g2p_odk_choice_model">g2p.enderase.hear.about</field>
+        <field name="enderase_member_field">hear_about_id</field>
+    </record>
+
+    <record id="q_hear_about_other" model="survey.question">
+        <field name="survey_id" ref="survey_enderase_member_registration"/>
+        <field name="sequence">410</field>
+        <field name="title">Other Source</field>
+        <field name="question_type">char_box</field>
+        <field name="g2p_odk_name">hear_about_other</field>
+        <field name="g2p_odk_relevant">${hear_about}='other'</field>
+        <field name="enderase_member_field">hear_about_other</field>
+    </record>
+
+    <record id="q_membership_type" model="survey.question">
+        <field name="survey_id" ref="survey_enderase_member_registration"/>
+        <field name="sequence">420</field>
+        <field name="title">Membership Type</field>
+        <field name="question_type">simple_choice</field>
+        <field name="g2p_odk_name">membership_type</field>
+        <field name="g2p_odk_appearance">minimal</field>
+        <field name="g2p_odk_choice_model">g2p.enderase.membership.type</field>
+        <field name="enderase_member_field">membership_type_id</field>
+    </record>
+
+    <!-- ===================== Declaration ===================== -->
+    <record id="q_declaration" model="survey.question">
+        <field name="survey_id" ref="survey_enderase_member_registration"/>
+        <field name="sequence">430</field>
+        <field name="title">Declaration: I confirm the information provided is accurate.</field>
+        <field name="question_type">simple_choice</field>
+        <field name="constr_mandatory" eval="True"/>
+        <field name="g2p_odk_name">declaration</field>
+        <field name="g2p_odk_appearance">minimal</field>
+        <field name="enderase_member_field">declaration</field>
+    </record>
+    <record id="a_declaration_agree" model="survey.question.answer">
+        <field name="question_id" ref="q_declaration"/>
+        <field name="sequence">1</field>
+        <field name="value">I agree</field>
+        <field name="g2p_odk_value">agree</field>
+    </record>
+    <record id="a_declaration_disagree" model="survey.question.answer">
+        <field name="question_id" ref="q_declaration"/>
+        <field name="sequence">2</field>
+        <field name="value">I disagree</field>
+        <field name="g2p_odk_value">disagree</field>
+    </record>
+</odoo>

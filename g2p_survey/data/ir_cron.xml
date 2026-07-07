@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ir_cron_g2p_odk_import_submissions" model="ir.cron">
+        <field name="name">ODK: Import Survey Submissions</field>
+        <field name="model_id" ref="survey.model_survey_survey"/>
+        <field name="state">code</field>
+        <field name="code">model._g2p_cron_import_odk_submissions()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">hours</field>
+        <field name="numbercall">-1</field>
+        <field name="active" eval="False"/>
+    </record>
+</odoo>

@@ -8,17 +8,83 @@
             }"
         >
             <div class="o_enderase_home_menu_shell">
-                <header class="o_enderase_home_menu_header">
-                    <img
-                        class="o_enderase_home_menu_logo"
-                        t-att-src="brandIcon"
-                        alt="Enderase Youth Association"
-                    />
-                    <div class="o_enderase_home_menu_brand">
-                        <div class="o_enderase_home_menu_title">Enderase</div>
-                        <div class="o_enderase_home_menu_subtitle">Youth Association</div>
+                <header class="o_enderase_home_menu_hero">
+                    <div class="o_enderase_home_menu_hero_glow"/>
+                    <div class="o_enderase_home_menu_hero_content">
+                        <div class="o_enderase_home_menu_hero_brand">
+                            <img
+                                class="o_enderase_home_menu_logo"
+                                t-att-src="brandIcon"
+                                alt="Enderase Youth Association"
+                            />
+                            <div class="o_enderase_home_menu_brand">
+                                <div class="o_enderase_home_menu_title">Enderase Registry</div>
+                                <div class="o_enderase_home_menu_subtitle">Youth Association · Workspace</div>
+                            </div>
+                        </div>
+                        <p class="o_enderase_home_menu_hero_note">
+                            Choose an application to manage beneficiaries, programs, and insights.
+                        </p>
                     </div>
                 </header>
+
+                <section
+                    class="o_enderase_home_menu_registry"
+                    aria-label="Registry quick access"
+                >
+                    <div class="o_enderase_home_menu_registry_cards">
+                        <button
+                            t-foreach="registryCards"
+                            t-as="card"
+                            t-key="card.key"
+                            type="button"
+                            t-att-class="getRegistryCardClass(card)"
+                            t-on-click="() => this.openRegistry(card.key)"
+                        >
+                            <span class="o_enderase_home_menu_registry_count">
+                                <t t-out="card.countLabel"/>
+                            </span>
+                            <span class="o_enderase_home_menu_registry_label">
+                                <t t-out="card.label"/>
+                            </span>
+                        </button>
+                    </div>
+
+                    <form class="o_enderase_home_menu_registry_search" t-on-submit.prevent="openRegistrySearch">
+                        <label class="o_enderase_home_menu_registry_scope">
+                            <span class="visually-hidden">Register type</span>
+                            <select
+                                class="o_enderase_home_menu_registry_scope_select"
+                                t-att-value="state.registryScope"
+                                t-on-change="onScopeChange"
+                            >
+                                <t t-foreach="registryCards" t-as="card" t-key="card.key">
+                                    <option t-att-value="card.key">
+                                        <t t-out="card.label"/>
+                                    </option>
+                                </t>
+                            </select>
+                            <i class="fa fa-caret-down o_enderase_home_menu_registry_scope_icon" aria-hidden="true"/>
+                        </label>
+                        <span class="o_enderase_home_menu_registry_search_divider" aria-hidden="true"/>
+                        <input
+                            type="search"
+                            class="o_enderase_home_menu_registry_search_input"
+                            placeholder="Search records in register"
+                            t-att-value="state.searchQuery"
+                            t-on-input="onSearchInput"
+                            t-on-keydown="onSearchKeydown"
+                        />
+                        <button
+                            type="submit"
+                            class="o_enderase_home_menu_registry_search_btn"
+                            title="Search"
+                            aria-label="Search"
+                        >
+                            <i class="oi oi-search" aria-hidden="true"/>
+                        </button>
+                    </form>
+                </section>
 
                 <div class="o_enderase_home_menu_apps" role="menu">
                     <a
@@ -32,8 +98,7 @@
                         role="menuitem"
                         t-att-href="getAppHref(app)"
                         t-att-title="app.name"
-                        t-att-data-menu-xmlid="app.xmlid"
-                        t-att-data-section="app.id"
+                        t-att-style="'animation-delay: ' + (app_index * 0.04) + 's'"
                         t-on-click.prevent="() => this.openApp(app)"
                     >
                         <span class="o_enderase_home_menu_icon_frame">

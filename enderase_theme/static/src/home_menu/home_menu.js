@@ -1,16 +1,24 @@
 /** @odoo-module **/
 
 import {Component, onMounted, onWillUnmount, useExternalListener, useState} from "@odoo/owl";
+import {Domain} from "@web/core/domain";
 import {patch} from "@web/core/utils/patch";
 import {registry} from "@web/core/registry";
 import {useService} from "@web/core/utils/hooks";
 import {WebClient} from "@web/webclient/webclient";
 import {NavBar} from "@web/webclient/navbar/navbar";
+import {
+    HOME_MENU_ACTION_TAG,
+    ENDERASE_LOGO_URL,
+    REGISTRY_CARDS,
+    buildRegistrySearchDomain,
+    getAppHref,
+    getRegistryCard,
+    normalizeIconData,
+} from "../js/utils";
 
-const HOME_MENU_ACTION_TAG = "enderase_theme.home_menu";
 const HOME_MENU_SYSTRAY_KEYS = ["mail.activity_menu", "mail.messaging_menu", "web.user_menu"];
-const APP_OPEN_ANIMATION_MS = 180;
-const ENDERASE_LOGO_URL = "/enderase_theme/static/src/img/enderase-icon.png";
+const APP_OPEN_ANIMATION_MS = 220;
 
 function isHomeMenuOpen() {
     return document.body?.classList.contains("o_enderase_home_menu_open") || false;
@@ -31,20 +39,6 @@ function cleanHomeMenuRoute(router) {
     );
 }
 
-function normalizeIconData(app) {
-    if (!app.webIconData) {
-        return "/base/static/description/icon.png";
-    }
-    if (app.webIconData.startsWith("data:image")) {
-        return app.webIconData;
-    }
-    const iconData = app.webIconData.replace(/\s/g, "");
-    const prefix = iconData.startsWith("P")
-        ? "data:image/svg+xml;base64,"
-        : "data:image/png;base64,";
-    return `${prefix}${iconData}`;
-}
-
 export class EnderaseHomeMenu extends Component {
     static template = "enderase_theme.HomeMenu";
     static props = ["*"];
@@ -52,15 +46,21 @@ export class EnderaseHomeMenu extends Component {
     setup() {
         this.menuService = useService("menu");
         this.router = useService("router");
+        this.orm = useService("orm");
+        this.actionService = useService("action");
         this.state = useState({
             isLeaving: false,
             launchingAppId: null,
+            registryScope: REGISTRY_CARDS[0].key,
+            searchQuery: "",
+            registryCounts: {},
         });
 
-        onMounted(() => {
+        onMounted(async () => {
             document.body.classList.add("o_enderase_home_menu_open");
             cleanHomeMenuRoute(this.router);
             this.env.bus.trigger("MENUS:APP-CHANGED");
+            await this.loadRegistryCounts();
         });
         onWillUnmount(() => {
             document.body.classList.remove("o_enderase_home_menu_open");
@@ -76,16 +76,93 @@ export class EnderaseHomeMenu extends Component {
         return ENDERASE_LOGO_URL;
     }
 
+    get registryCards() {
+        return REGISTRY_CARDS.map((card) => ({
+            ...card,
+            countLabel: this.formatCountLabel(this.state.registryCounts[card.key]),
+        }));
+    }
+
+    formatCountLabel(count) {
+        return count === undefined || count === null ? "—" : String(count);
+    }
+
     getAppHref(app) {
-        const hrefParts = [`menu_id=${app.id}`];
-        if (app.actionID) {
-            hrefParts.push(`action=${app.actionID}`);
-        }
-        return `#${hrefParts.join("&")}`;
+        return getAppHref(app);
     }
 
     getAppIcon(app) {
         return normalizeIconData(app);
+    }
+
+    getRegistryCardClass(card) {
+        return {
+            o_enderase_home_menu_registry_card: true,
+            [`o_enderase_home_menu_registry_card_${card.key}`]: true,
+            o_enderase_home_menu_registry_card_active: this.state.registryScope === card.key,
+        };
+    }
+
+    async loadRegistryCounts() {
+        const counts = {};
+        await Promise.all(
+            REGISTRY_CARDS.map(async (card) => {
+                try {
+                    const action = await this.actionService.loadAction(card.action);
+                    counts[card.key] = await this.orm.searchCount(
+                        "res.partner",
+                        action.domain || []
+                    );
+                } catch {
+                    counts[card.key] = 0;
+                }
+            })
+        );
+        this.state.registryCounts = counts;
+    }
+
+    onSearchInput(ev) {
+        this.state.searchQuery = ev.target.value;
+    }
+
+    onSearchKeydown(ev) {
+        if (ev.key === "Enter") {
+            ev.preventDefault();
+            this.openRegistrySearch();
+        }
+    }
+
+    onScopeChange(ev) {
+        this.state.registryScope = ev.target.value;
+    }
+
+    async openRegistry(scope = this.state.registryScope) {
+        this.state.registryScope = scope;
+        const card = getRegistryCard(scope);
+        await this._openRegistryAction(card.action, this.state.searchQuery);
+    }
+
+    async openRegistrySearch() {
+        const card = getRegistryCard(this.state.registryScope);
+        await this._openRegistryAction(card.action, this.state.searchQuery);
+    }
+
+    async _openRegistryAction(actionXmlId, query) {
+        if (this.state.isLeaving) {
+            return;
+        }
+        this.state.isLeaving = true;
+        const searchDomain = buildRegistrySearchDomain(query);
+        try {
+            const action = await this.actionService.loadAction(actionXmlId);
+            const baseDomain = action.domain || [];
+            action.domain = searchDomain.length
+                ? Domain.and([baseDomain, searchDomain]).toList()
+                : baseDomain;
+            await this.actionService.doAction(action, {clearBreadcrumbs: true});
+        } catch {
+            this.state.isLeaving = false;
+        }
     }
 
     async openApp(app) {

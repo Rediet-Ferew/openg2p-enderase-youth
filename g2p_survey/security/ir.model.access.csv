@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_g2p_survey_odk_server_user,g2p_survey_odk_server user,model_g2p_survey_odk_server,survey.group_survey_user,1,0,0,0
+access_g2p_survey_odk_server_manager,g2p_survey_odk_server manager,model_g2p_survey_odk_server,survey.group_survey_manager,1,1,1,1
+access_g2p_survey_odk_user_user,g2p_survey_odk_user user,model_g2p_survey_odk_user,survey.group_survey_user,1,0,0,0
+access_g2p_survey_odk_user_manager,g2p_survey_odk_user manager,model_g2p_survey_odk_user,survey.group_survey_manager,1,1,1,1

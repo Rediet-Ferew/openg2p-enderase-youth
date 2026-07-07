@@ -1,4 +1,5 @@
 # Part of OpenG2P. See LICENSE file for full copyright and licensing details.
-from . import lookup
-from . import res_partner
+
+from . import ir_module
+from . import odk_client
 from . import survey

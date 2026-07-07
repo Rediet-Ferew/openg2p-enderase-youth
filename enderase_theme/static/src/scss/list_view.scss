@@ -1,0 +1,277 @@
+// Storyteller Beneficiaries list page — title, KPI, toolbar, table card
+
+// ─── Page title (AppShell h1, top-left) ───────────────────────
+
+.o_action:has(.o_list_view) .o_control_panel {
+    padding-bottom: 0.5rem !important;
+    border-bottom: 1px solid var(--enderase-header-border) !important;
+}
+
+.o_action:has(.o_list_view) .o_control_panel .o_control_panel_breadcrumbs {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: 0.75rem;
+    min-width: 0;
+    max-width: 100%;
+}
+
+.o_action:has(.o_list_view) .o_control_panel .o_breadcrumb {
+    flex: 1 1 auto;
+    flex-direction: row !important;
+    align-items: center !important;
+    min-width: 0;
+    max-width: 100%;
+}
+
+// Storyteller: one page title only — hide breadcrumb path trail
+.o_action:has(.o_list_view) .o_control_panel .o_breadcrumb .breadcrumb,
+.o_action:has(.o_list_view) .o_control_panel .o_breadcrumb ol.breadcrumb,
+.o_action:has(.o_list_view) .o_control_panel .o_breadcrumb .breadcrumb-item,
+.o_action:has(.o_list_view) .o_control_panel .o_breadcrumb .o_back_button {
+    display: none !important;
+}
+
+.o_action:has(.o_list_view) .o_control_panel .o_breadcrumb > .d-flex.gap-1 {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.o_action:has(.o_list_view) .o_control_panel .o_last_breadcrumb_item {
+    min-width: 0;
+    color: var(--enderase-ink) !important;
+    font-family: Sora, sans-serif !important;
+    font-size: 1.5rem !important;
+    font-weight: 800 !important;
+    letter-spacing: -0.03em;
+    line-height: 1.15;
+
+    > span,
+    .text-truncate {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}
+
+.o_action:has(.o_list_view) .o_control_panel .o_control_panel_main_buttons {
+    margin-left: auto;
+    flex-shrink: 0;
+}
+
+.o_action:has(.o_list_view) .o_content {
+    padding-top: 0.5rem !important;
+}
+
+// ─── KPI strip (storyteller summary cards) ────────────────────
+
+.o_list_view .o_enderase_kpi_strip {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    width: 100%;
+    margin: 0 0 0;
+    padding-inline: 1.5rem;
+    animation: o-enderase-fade-up 400ms var(--enderase-ease) both;
+
+    @media (min-width: 768px) {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+}
+
+.o_list_view .o_enderase_kpi_card {
+    padding: 1rem 1.25rem;
+    border-radius: 1.5rem;
+}
+
+// ─── Toolbar — search + filters + pagination (mt-8 after KPI) ─
+
+.o_list_view .o_enderase_list_toolbar.o_enderase_list_toolbar_ready {
+    margin-top: 2rem;
+    margin-bottom: 1.25rem;
+}
+
+// ─── Table card (rounded-3xl, shadow-block) ───────────────────
+
+.o_list_view .o_list_renderer {
+    padding: 0 1.5rem 2rem;
+    background: transparent;
+}
+
+.o_list_view .o_list_renderer .o_list_table {
+    width: 100%;
+    border-collapse: collapse !important;
+    border: 1px solid var(--enderase-border) !important;
+    border-radius: 1.5rem !important;
+    overflow: hidden;
+    background: var(--enderase-card) !important;
+    box-shadow: var(--enderase-shadow-block) !important;
+    font-size: 0.875rem;
+}
+
+// Column headers — uppercase coffee, muted blur background
+.o_list_view .o_list_renderer .o_list_table thead {
+    background: hsla(38, 30%, 90%, 0.82) !important;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+.o_list_view .o_list_renderer .o_list_table thead th {
+    height: auto;
+    padding: 0.875rem 1.25rem !important;
+    border: 0 !important;
+    border-bottom: 1px solid hsla(33, 28%, 84%, 0.6) !important;
+    background: transparent !important;
+    color: var(--enderase-coffee) !important;
+    font-family: Manrope, sans-serif;
+    font-size: 0.75rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.06em !important;
+    text-transform: uppercase;
+    vertical-align: middle;
+}
+
+// Body cells — px-5 py-3.5
+.o_list_view .o_list_renderer .o_list_table tbody > tr > td,
+.o_list_view .o_list_renderer .o_list_table tbody > tr > th {
+    padding: 0.875rem 1.25rem !important;
+    border-top: 1px solid hsla(33, 28%, 84%, 0.45) !important;
+    vertical-align: middle;
+}
+
+.o_list_view .o_list_renderer .o_list_table tbody > tr:nth-of-type(odd) > * {
+    background-color: transparent !important;
+}
+
+.o_list_view .o_list_renderer .o_list_table tbody > tr:nth-of-type(even) > * {
+    background-color: hsla(38, 30%, 90%, 0.28) !important;
+}
+
+.o_list_view .o_list_renderer .o_list_table.table-hover > tbody > tr:hover > *,
+.o_list_view .o_list_renderer .o_data_row:hover {
+    background: hsla(44, 92%, 52%, 0.1) !important;
+}
+
+// Primary name column
+.o_list_view .o_list_renderer .o_data_cell[name="name"],
+.o_list_view .o_list_renderer .o_data_cell[name="display_name"],
+.o_list_view .o_list_renderer .o_data_cell[name="complete_name"] {
+    color: var(--enderase-ink);
+    font-weight: 600;
+}
+
+.o_list_view .o_list_renderer .o_data_cell {
+    color: var(--enderase-coffee);
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+// Secondary text under names
+.o_list_view .o_list_renderer .o_data_cell .text-muted,
+.o_list_view .o_list_renderer .o_data_cell .o_m2o_avatar + span,
+.o_list_view .o_list_renderer .o_data_cell small {
+    color: var(--enderase-muted-fg) !important;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+// Avatars
+.o_list_view .o_list_renderer .o_field_many2one_avatar img,
+.o_list_view .o_list_renderer .o_m2o_avatar,
+.o_list_view .o_list_renderer .o_field_many2one_avatar .o_avatar {
+    width: 2.25rem !important;
+    height: 2.25rem !important;
+    border-radius: 50% !important;
+    background: var(--enderase-gradient-brown) !important;
+    color: var(--enderase-cream) !important;
+    font-size: 0.6875rem;
+    font-weight: 700;
+}
+
+// Type / status pills
+.o_list_view .o_list_renderer .o_field_badge span,
+.o_list_view .o_list_renderer .o_field_badge .badge,
+.o_list_view .o_list_renderer .badge.rounded-pill,
+.o_list_view .o_list_renderer .o_field_widget .badge {
+    padding: 0.25rem 0.625rem !important;
+    border: 0 !important;
+    border-radius: 999px !important;
+    background: hsla(38, 30%, 90%, 0.95) !important;
+    color: var(--enderase-coffee) !important;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.o_list_view .o_list_renderer .text-bg-warning,
+.o_list_view .o_list_renderer .badge.text-bg-warning {
+    background: hsla(38, 88%, 52%, 0.2) !important;
+    color: var(--enderase-brown-deep) !important;
+    box-shadow: inset 0 0 0 1px hsla(38, 88%, 52%, 0.35);
+}
+
+.o_list_view .o_list_renderer .text-bg-success,
+.o_list_view .o_list_renderer .badge.text-bg-success {
+    background: hsla(44, 92%, 52%, 0.15) !important;
+    color: var(--enderase-brown-deep) !important;
+    box-shadow: inset 0 0 0 1px hsla(44, 92%, 52%, 0.35);
+}
+
+// Progress bars
+.o_list_view .o_list_renderer .o_field_progressbar .o_progressbar {
+    width: 7rem;
+    height: 0.375rem;
+    margin-top: 0.375rem;
+    border-radius: 999px;
+    background: hsla(38, 30%, 90%, 0.95);
+}
+
+.o_list_view .o_list_renderer .o_field_progressbar .o_progressbar_complete {
+    border-radius: 999px;
+    background: var(--enderase-gradient-gold) !important;
+}
+
+.o_list_view .o_list_renderer .o_field_progressbar .o_progressbar_value {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--enderase-ink);
+}
+
+// Filter facets in search bar — pill chips
+.o_list_view .o_enderase_list_toolbar .o_searchview_facet {
+    border-radius: 999px !important;
+    border: 1px solid hsla(33, 28%, 84%, 0.85) !important;
+    background: hsla(38, 30%, 90%, 0.95) !important;
+    color: var(--enderase-coffee) !important;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+// Filter menu button — storyteller pill group style
+.o_list_view .o_enderase_list_toolbar .o_searchview_dropdown_toggler {
+    min-height: 2.625rem;
+    padding: 0 1rem !important;
+    border: 1px solid var(--enderase-border) !important;
+    border-radius: 1rem !important;
+    background: var(--enderase-card) !important;
+    color: var(--enderase-coffee) !important;
+    font-weight: 600;
+
+    &::before {
+        content: "\f0b0";
+        font-family: FontAwesome;
+        margin-right: 0.375rem;
+        opacity: 0.7;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .o_list_view .o_enderase_kpi_strip,
+    .o_list_view .o_enderase_list_toolbar,
+    .o_list_view .o_list_renderer {
+        padding-inline: 0.75rem;
+    }
+
+    .o_action:has(.o_list_view) .o_control_panel .o_last_breadcrumb_item {
+        font-size: 1.25rem !important;
+    }
+}

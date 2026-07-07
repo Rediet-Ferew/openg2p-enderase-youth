@@ -9,9 +9,11 @@
     "license": "LGPL-3",
     "depends": [
         "g2p_social_registry",
+        "g2p_survey",
     ],
     "data": [
         "security/ir.model.access.csv",
+        "data/enderase_gender_data.xml",
         "data/enderase_group_kind.xml",
         "data/enderase_registry_type_data.xml",
         "data/enderase_lookup_data.xml",
@@ -28,8 +30,10 @@
         "data/g2p.enderase.interest.area.csv",
         "data/g2p.enderase.hear.about.csv",
         "data/g2p.enderase.membership.type.csv",
+        "data/enderase_member_survey.xml",
         "views/enderase_registry_views.xml",
         "views/enderase_lookup_views.xml",
+        "views/enderase_survey_views.xml",
         "views/menu.xml",
     ],
     "application": True,

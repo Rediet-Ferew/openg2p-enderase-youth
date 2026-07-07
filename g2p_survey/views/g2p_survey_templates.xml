@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="survey_layout_without_brand_promotion" inherit_id="survey.layout" name="Survey Layout With Enderase Branding">
+        <xpath expr="//div[contains(@class, 'o_survey_brand_message')]/div[@t-call='web.brand_promotion_message']" position="replace">
+            <div class="px-2 py-2 d-inline-block text-muted">
+                Powered by <span>Enderase</span>
+            </div>
+        </xpath>
+    </template>
+</odoo>

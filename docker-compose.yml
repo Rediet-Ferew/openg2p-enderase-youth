@@ -64,13 +64,16 @@ services:
       # would be created root-owned and break bootstrap).
       ODOO_VOLUME_DIR: /var/lib/odoo
       ODOO_SKIP_BOOTSTRAP: "no"
-      ODOO_BOOTSTRAP_MODULES: g2p_enderase_youth_registry,g2p_ati_embed,enderase_theme
+      ODOO_BOOTSTRAP_MODULES: g2p_enderase_youth_registry,g2p_ati_embed,gamification,survey,g2p_survey,enderase_theme
       ODOO_SKIP_MODULES_UPDATE: "no"
-      ODOO_UPDATE_MODULES: g2p_enderase_youth_registry,g2p_ati_embed,enderase_theme
+      ODOO_UPDATE_MODULES: g2p_enderase_youth_registry,g2p_ati_embed,gamification,survey,g2p_survey,enderase_theme
     volumes:
       - odoo-data:/var/lib/odoo
       - ./g2p_enderase_youth_registry:/opt/odoo/customaddons/g2p_enderase_youth_registry:ro
       - ./g2p_ati_embed:/opt/odoo/customaddons/g2p_ati_embed:ro
+      # survey + gamification are provided by the image (see ../odoo/Dockerfile),
+      # sourced from official Odoo. Only g2p_survey (the extension) is mounted here.
+      - ./g2p_survey:/opt/odoo/customaddons/g2p_survey:ro
       - ./enderase_theme:/opt/odoo/customaddons/enderase_theme:ro
       # Mask account_payment — see odoo/disabled-addons/account_payment/README.md
       - ../odoo/disabled-addons/account_payment:/usr/lib/python3/dist-packages/odoo/addons/account_payment:ro
